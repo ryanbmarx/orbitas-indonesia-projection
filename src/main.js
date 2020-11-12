@@ -2,10 +2,10 @@ import App from "./App.svelte";
 
 const app = new App({
   hydrate: true,
-  target: document.body,
+  target: document.querySelector("#orbitas-projections-map"),
   props: {
-    name: "world"
-  }
+    name: "world",
+  },
 });
 
 export default app;

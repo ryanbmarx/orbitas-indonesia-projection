@@ -1,20 +1,34 @@
 <script>
   import { onMount } from "svelte";
-  import * as analytics from "./utils/analytics.js";
-
-  export let name;
-
-  onMount(() => {
-    analytics.fireEvent(`${process.env.PROJECT_SLUG}-loaded`);
-  });
+  import Map from "./components/Map.svelte";
+  import Nav from "./components/Nav.svelte";
+  onMount(() => {});
 </script>
 
 <style>
-  h1 {
-    color: purple;
+  :global(html body) {
+    --sans-serif: "Work Sans", Helvetica, Arial, Lucida, sans-serif;
+    --color-orb-orange: #e9492e;
+    --color-orb-black: #020203;
+    --color-org-soft-grey: #f0f0ef;
+
+    --color-accent: var(--color-orb-orange);
+    --color-background: white;
+  }
+
+  :global(.projections-map-wrapper) {
+    margin: 32px 0;
+    padding: 0;
+  }
+  .projections :global(.select-wrapper label),
+  .projections :global(.label) {
+    display: block;
+    font: 500 14px/1em var(--sans-serif);
+    margin: 0 0 16px 0;
   }
 </style>
 
-<h1>Hello {name}!</h1>
-
-<p>S2-apps are go.</p>
+<div class="projections">
+  <Nav />
+  <Map />
+</div>
