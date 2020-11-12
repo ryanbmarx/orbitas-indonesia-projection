@@ -1,3 +1,3 @@
 import { writable } from "svelte/store";
 
-export let loading = writable(true);
+export let loading = writable(false);

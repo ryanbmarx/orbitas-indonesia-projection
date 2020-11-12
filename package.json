@@ -11,6 +11,7 @@
     "d3-format": "^2.0.0",
     "gulp": "^4.0.2",
     "gulp-cli": "^2.3.0",
+    "mapbox-gl": "^1.12.0",
     "npm-run-all": "^4.1.5",
     "rollup": "^2.33.1",
     "rollup-plugin-babel": "^4.4.0",
@@ -25,12 +26,10 @@
   },
   "scripts": {
     "autobuild": "rollup -c -w",
-    "build": "rollup -c",
-    "caddy": "caddy",
-    "dev": "run-p start:dev autobuild",
-    "start": "sirv public --single",
-    "start:dev": "sirv public --single --dev",
-    "start:embed": "run-p start:dev autobuild caddy"
+    "build": ". .env && rollup -c",
+    "dev": ". .env && run-p start:dev autobuild",
+    "start": ". .env && sirv public --single",
+    "start:dev": " sirv public --single --dev"
   },
   "browserslist": "> 0.25%, not dead"
 }

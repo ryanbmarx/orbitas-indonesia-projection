@@ -1,7 +1,10 @@
 <script>
   import Loading from "./Loading.svelte";
   import { format } from "d3-format";
+  import { onMount } from "svelte";
+  import mapboxgl from "mapbox-gl";
 
+  let mapContainer;
   let data = [
     {
       min: 0.2,
@@ -30,7 +33,29 @@
     },
   ];
 
-  let loading = true;
+  onMount(() => {
+    mapboxgl.accessToken = process.env.MAPBOX_TOKEN_R;
+
+    // CONFIG STUFF
+    const SLUG = "indonesia";
+    const LOCATION = "Indonesia";
+    const CENTER = [122.483349, -2.936083];
+    const MAP_ZOOM = 3;
+
+    // UI ELEMENTS
+    const SLIDER = document.getElementById("slider");
+    const END_DATE = document.getElementById("date");
+
+    // INIT THE MAP
+    var map = new mapboxgl.Map({
+      container: mapContainer,
+      style: "mapbox://styles/mapbox/streets-v11",
+      zoom: MAP_ZOOM,
+      center: CENTER,
+    });
+    map.scrollZoom.disable();
+    map.addControl(new mapboxgl.NavigationControl());
+  });
 </script>
 
 <style>
@@ -103,6 +128,9 @@
   }
 </style>
 
+<svelte:head>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+</svelte:head>
 <div class="map-wrapper">
   <div class="legend">
     <span class="label">Legend</span>
@@ -116,5 +144,5 @@
     </ol>
   </div>
   <Loading />
-  <div class="map" />
+  <div bind:this={mapContainer} class="map" />
 </div>

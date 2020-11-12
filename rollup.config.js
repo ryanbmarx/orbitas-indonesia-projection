@@ -17,7 +17,7 @@ export default {
     sourcemap: true,
     format: "iife",
     name: "app",
-    file: "public/bundle.js"
+    file: "public/bundle.js",
   },
   plugins: [
     svelte({
@@ -29,7 +29,7 @@ export default {
       // a separate file — better for performance
       css: css => {
         css.write("public/bundle.css");
-      }
+      },
     }),
 
     // If you have external dependencies installed from
@@ -39,8 +39,7 @@ export default {
     // https://github.com/rollup/rollup-plugin-commonjs
     resolve({
       browser: true,
-      dedupe: importee =>
-        importee === "svelte" || importee.startsWith("svelte/")
+      dedupe: importee => importee === "svelte" || importee.startsWith("svelte/"),
     }),
     commonjs(),
 
@@ -48,12 +47,8 @@ export default {
 
     // use process.env in browser code
     replace({
-      "process.env.GIT_BRANCH": JSON.stringify(process.env.GIT_BRANCH),
-      "process.env.ASSET_PATH": JSON.stringify(process.env.ASSET_PATH),
-      "process.env.NODE_ENV": JSON.stringify(
-        process.env.NODE_ENV || "development"
-      ),
-      "process.env.PROJECT_SLUG": JSON.stringify(PROJECT_SLUG)
+      "process.env.MAPBOX_TOKEN_R": JSON.stringify(process.env.MAPBOX_TOKEN_R),
+      "process.env.MAPBOX_TOKEN": JSON.stringify(process.env.MAPBOX_TOKEN),
     }),
 
     babel({
@@ -64,11 +59,11 @@ export default {
           "@babel/preset-env",
           {
             targets: {
-              esmodules: true
-            }
-          }
-        ]
-      ]
+              esmodules: true,
+            },
+          },
+        ],
+      ],
     }),
 
     // Watch the `public` directory and refresh the
@@ -77,9 +72,9 @@ export default {
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
-    production && terser()
+    production && terser(),
   ],
   watch: {
-    clearScreen: false
-  }
+    clearScreen: false,
+  },
 };
