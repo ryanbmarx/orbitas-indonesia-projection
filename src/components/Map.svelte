@@ -120,6 +120,7 @@
       width: 33vw;
       max-width: 380px;
       padding: 8px;
+      z-index: 90;
     }
 
     .label {

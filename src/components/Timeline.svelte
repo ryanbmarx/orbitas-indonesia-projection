@@ -1,4 +1,10 @@
 <script>
+  let currentYear = "2020";
+  let years = ["2020", "2025", "2030", "2035", "2040", "2045", "2050"];
+
+  function handleClick(e) {
+    currentYear = this.dataset.year;
+  }
 </script>
 
 <style>
@@ -6,7 +12,7 @@
     --dot-height: 20px;
     --line-z-index: 1;
     list-style: none;
-    margin: 0 0 24px 0;
+    margin: 0 0 0 0;
     padding: 0;
 
     display: flex;
@@ -15,13 +21,18 @@
     position: relative;
   }
 
+  .timeline li {
+    flex: 1 1;
+  }
+
   .timeline::before {
+    /* THIS IS THE LINE OF TIME */
     content: "";
     display: block;
     width: 100%;
-    height: 4px;
+    height: var(--line-width, 4px);
     background: var(--color-accent);
-    border-radius: 4px;
+    border-radius: var(--line-width, 4px);
 
     position: absolute;
     top: calc(var(--dot-height, 20px) / 2);
@@ -36,7 +47,8 @@
     padding: 0;
     margin: 0;
     height: 44px;
-    width: 44px;
+    min-width: 44px;
+    width: 100%;
 
     cursor: pointer;
   }
@@ -49,16 +61,17 @@
   }
 
   .timeline__button__year::before {
+    /* THIS IS THE DOT */
     content: "";
     display: block;
     width: var(--dot-height, 20px);
     height: var(--dot-height, 20px);
     box-sizing: border-box;
 
-    border: 4px solid var(--color-accent);
+    border: var(--line-width, 4px) solid var(--color-accent);
     background: var(--color-background);
     border-radius: 50px;
-    margin: 0 auto 8px auto;
+    margin: calc(var(--line-width, 4px) * -1) auto 0 auto;
     transition: background 150ms ease;
   }
 
@@ -74,17 +87,22 @@
   .timeline__button.timeline__button--active .timeline__button__year::before {
     background: var(--color-accent);
   }
+
+  @media all and (min-width: 768px) {
+    .timeline {
+      /* THIS IS THE LINE OF TIME */
+      transform: translate(0, 10px);
+    }
+  }
 </style>
 
 <div class="timeline-wrapper">
   <span id="timeline-label" class="label">Select a year</span>
   <ol aria-labelledby="timeline-label" class="timeline">
-    <li><button class="timeline__button timeline__button--active"><span class="timeline__button__year">2020</span></button></li>
-    <li><button class="timeline__button"><span class="timeline__button__year">2025</span></button></li>
-    <li><button class="timeline__button"><span class="timeline__button__year">2030</span></button></li>
-    <li><button class="timeline__button"><span class="timeline__button__year">2035</span></button></li>
-    <li><button class="timeline__button"><span class="timeline__button__year">2040</span></button></li>
-    <li><button class="timeline__button"><span class="timeline__button__year">2045</span></button></li>
-    <li><button class="timeline__button"><span class="timeline__button__year">2050</span></button></li>
+    {#each years as year, i}
+      <li>
+        <button class="timeline__button" data-year={year} class:timeline__button--active={year === currentYear} on:click={handleClick}><span class="timeline__button__year">{year}</span></button>
+      </li>
+    {/each}
   </ol>
 </div>

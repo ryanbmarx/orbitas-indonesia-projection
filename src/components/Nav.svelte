@@ -38,7 +38,8 @@
     --input-height: 44px;
     --border-radius: 0;
     --color-icon: var(--color-accent) !important;
-    border: 2px solid var(--color-accent);
+    --outline-color: var(--color-accent) !important;
+    border: var(--line-width, 3px) solid var(--color-accent);
     font-family: var(--sans-serif);
   }
 </style>
@@ -51,7 +52,7 @@
       label="Select the data"
       {options}
       on:input={e => {
-        console.log('NEW DATA!');
+        console.log('NEW DATA!', `${$loading} becomes ${!$loading}`);
         $loading = !$loading;
       }} />
   </div>

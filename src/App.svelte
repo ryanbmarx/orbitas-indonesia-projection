@@ -14,6 +14,8 @@
 
     --color-accent: var(--color-orb-orange);
     --color-background: white;
+
+    --line-width: 3px;
   }
 
   :global(.projections-map-wrapper) {

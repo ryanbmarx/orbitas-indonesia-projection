@@ -37,6 +37,7 @@
     background: white;
     height: var(--input-height);
     border-radius: var(--border-radius, 5px);
+    box-sizing: border-box;
   }
 
   .select::after {
@@ -67,6 +68,8 @@
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
+
+    outline-color: var(--outline-color, #009bff);
   }
 
   .select__input::-ms-expand {

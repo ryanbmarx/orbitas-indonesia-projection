@@ -18,6 +18,7 @@
     width: 100%;
     height: 100%;
     background: #eee;
+    z-index: 100;
   }
 
   .spinner__wrapper {
@@ -42,14 +43,11 @@
     animation: sk-scaleout 1s infinite ease-in-out;
   }
 
-  @-webkit-keyframes sk-scaleout {
-    0% {
-      -webkit-transform: scale(0);
-    }
-    100% {
-      -webkit-transform: scale(1);
-      opacity: 0;
-    }
+  .spinner__text {
+    animation-name: fade;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
   }
 
   @keyframes sk-scaleout {
@@ -63,8 +61,14 @@
       opacity: 0;
     }
   }
+
+  @keyframes fade {
+    to {
+      opacity: 0.3;
+    }
+  }
 </style>
 
 {#if $loading}
-  <div class="spinner" transition:fade={{ duration: 150 }}><span class="spinner__wrapper"> <span class="spinner__animation" /> </span> <span>{text}</span></div>
+  <div class="spinner" transition:fade={{ duration: 150 }}><span class="spinner__wrapper"> <span class="spinner__animation" /> </span> <span class="spinner__text">{text}</span></div>
 {/if}
