@@ -18,6 +18,9 @@ export default {
     format: "iife",
     name: "app",
     file: "public/bundle.js",
+    globals: {
+      "topojson-client": "topojson-client",
+    },
   },
   plugins: [
     svelte({

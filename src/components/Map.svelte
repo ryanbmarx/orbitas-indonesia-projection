@@ -1,8 +1,10 @@
 <script>
   import Loading from "./Loading.svelte";
+  import { loading } from "../utils/stores";
   import { format } from "d3-format";
   import { onMount } from "svelte";
   import mapboxgl from "mapbox-gl";
+  import * as topojson from "topojson-client";
 
   let mapContainer;
   let data = [
@@ -37,14 +39,10 @@
     mapboxgl.accessToken = process.env.MAPBOX_TOKEN_R;
 
     // CONFIG STUFF
-    const SLUG = "indonesia";
-    const LOCATION = "Indonesia";
+    // const SLUG = "indonesia";
+    // const LOCATION = "Indonesia";
     const CENTER = [122.483349, -2.936083];
     const MAP_ZOOM = 3;
-
-    // UI ELEMENTS
-    const SLIDER = document.getElementById("slider");
-    const END_DATE = document.getElementById("date");
 
     // INIT THE MAP
     var map = new mapboxgl.Map({
@@ -55,6 +53,50 @@
     });
     map.scrollZoom.disable();
     map.addControl(new mapboxgl.NavigationControl());
+
+    // This fires when the map has loaded
+    map.on("load", function () {
+      // Get the grid data
+      fetch(`./grid-sm.topojson`)
+        .then(r => {
+          // Check the request, and parse to JSON if its fine. KILL IT if not.
+          return r.ok ? r.json() : Promise.reject(r.status);
+        })
+        .then(grid => {
+          // Add the grid to the map
+          map.addSource("grid", {
+            type: "geojson",
+            data: topojson.mesh(grid),
+          });
+
+          map.addLayer({
+            id: "border-dropshadow",
+            type: "line",
+            source: "grid",
+            layout: {},
+            paint: {
+              "line-color": "#000000",
+              "line-width": 1,
+              "line-opacity": 0.5,
+            },
+          });
+
+          map.addLayer({
+            id: "border",
+            type: "line",
+            source: "grid",
+            layout: {},
+            paint: {
+              "line-width": 1,
+              "line-color": "#000",
+            },
+          });
+        })
+        .then(() => {
+          //  Turn of the loading indicator.
+          $loading = false;
+        });
+    });
   });
 </script>
 
