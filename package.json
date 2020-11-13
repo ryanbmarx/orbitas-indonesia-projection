@@ -27,10 +27,11 @@
   },
   "scripts": {
     "autobuild": "rollup -c -w",
-    "build": ". .env && rollup -c",
+    "build": ". .env && npm run static && rollup -c",
     "dev": ". .env && run-p start:dev autobuild",
     "start": ". .env && sirv public --single",
-    "start:dev": " sirv public --single --dev"
+    "start:dev": " sirv public --single --dev",
+    "static": "cp -rf src/static/* public/ && cp -rf src/geo/* public/geo"
   },
   "browserslist": "> 0.25%, not dead"
 }
