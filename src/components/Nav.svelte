@@ -14,6 +14,10 @@
     console.log(`Changing data from ${$activeData} to ${dataMenu.value}`);
     $activeData = dataMenu.value;
   }
+
+  onMount(() => {
+    setData();
+  });
 </script>
 
 <style>

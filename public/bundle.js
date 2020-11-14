@@ -2481,21 +2481,20 @@ var app = (function () {
     child_ctx[11] = list[i];
     child_ctx[13] = i;
     return child_ctx;
-  } // (221:4) {#each years as year, i}
+  } // (229:4) {#each years as year, i}
 
 
   function create_each_block(ctx) {
     var li;
     var button;
     var span;
-    var t0_value = formatYear(
+    var raw_value = formatYear(
     /*year*/
     ctx[11],
     /*i*/
     ctx[13]) + "";
-    var t0;
     var button_data_year_value;
-    var t1;
+    var t;
     var mounted;
     var dispose;
     var block = {
@@ -2503,8 +2502,7 @@ var app = (function () {
         li = element("li");
         button = element("button");
         span = element("span");
-        t0 = text(t0_value);
-        t1 = space();
+        t = space();
         this.h();
       },
       l: function claim(nodes) {
@@ -2521,35 +2519,34 @@ var app = (function () {
           class: true
         });
         var span_nodes = children(span);
-        t0 = claim_text(span_nodes, t0_value);
         span_nodes.forEach(detach_dev);
         button_nodes.forEach(detach_dev);
-        t1 = claim_space(li_nodes);
+        t = claim_space(li_nodes);
         li_nodes.forEach(detach_dev);
         this.h();
       },
       h: function hydrate() {
         attr_dev(span, "class", "timeline__button__year svelte-fag79s");
-        add_location(span, file$2, 222, 134, 4927);
+        add_location(span, file$2, 230, 135, 5294);
         attr_dev(button, "class", "timeline__button svelte-fag79s");
         attr_dev(button, "data-year", button_data_year_value =
         /*year*/
         ctx[11]);
         toggle_class(button, "timeline__button--active",
         /*year*/
-        ctx[11] ===
-        /*yearString*/
+        ctx[11] ==
+        /*$currentYear*/
         ctx[1]);
-        add_location(button, file$2, 222, 8, 4801);
+        add_location(button, file$2, 230, 8, 5167);
         attr_dev(li, "class", "svelte-fag79s");
-        add_location(li, file$2, 221, 6, 4788);
+        add_location(li, file$2, 229, 6, 5154);
       },
       m: function mount(target, anchor) {
         insert_dev(target, li, anchor);
         append_dev(li, button);
         append_dev(button, span);
-        append_dev(span, t0);
-        append_dev(li, t1);
+        span.innerHTML = raw_value;
+        append_dev(li, t);
 
         if (!mounted) {
           dispose = listen_dev(button, "click",
@@ -2560,12 +2557,12 @@ var app = (function () {
       },
       p: function update(ctx, dirty) {
         if (dirty &
-        /*years, yearString*/
+        /*years, $currentYear*/
         6) {
           toggle_class(button, "timeline__button--active",
           /*year*/
-          ctx[11] ===
-          /*yearString*/
+          ctx[11] ==
+          /*$currentYear*/
           ctx[1]);
         }
       },
@@ -2579,11 +2576,11 @@ var app = (function () {
       block,
       id: create_each_block.name,
       type: "each",
-      source: "(221:4) {#each years as year, i}",
+      source: "(229:4) {#each years as year, i}",
       ctx
     });
     return block;
-  } // (232:4) {:else}
+  } // (240:4) {:else}
 
 
   function create_else_block(ctx) {
@@ -2606,11 +2603,11 @@ var app = (function () {
       block,
       id: create_else_block.name,
       type: "else",
-      source: "(232:4) {:else}",
+      source: "(240:4) {:else}",
       ctx
     });
     return block;
-  } // (229:4) {#if playing}
+  } // (237:4) {#if playing}
 
 
   function create_if_block$1(ctx) {
@@ -2633,7 +2630,7 @@ var app = (function () {
       block,
       id: create_if_block$1.name,
       type: "if",
-      source: "(229:4) {#if playing}",
+      source: "(237:4) {#if playing}",
       ctx
     });
     return block;
@@ -2723,18 +2720,18 @@ var app = (function () {
       h: function hydrate() {
         attr_dev(span, "id", "timeline-label");
         attr_dev(span, "class", "label svelte-fag79s");
-        add_location(span, file$2, 218, 2, 4635);
+        add_location(span, file$2, 226, 2, 5001);
         attr_dev(ol, "aria-labelledby", "timeline-label");
         attr_dev(ol, "class", "timeline svelte-fag79s");
-        add_location(ol, file$2, 219, 2, 4698);
+        add_location(ol, file$2, 227, 2, 5064);
         attr_dev(button, "class", "timeline__button timeline__button--play svelte-fag79s");
         attr_dev(button, "aria-label", "Play the animation over time");
         toggle_class(button, "playing",
         /*playing*/
         ctx[0]);
-        add_location(button, file$2, 227, 2, 5048);
+        add_location(button, file$2, 235, 2, 5421);
         attr_dev(div, "class", "timeline-wrapper svelte-fag79s");
-        add_location(div, file$2, 217, 0, 4602);
+        add_location(div, file$2, 225, 0, 4968);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);
@@ -2762,7 +2759,7 @@ var app = (function () {
         var [dirty] = _ref;
 
         if (dirty &
-        /*years, yearString, handleClick, formatYear*/
+        /*years, $currentYear, handleClick, formatYear*/
         14) {
           each_value =
           /*years*/
@@ -2836,13 +2833,13 @@ var app = (function () {
     // Return the full thing if it is the first.
     if (i === 0) return y; // Otherwise, return an apostrophe and last two characters
 
-    return "'".concat(y.slice(y.length - 2, y.length));
+    return "&#8217;".concat(y - 2000);
   }
 
   function instance$2($$self, $$props, $$invalidate) {
     var $currentYear;
     validate_store(currentYear, "currentYear");
-    component_subscribe($$self, currentYear, $$value => $$invalidate(9, $currentYear = $$value));
+    component_subscribe($$self, currentYear, $$value => $$invalidate(1, $currentYear = $$value));
     var {
       $$slots: slots = {},
       $$scope
@@ -2856,38 +2853,43 @@ var app = (function () {
     } = $$props;
     var {
       step
-    } = $$props;
-    var playing = false;
-    var years = generateYears();
-    var timer;
+    } = $$props; // Generate our list of years to build the years
+
+    var years = generateYears(); // For the play animation
+
+    var timer; // Monitor the play state.
+
+    var playing = false; // generateYears | Returns an array of
 
     function generateYears() {
       var retval = [];
 
       for (var y = start; y <= end; y += step) {
-        retval.push("".concat(y));
+        retval.push(y);
       }
 
       return retval;
     }
 
     function handleClick(e) {
+      // Switch the current year to the clicked/selected year
       set_store_value(currentYear, $currentYear = this.dataset.year, $currentYear);
-    }
+    } // play | starts at the beginning and cycles through the available years
+    // by switching the store value `currentYear`, the map also will
+    // cycle through the available data
+
 
     function play(e) {
       if (!playing) {
         // If not playing, then start playing
-        var year = start;
+        $$invalidate(0, playing = true);
+        set_store_value(currentYear, $currentYear = start, $currentYear);
         timer = setInterval(() => {
-          $$invalidate(0, playing = true);
-          set_store_value(currentYear, $currentYear = year, $currentYear);
+          set_store_value(currentYear, $currentYear += step, $currentYear);
 
-          if ($currentYear == end) {
+          if ($currentYear === end) {
             clearInterval(timer);
             $$invalidate(0, playing = false);
-          } else {
-            year += step;
           }
         }, ANIMATION_INTERVAL);
       } else {
@@ -2913,10 +2915,10 @@ var app = (function () {
       start,
       end,
       step,
-      playing,
       years,
-      ANIMATION_INTERVAL,
       timer,
+      ANIMATION_INTERVAL,
+      playing,
       generateYears,
       handleClick,
       play,
@@ -2929,10 +2931,10 @@ var app = (function () {
       if ("start" in $$props) $$invalidate(5, start = $$props.start);
       if ("end" in $$props) $$invalidate(6, end = $$props.end);
       if ("step" in $$props) $$invalidate(7, step = $$props.step);
-      if ("playing" in $$props) $$invalidate(0, playing = $$props.playing);
       if ("years" in $$props) $$invalidate(2, years = $$props.years);
       if ("timer" in $$props) timer = $$props.timer;
-      if ("yearString" in $$props) $$invalidate(1, yearString = $$props.yearString);
+      if ("playing" in $$props) $$invalidate(0, playing = $$props.playing);
+      if ("yearString" in $$props) yearString = $$props.yearString;
     };
 
     var yearString;
@@ -2944,12 +2946,12 @@ var app = (function () {
     $$self.$$.update = () => {
       if ($$self.$$.dirty &
       /*$currentYear*/
-      512) {
-         $$invalidate(1, yearString = "".concat($currentYear));
+      2) {
+         yearString = "".concat($currentYear);
       }
     };
 
-    return [playing, yearString, years, handleClick, play, start, end, step];
+    return [playing, $currentYear, years, handleClick, play, start, end, step];
   }
 
   class Timeline extends SvelteComponentDev {
@@ -3682,9 +3684,9 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(div, "class", "select-wrapper svelte-n94yzc");
-        add_location(div, file$4, 43, 2, 1050);
+        add_location(div, file$4, 47, 2, 1090);
         attr_dev(nav, "class", "nav svelte-n94yzc");
-        add_location(nav, file$4, 41, 0, 986);
+        add_location(nav, file$4, 45, 0, 1026);
       },
       m: function mount(target, anchor) {
         insert_dev(target, nav, anchor);
@@ -3782,6 +3784,9 @@ var app = (function () {
       set_store_value(activeData, $activeData = dataMenu.value, $activeData);
     }
 
+    onMount(() => {
+      setData();
+    });
     var writable_props = ["options", "yearLabel", "dataLabel", "years"];
     Object.keys($$props).forEach(key => {
       if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn("<Nav> was created with unknown prop '".concat(key, "'"));

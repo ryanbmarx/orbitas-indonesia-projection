@@ -3,40 +3,48 @@
   export let start;
   export let end;
   export let step;
-  let playing = false;
 
+  // Generate our list of years to build the years
   let years = generateYears();
-  const ANIMATION_INTERVAL = 2000;
+
+  // For the play animation
   let timer;
+
+  // How fast to animate each step
+  const ANIMATION_INTERVAL = 2000;
+
+  // Monitor the play state.
+  let playing = false;
 
   $: yearString = `${$currentYear}`;
 
+  // generateYears | Returns an array of
   function generateYears() {
     let retval = [];
-
     for (let y = start; y <= end; y += step) {
-      retval.push(`${y}`);
+      retval.push(y);
     }
-
     return retval;
   }
 
   function handleClick(e) {
+    // Switch the current year to the clicked/selected year
     $currentYear = this.dataset.year;
   }
 
+  // play | starts at the beginning and cycles through the available years
+  // by switching the store value `currentYear`, the map also will
+  // cycle through the available data
   function play(e) {
     if (!playing) {
       // If not playing, then start playing
-      let year = start;
+      playing = true;
+      $currentYear = start;
       timer = setInterval(() => {
-        playing = true;
-        $currentYear = year;
-        if ($currentYear == end) {
+        $currentYear += step;
+        if ($currentYear === end) {
           clearInterval(timer);
           playing = false;
-        } else {
-          year += step;
         }
       }, ANIMATION_INTERVAL);
     } else {
@@ -50,7 +58,7 @@
     // Return the full thing if it is the first.
     if (i === 0) return y;
     // Otherwise, return an apostrophe and last two characters
-    return `'${y.slice(y.length - 2, y.length)}`;
+    return `&#8217;${y - 2000}`;
   }
 </script>
 
@@ -220,14 +228,14 @@
   <ol aria-labelledby="timeline-label" class="timeline">
     {#each years as year, i}
       <li>
-        <button class="timeline__button" data-year={year} class:timeline__button--active={year === yearString} on:click={handleClick}><span
-            class="timeline__button__year">{formatYear(year, i)}</span></button>
+        <button class="timeline__button" data-year={year} class:timeline__button--active={year == $currentYear} on:click={handleClick}><span
+            class="timeline__button__year">{@html formatYear(year, i)}</span></button>
       </li>
     {/each}
   </ol>
   <button class:playing class="timeline__button timeline__button--play" aria-label="Play the animation over time" on:click={play}>
     {#if playing}
-      <!-- square-->
+      <!-- Square-->
       &#9724;
     {:else}
       <!-- Triangle -->
