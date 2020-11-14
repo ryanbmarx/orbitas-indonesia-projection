@@ -20,6 +20,7 @@ export default {
     file: "public/bundle.js",
     globals: {
       "topojson-client": "topojson-client",
+      "d3-dsv": "d3-dsv",
     },
   },
   plugins: [

@@ -1,37 +1,32 @@
 <script>
   import Timeline from "./Timeline.svelte";
   import InputSelect from "./InputSelect.svelte";
-  import { loading } from "../utils/stores";
-  let options = [
-    {
-      label: "data1",
-      value: "val",
-      disabled: false,
-    },
-    {
-      label: "data2",
-      value: "val2",
-      disabled: false,
-    },
-    {
-      label: "data3",
-      value: "val3",
-      disabled: false,
-    },
-    {
-      label: "data4",
-      value: "val4",
-      disabled: false,
-    },
-  ];
+  import { loading, activeData } from "../utils/stores";
+  import { onMount } from "svelte";
+  export let options = [];
+  export let yearLabel;
+  export let dataLabel;
+  export let years;
+
+  // The acutal input el.
+  let dataMenu;
+  function setData() {
+    console.log(`Changing data from ${$activeData} to ${dataMenu.value}`);
+    $activeData = dataMenu.value;
+  }
 </script>
 
 <style>
   .nav {
-    display: grid;
-    grid-template: auto / repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 24px;
+    display: flex;
+    /* grid-template: auto / repeat(auto-fit, minmax(300px, 1fr)); */
+    /* grid-gap: 24px; */
     gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .select-wrapper {
+    flex: 1 1 255px;
   }
 
   :global(.select) {
@@ -45,15 +40,8 @@
 </style>
 
 <nav class="nav">
-  <Timeline />
+  <Timeline label={yearLabel} {...years} />
   <div class="select-wrapper">
-    <InputSelect
-      id="data"
-      label="Select the data"
-      {options}
-      on:input={e => {
-        console.log('NEW DATA!', `${$loading} becomes ${!$loading}`);
-        $loading = !$loading;
-      }} />
+    <InputSelect bind:this={dataMenu} id="data" label={dataLabel} {options} on:input={setData} />
   </div>
 </nav>

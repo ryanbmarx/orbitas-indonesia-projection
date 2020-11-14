@@ -1,51 +1,84 @@
 <script>
+  import { loading, activeData, currentYear } from "./../utils/stores.js";
   import Loading from "./Loading.svelte";
-  import { loading } from "../utils/stores";
+
   import { format } from "d3-format";
-  import { onMount } from "svelte";
+  import { onMount, afterUpdate } from "svelte";
   import mapboxgl from "mapbox-gl";
   import * as topojson from "topojson-client";
+  import { csvParse } from "../utils/csv-parse";
 
+  export let gridFile,
+    data,
+    stops,
+    mapFill = "#2f4752";
+  // for the map instance
+  let map;
+  // the dom element with the map in it.
   let mapContainer;
-  let data = [
-    {
-      min: 0.2,
-      max: 1.0,
-      color: "red",
-    },
-    {
-      min: 1.0,
-      max: 2.0,
-      color: "blue",
-    },
-    {
-      min: 2.0,
-      max: 3.0,
-      color: "orange",
-    },
-    {
-      min: 3,
-      max: 4,
-      color: "green",
-    },
-    {
-      min: 4,
-      max: 4.9,
-      color: "purple",
-    },
-  ];
+  // This will hold IDs of all our added layers
+  let layers = [];
+  // CONFIG STUFF
+  mapboxgl.accessToken = process.env.MAPBOX_TOKEN_R;
+  const CENTER = [122.483349, -2.936083];
+  const MAP_ZOOM = 3;
 
+  // let fakedata = [
+  //   {
+  //     min: 0.2,
+  //     max: 1.0,
+  //     color: "red",
+  //   },
+  //   {
+  //     min: 1.0,
+  //     max: 2.0,
+  //     color: "blue",
+  //   },
+  //   {
+  //     min: 2.0,
+  //     max: 3.0,
+  //     color: "orange",
+  //   },
+  //   {
+  //     min: 3,
+  //     max: 4,
+  //     color: "green",
+  //   },
+  //   {
+  //     min: 4,
+  //     max: 4.9,
+  //     color: "purple",
+  //   },
+  // ];
+
+  // The things we are fetching get stored here, so we can wait until they are fetched.
+  const fetching = [`./geo/${gridFile}.topojson`, `./data/${data[0].value}`].map(f => {
+    console.log("Starting fetch for", f, f.indexOf(".csv") > -1);
+    return fetch(f).then(req => (f.indexOf(".csv") > -1 ? req.text() : req.json()));
+  });
+
+  afterUpdate(() => {
+    console.log("Map update. A mapdate!");
+
+    layers.forEach(l => {
+      let visibilityState = l === `grid-${$currentYear}` ? "visible" : "none";
+      map.setLayoutProperty(l, "visibility", visibilityState);
+    });
+  });
+
+  // Adds downloaded values from CSV into the geojson
+  function mergeProps(data, geo) {
+    geo.features.forEach(g => {
+      const ID = g.properties.Grid_ID;
+      for (let key in data[ID]) {
+        g["properties"][key] = data[ID][key];
+      }
+    });
+    return geo;
+  }
   onMount(() => {
-    mapboxgl.accessToken = process.env.MAPBOX_TOKEN_R;
-
-    // CONFIG STUFF
-    // const SLUG = "indonesia";
-    // const LOCATION = "Indonesia";
-    const CENTER = [122.483349, -2.936083];
-    const MAP_ZOOM = 3;
-
     // INIT THE MAP
-    var map = new mapboxgl.Map({
+    map = new mapboxgl.Map({
       container: mapContainer,
       style: "mapbox://styles/mapbox/streets-v11",
       zoom: MAP_ZOOM,
@@ -56,41 +89,51 @@
 
     // This fires when the map has loaded
     map.on("load", function () {
-      // Get the grid data
-      fetch(`./grid-sm.topojson`)
-        .then(r => {
-          // Check the request, and parse to JSON if its fine. KILL IT if not.
-          return r.ok ? r.json() : Promise.reject(r.status);
-        })
-        .then(grid => {
-          // Add the grid to the map
+      // Wait until we got the things
+      Promise.all(fetching)
+        .then(d => {
+          // console.log({ Data: csvParse(d[1]) });
+          const geoData = mergeProps(csvParse(d[1]), topojson.feature(d[0], d[0].objects[gridFile]));
+          // console.log({ geoData });
+
+          // Add the grid to the map. It was first in our array
+          // of files to fetch, so it will be first here, too.
           map.addSource("grid", {
             type: "geojson",
-            data: topojson.mesh(grid),
+            data: geoData,
           });
 
-          map.addLayer({
-            id: "border-dropshadow",
-            type: "line",
-            source: "grid",
-            layout: {},
-            paint: {
-              "line-color": "#000000",
-              "line-width": 1,
-              "line-opacity": 0.5,
-            },
-          });
+          // Add grid for each of our years
+          for (let i = 2020; i < 2051; i += 5) {
+            let gridID = `grid-${i}`;
+            // Add our grid ID to our list
+            layers.push(gridID);
 
-          map.addLayer({
-            id: "border",
-            type: "line",
-            source: "grid",
-            layout: {},
-            paint: {
-              "line-width": 1,
-              "line-color": "#000",
-            },
-          });
+            // Add grid and color it using the stops provided
+            map.addLayer({
+              id: gridID,
+              type: "fill",
+              source: "grid",
+              layout: {
+                visibility: `grid-${i}` === `grid-${$currentYear}` ? "visible" : "none",
+              },
+              paint: {
+                "fill-opacity": {
+                  property: `${i}`,
+                  stops,
+                },
+                "fill-color": mapFill,
+                "fill-opacity-transition": {
+                  duration: 300,
+                  delay: 0,
+                },
+              },
+            });
+            // Let's not waste our time on grid cells without data.
+            // Filter them out of the display by checking for
+            // a value for the year in questions.
+            map.setFilter(gridID, [">=", `${i}`, 0]);
+          }
         })
         .then(() => {
           //  Turn of the loading indicator.
@@ -175,17 +218,18 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
 <div class="map-wrapper">
-  <div class="legend">
-    <span class="label">Legend</span>
-    <ol class="legend__list">
-      {#each data as d, i}
-        <li class="legend__list-item">
-          {#if i + 1 < data.length}<span class="legend__list-item__label">{format('.1f')(d.max)}</span>{/if}
-          <span style="background:{d.color}" class="legend__list-item__box" />
-        </li>
-      {/each}
-    </ol>
-  </div>
+  <!-- <div class="legend">
+      <span class="label">Legend</span>
+      <ol class="legend__list">
+        {#each fakedata as d, i}
+          <li class="legend__list-item">
+            {#if i + 1 < data.length}<span class="legend__list-item__label">{format('.1f')(d.max)}</span>{/if}
+            <span style="background:{d.color}" class="legend__list-item__box" />
+          </li>
+        {/each}
+      </ol>
+    </div> -->
+
   <Loading />
   <div bind:this={mapContainer} class="map" />
 </div>
