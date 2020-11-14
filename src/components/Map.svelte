@@ -1,7 +1,12 @@
 <script>
+  // STORES
   import { loading, activeData, currentYear } from "./../utils/stores.js";
-  import Loading from "./Loading.svelte";
 
+  // COMPONENTS
+  import Loading from "./Loading.svelte";
+  import DataDescription from "./DataDescription.svelte";
+
+  // UTILS
   import { format } from "d3-format";
   import { onMount, afterUpdate } from "svelte";
   import mapboxgl from "mapbox-gl";
@@ -217,6 +222,7 @@
 <svelte:head>
   <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
+<DataDescription />
 <div class="map-wrapper">
   <!-- <div class="legend">
       <span class="label">Legend</span>
