@@ -17,7 +17,7 @@
 
   export let data;
   export let stops;
-  export let activeData;
+  export let mapData;
   export let mapFill = "#2f4752";
 
   export let years;
@@ -35,13 +35,12 @@
 
   let fetching = [];
   // The things we are fetching get stored here, so we can wait until they are fetched.
-  fetching = [`./geo/${gridFile}.topojson`, `./data/${data[activeData].value}`].map(f => {
+  fetching = [`./geo/${gridFile}.topojson`, `./data/${data[mapData].value}`].map(f => {
     console.log("Starting fetch for", f);
     return fetch(f).then(req => (f.indexOf(".csv") > -1 ? req.text() : req.json()));
   });
 
   afterUpdate(() => {
-    console.log("Map update. A mapdate!");
     // If the year has changed
     if (oldCurrentYear !== $currentYear) {
       oldCurrentYear = $currentYear;
@@ -63,9 +62,9 @@
     return geo;
   }
 
-  onMount(() => {
+  onMount(async () => {
     // INIT THE MAP
-
+    console.log({ mapData });
     map = new mapboxgl.Map({
       container: mapContainer,
       style: "mapbox://styles/mapbox/streets-v11",
@@ -80,6 +79,7 @@
       // Wait until we got the things
       Promise.all(fetching)
         .then(d => {
+          console.log(d);
           // Merge our shapes with our CSV data
           const geoData = mergeProps(csvParse(d[1]), topojson.feature(d[0], d[0].objects[gridFile]));
 
@@ -141,6 +141,8 @@
     background: #eee;
   }
 </style>
+
+<svelte:options accessors={true} />
 
 <svelte:head>
   <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
