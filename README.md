@@ -44,7 +44,7 @@ There are logical, semantic, accesible spots for a header and introduction to th
 
 ### Configuring
 
-There are several options and bits of text written here which affect the presentation's display. See `/public/index.html` for complete examples. Here are the highlights:
+There are several options and bits of text written here which affect the presentation's display. The app will detect the script tag in its container and use that to configure iself. See `/public/index.html` for complete examples. Here are the highlights:
 
 ```
 {
