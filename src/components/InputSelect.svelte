@@ -85,9 +85,9 @@
     {#if showAll}
       <option value={showAll.value} selected>{showAll.label}</option>
     {/if}
-    {#each options as { value, label, disabled } (value)}
+    {#each options as { value, label, disabled, selected } (value)}
       {#if label}
-        <option {value} {disabled}>{label}</option>
+        <option {value} {disabled} {selected}>{label}</option>
       {/if}
     {/each}
   </select>

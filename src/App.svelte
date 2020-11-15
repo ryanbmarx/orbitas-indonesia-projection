@@ -1,6 +1,6 @@
 <script>
   import { activeData, currentYear } from "./utils/stores.js";
-  import { onMount } from "svelte";
+  import { onMount, afterUpdate } from "svelte";
 
   import Map from "./components/Map.svelte";
   import Nav from "./components/Nav.svelte";
@@ -13,7 +13,9 @@
   export let years;
   export let stops;
   export let mapFill;
+
   export let firstData;
+  let oldData = firstData;
 
   let map;
   let container;
@@ -22,9 +24,18 @@
     $activeData = firstData;
   });
 
+  afterUpdate(() => {
+    if (oldData !== $activeData) {
+      console.log(`APP: Data to map now is ${$activeData}`);
+      map.$set({
+        mapData: $activeData,
+      });
+    }
+  });
+
   function click() {
     console.log("CLICK");
-    map.$destroy();
+    map.$set({ mapData: $activeData });
   }
 </script>
 
@@ -58,8 +69,6 @@
 
 <button on:click={click}>BOOM!</button>
 <div bind:this={container} class="projections">
-  <Nav {data} {yearLabel} {dataLabel} {years} />
-  {#if $activeData}
-    <Map bind:this={map} gridFile={grid} {data} {stops} {mapFill} {years} activeData={$activeData} />
-  {/if}
+  <Nav {data} {yearLabel} {dataLabel} {years} {firstData} />
+  <Map bind:this={map} bind:$activeData gridFile={grid} {data} {stops} {mapFill} {years} mapData={firstData} />
 </div>
