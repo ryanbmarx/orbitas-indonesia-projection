@@ -31,19 +31,24 @@
   $: descriptionData = $activeData ? data[$activeData] : data[firstData];
 
   onMount(async () => {
-    console.log(`APP, MOUNT: Data to map now is ${firstData}`);
     $currentYear = years.start;
     geoData = await getMapData(grid, firstData, data, gridID);
-    console.log("Initial data is", { geoData });
   });
 
   afterUpdate(async () => {
+    // Check to make sure this update is for new data
     if (oldData !== $activeData && $activeData) {
-      console.log(`APP, UPDATE: Data to map now is ${$activeData}. It was ${oldData}`);
+      // activate loading mode
       $loading = true;
+
+      // Remember what we had, to check next time.
       oldData = $activeData;
+
+      // Clear out the mapped data, which will destroy the instance of the component
+      geoData = null;
+
+      // get the new data for the map. When it loads, this will trigger a new map.
       geoData = await getMapData(grid, $activeData, data, gridID);
-      console.log("New data is", { geoData });
     }
   });
 </script>

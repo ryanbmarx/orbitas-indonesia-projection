@@ -3812,10 +3812,7 @@ var app = (function () {
 
   }
 
-  var {
-    console: console_1$1
-  } = globals;
-  var file$7 = "src/App.svelte"; // (90:4) {#if $loading}
+  var file$7 = "src/App.svelte"; // (95:4) {#if $loading}
 
   function create_if_block_1$1(ctx) {
     var loading_1;
@@ -3851,11 +3848,11 @@ var app = (function () {
       block,
       id: create_if_block_1$1.name,
       type: "if",
-      source: "(90:4) {#if $loading}",
+      source: "(95:4) {#if $loading}",
       ctx
     });
     return block;
-  } // (93:4) {#if geoData}
+  } // (98:4) {#if geoData}
 
 
   function create_if_block$3(ctx) {
@@ -3953,7 +3950,7 @@ var app = (function () {
       block,
       id: create_if_block$3.name,
       type: "if",
-      source: "(93:4) {#if geoData}",
+      source: "(98:4) {#if geoData}",
       ctx
     });
     return block;
@@ -4042,9 +4039,9 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(div0, "class", "map-wrapper svelte-1ijba7o");
-        add_location(div0, file$7, 88, 2, 2370);
+        add_location(div0, file$7, 93, 2, 2451);
         attr_dev(div1, "class", "projections svelte-1ijba7o");
-        add_location(div1, file$7, 85, 0, 2216);
+        add_location(div1, file$7, 90, 0, 2297);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div1, anchor);
@@ -4228,27 +4225,25 @@ var app = (function () {
     var map;
     var container;
     onMount( /*#__PURE__*/_asyncToGenerator(function* () {
-      console.log("APP, MOUNT: Data to map now is ".concat(firstData));
       set_store_value(currentYear, $currentYear = years.start, $currentYear);
       $$invalidate(8, geoData = yield getMapData(grid, firstData, data, gridID));
-      console.log("Initial data is", {
-        geoData
-      });
     }));
     afterUpdate( /*#__PURE__*/_asyncToGenerator(function* () {
+      // Check to make sure this update is for new data
       if (oldData !== $activeData && $activeData) {
-        console.log("APP, UPDATE: Data to map now is ".concat($activeData, ". It was ").concat(oldData));
-        set_store_value(loading, $loading = true, $loading);
-        oldData = $activeData;
+        // activate loading mode
+        set_store_value(loading, $loading = true, $loading); // Remember what we had, to check next time.
+
+        oldData = $activeData; // Clear out the mapped data, which will destroy the instance of the component
+
+        $$invalidate(8, geoData = null); // get the new data for the map. When it loads, this will trigger a new map.
+
         $$invalidate(8, geoData = yield getMapData(grid, $activeData, data, gridID));
-        console.log("New data is", {
-          geoData
-        });
       }
     }));
     var writable_props = ["data", "grid", "yearLabel", "dataLabel", "years", "stops", "mapFill", "gridID", "firstData"];
     Object.keys($$props).forEach(key => {
-      if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn("<App> was created with unknown prop '".concat(key, "'"));
+      if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn("<App> was created with unknown prop '".concat(key, "'"));
     });
 
     function map_1_binding($$value) {
@@ -4369,25 +4364,25 @@ var app = (function () {
       if (
       /*years*/
       ctx[4] === undefined && !("years" in props)) {
-        console_1$1.warn("<App> was created without expected prop 'years'");
+        console.warn("<App> was created without expected prop 'years'");
       }
 
       if (
       /*mapFill*/
       ctx[6] === undefined && !("mapFill" in props)) {
-        console_1$1.warn("<App> was created without expected prop 'mapFill'");
+        console.warn("<App> was created without expected prop 'mapFill'");
       }
 
       if (
       /*gridID*/
       ctx[13] === undefined && !("gridID" in props)) {
-        console_1$1.warn("<App> was created without expected prop 'gridID'");
+        console.warn("<App> was created without expected prop 'gridID'");
       }
 
       if (
       /*firstData*/
       ctx[7] === undefined && !("firstData" in props)) {
-        console_1$1.warn("<App> was created without expected prop 'firstData'");
+        console.warn("<App> was created without expected prop 'firstData'");
       }
     }
 
