@@ -46,7 +46,7 @@ There are logical, semantic, accesible spots for a header and introduction to th
 
 There are several options and bits of text written here which affect the presentation's display. See `/public/index.html` for complete examples. Here are the highlights:
 
-```json
+```
 {
   // The color used to fill each cell. Any valid CSS chex color will do.
   "mapFill": "#2f4752",
