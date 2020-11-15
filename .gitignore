@@ -2,6 +2,6 @@
 node_modules
 public/**/*.map
 public/embed.html
-public/geo
-public/data
+# public/geo
+# public/data
 .env
