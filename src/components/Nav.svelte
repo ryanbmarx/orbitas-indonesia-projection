@@ -28,7 +28,7 @@
   }
 
   .select-wrapper {
-    flex: 1 1 255px;
+    flex: 1 1 220px;
   }
 
   :global(.select) {

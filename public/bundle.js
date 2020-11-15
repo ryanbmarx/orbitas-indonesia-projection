@@ -2159,7 +2159,7 @@ var app = (function () {
     child_ctx[11] = list[i];
     child_ctx[13] = i;
     return child_ctx;
-  } // (229:4) {#each years as year, i}
+  } // (233:4) {#each years as year, i}
 
 
   function create_each_block$1(ctx) {
@@ -2204,20 +2204,23 @@ var app = (function () {
         this.h();
       },
       h: function hydrate() {
-        attr_dev(span, "class", "timeline__button__year svelte-fag79s");
-        add_location(span, file$3, 230, 135, 5294);
-        attr_dev(button, "class", "timeline__button svelte-fag79s");
+        attr_dev(span, "class", "timeline__button__year svelte-qg2shx");
+        add_location(span, file$3, 234, 189, 5425);
+        attr_dev(button, "class", "timeline__button svelte-qg2shx");
         attr_dev(button, "data-year", button_data_year_value =
         /*year*/
         ctx[11]);
+        toggle_class(button, "timeline__button--compressed",
+        /*years*/
+        ctx[2].length > 7);
         toggle_class(button, "timeline__button--active",
         /*year*/
         ctx[11] ==
         /*$currentYear*/
         ctx[1]);
-        add_location(button, file$3, 230, 8, 5167);
-        attr_dev(li, "class", "svelte-fag79s");
-        add_location(li, file$3, 229, 6, 5154);
+        add_location(button, file$3, 234, 8, 5244);
+        attr_dev(li, "class", "svelte-qg2shx");
+        add_location(li, file$3, 233, 6, 5231);
       },
       m: function mount(target, anchor) {
         insert_dev(target, li, anchor);
@@ -2234,6 +2237,14 @@ var app = (function () {
         }
       },
       p: function update(ctx, dirty) {
+        if (dirty &
+        /*years*/
+        4) {
+          toggle_class(button, "timeline__button--compressed",
+          /*years*/
+          ctx[2].length > 7);
+        }
+
         if (dirty &
         /*years, $currentYear*/
         6) {
@@ -2254,11 +2265,11 @@ var app = (function () {
       block,
       id: create_each_block$1.name,
       type: "each",
-      source: "(229:4) {#each years as year, i}",
+      source: "(233:4) {#each years as year, i}",
       ctx
     });
     return block;
-  } // (240:4) {:else}
+  } // (244:4) {:else}
 
 
   function create_else_block(ctx) {
@@ -2281,11 +2292,11 @@ var app = (function () {
       block,
       id: create_else_block.name,
       type: "else",
-      source: "(240:4) {:else}",
+      source: "(244:4) {:else}",
       ctx
     });
     return block;
-  } // (237:4) {#if playing}
+  } // (241:4) {#if playing}
 
 
   function create_if_block$1(ctx) {
@@ -2308,7 +2319,7 @@ var app = (function () {
       block,
       id: create_if_block$1.name,
       type: "if",
-      source: "(237:4) {#if playing}",
+      source: "(241:4) {#if playing}",
       ctx
     });
     return block;
@@ -2397,19 +2408,19 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(span, "id", "timeline-label");
-        attr_dev(span, "class", "label svelte-fag79s");
-        add_location(span, file$3, 226, 2, 5001);
+        attr_dev(span, "class", "label svelte-qg2shx");
+        add_location(span, file$3, 230, 2, 5078);
         attr_dev(ol, "aria-labelledby", "timeline-label");
-        attr_dev(ol, "class", "timeline svelte-fag79s");
-        add_location(ol, file$3, 227, 2, 5064);
-        attr_dev(button, "class", "timeline__button timeline__button--play svelte-fag79s");
+        attr_dev(ol, "class", "timeline svelte-qg2shx");
+        add_location(ol, file$3, 231, 2, 5141);
+        attr_dev(button, "class", "timeline__button timeline__button--play svelte-qg2shx");
         attr_dev(button, "aria-label", "Play the animation over time");
         toggle_class(button, "playing",
         /*playing*/
         ctx[0]);
-        add_location(button, file$3, 235, 2, 5421);
-        attr_dev(div, "class", "timeline-wrapper svelte-fag79s");
-        add_location(div, file$3, 225, 0, 4968);
+        add_location(button, file$3, 239, 2, 5552);
+        attr_dev(div, "class", "timeline-wrapper svelte-qg2shx");
+        add_location(div, file$3, 229, 0, 5045);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);
@@ -3389,9 +3400,9 @@ var app = (function () {
         this.h();
       },
       h: function hydrate() {
-        attr_dev(div, "class", "select-wrapper svelte-19y7zka");
+        attr_dev(div, "class", "select-wrapper svelte-v4cxpm");
         add_location(div, file$5, 45, 2, 938);
-        attr_dev(nav, "class", "nav svelte-19y7zka");
+        attr_dev(nav, "class", "nav svelte-v4cxpm");
         add_location(nav, file$5, 43, 0, 874);
       },
       m: function mount(target, anchor) {

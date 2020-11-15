@@ -127,6 +127,10 @@
 
     cursor: pointer;
   }
+
+  .timeline__button.timeline__button--compressed {
+    min-width: 35px;
+  }
   .timeline__button--play {
     position: relative;
     background-color: var(--color-accent);
@@ -228,7 +232,7 @@
   <ol aria-labelledby="timeline-label" class="timeline">
     {#each years as year, i}
       <li>
-        <button class="timeline__button" data-year={year} class:timeline__button--active={year == $currentYear} on:click={handleClick}><span
+        <button class="timeline__button" class:timeline__button--compressed={years.length > 7} data-year={year} class:timeline__button--active={year == $currentYear} on:click={handleClick}><span
             class="timeline__button__year">{@html formatYear(year, i)}</span></button>
       </li>
     {/each}
