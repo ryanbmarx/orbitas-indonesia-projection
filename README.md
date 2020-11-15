@@ -19,9 +19,11 @@ Before beginning work, you will need the associated mapbox token. It should be e
 
 Clone this repo into a working directory and install dependecies using `npm ci`. To run these presentations locally, start the development server (`npm run dev`) and visit [https://localhost:5000](https://localhost:5000).
 
+You'll also need to move the data files into the public folder, too, with `nom run static`.
+
 ## Deploying: How to actually use this.
 
-There are two required assets: `bundle.js` and `bundle.css`. They are the processed/compiled code and can be found in `/public`. They need to be included only once per page, no matter how many presentations there are.
+There are two required assets: `bundle.js` and `bundle.css`. They are the processed/compiled code and can be found in `/public`. They need to be included only once per page, no matter how many presentations there are. The `/data/` and `/geo/` folders should be in the same root as the bundled files.
 
 The basic markup required is:
 
