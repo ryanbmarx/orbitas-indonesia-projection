@@ -3823,7 +3823,7 @@ var app = (function () {
 
   }
 
-  var file$7 = "src/App.svelte"; // (95:4) {#if $loading}
+  var file$7 = "src/App.svelte"; // (94:4) {#if $loading}
 
   function create_if_block_1$1(ctx) {
     var loading_1;
@@ -3859,11 +3859,11 @@ var app = (function () {
       block,
       id: create_if_block_1$1.name,
       type: "if",
-      source: "(95:4) {#if $loading}",
+      source: "(94:4) {#if $loading}",
       ctx
     });
     return block;
-  } // (98:4) {#if geoData}
+  } // (97:4) {#if geoData}
 
 
   function create_if_block$3(ctx) {
@@ -3961,7 +3961,7 @@ var app = (function () {
       block,
       id: create_if_block$3.name,
       type: "if",
-      source: "(98:4) {#if geoData}",
+      source: "(97:4) {#if geoData}",
       ctx
     });
     return block;
@@ -4050,9 +4050,9 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(div0, "class", "map-wrapper svelte-1ijba7o");
-        add_location(div0, file$7, 93, 2, 2451);
+        add_location(div0, file$7, 92, 2, 2424);
         attr_dev(div1, "class", "projections svelte-1ijba7o");
-        add_location(div1, file$7, 90, 0, 2297);
+        add_location(div1, file$7, 89, 0, 2270);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div1, anchor);

@@ -13,7 +13,6 @@
 
   // export let config = {};
   export let data = [];
-  // export let slug = "";
   export let grid = "";
   export let yearLabel = "year";
   export let dataLabel = "data";
