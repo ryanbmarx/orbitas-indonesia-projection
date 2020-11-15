@@ -13,18 +13,19 @@
   export let years;
   export let stops;
   export let mapFill;
+  export let firstData;
 
+  let map;
   let container;
   onMount(() => {
     $currentYear = years.start;
-    // pick our first dataset to show
-    // $activeData = data[0].value;
-    // console.log($activeData, data[0].value);
-    // console.group(slug);
-    // console.log({ data });
-    // console.log({ grid });
-    // console.groupEnd();
+    $activeData = firstData;
   });
+
+  function click() {
+    console.log("CLICK");
+    map.$destroy();
+  }
 </script>
 
 <style>
@@ -55,7 +56,10 @@
   }
 </style>
 
+<button on:click={click}>BOOM!</button>
 <div bind:this={container} class="projections">
-  <Nav options={data} {yearLabel} {dataLabel} {years} />
-  <Map gridFile={grid} {data} {stops} {mapFill} />
+  <Nav {data} {yearLabel} {dataLabel} {years} />
+  {#if $activeData}
+    <Map bind:this={map} gridFile={grid} {data} {stops} {mapFill} {years} activeData={$activeData} />
+  {/if}
 </div>

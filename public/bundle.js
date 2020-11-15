@@ -214,6 +214,9 @@ var app = (function () {
   function claim_space(nodes) {
       return claim_text(nodes, ' ');
   }
+  function set_style(node, key, value, important) {
+      node.style.setProperty(key, value, important ? 'important' : '');
+  }
   function select_option(select, value) {
       for (let i = 0; i < select.options.length; i += 1) {
           const option = select.options[i];
@@ -1204,9 +1207,13 @@ var app = (function () {
       c: function create() {
         dl = element("dl");
         dt = element("dt");
-        t0 = text("XXX");
+        t0 = text(
+        /*label*/
+        ctx[0]);
         dd = element("dd");
-        t1 = text("A brief description of data. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.");
+        t1 = text(
+        /*description*/
+        ctx[1]);
         this.h();
       },
       l: function claim(nodes) {
@@ -1218,24 +1225,28 @@ var app = (function () {
           class: true
         });
         var dt_nodes = children(dt);
-        t0 = claim_text(dt_nodes, "XXX");
+        t0 = claim_text(dt_nodes,
+        /*label*/
+        ctx[0]);
         dt_nodes.forEach(detach_dev);
         dd = claim_element(dl_nodes, "DD", {
           class: true
         });
         var dd_nodes = children(dd);
-        t1 = claim_text(dd_nodes, "A brief description of data. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.");
+        t1 = claim_text(dd_nodes,
+        /*description*/
+        ctx[1]);
         dd_nodes.forEach(detach_dev);
         dl_nodes.forEach(detach_dev);
         this.h();
       },
       h: function hydrate() {
-        attr_dev(dt, "class", "description__name svelte-ql7yio");
-        add_location(dt, file$1, 23, 2, 347);
-        attr_dev(dd, "class", "description__text svelte-ql7yio");
-        add_location(dd, file$1, 24, 2, 388);
-        attr_dev(dl, "class", "description svelte-ql7yio");
-        add_location(dl, file$1, 22, 0, 320);
+        attr_dev(dt, "class", "description__name svelte-13fq2ju");
+        add_location(dt, file$1, 31, 2, 713);
+        attr_dev(dd, "class", "description__text svelte-13fq2ju");
+        add_location(dd, file$1, 32, 2, 758);
+        attr_dev(dl, "class", "description svelte-13fq2ju");
+        add_location(dl, file$1, 30, 0, 686);
       },
       m: function mount(target, anchor) {
         insert_dev(target, dl, anchor);
@@ -1244,7 +1255,19 @@ var app = (function () {
         append_dev(dl, dd);
         append_dev(dd, t1);
       },
-      p: noop,
+      p: function update(ctx, _ref) {
+        var [dirty] = _ref;
+        if (dirty &
+        /*label*/
+        1) set_data_dev(t0,
+        /*label*/
+        ctx[0]);
+        if (dirty &
+        /*description*/
+        2) set_data_dev(t1,
+        /*description*/
+        ctx[1]);
+      },
       i: noop,
       o: noop,
       d: function destroy(detaching) {
@@ -1261,29 +1284,74 @@ var app = (function () {
     return block;
   }
 
-  function instance$1($$self, $$props) {
+  function instance$1($$self, $$props, $$invalidate) {
     var {
       $$slots: slots = {},
       $$scope
     } = $$props;
     validate_slots("DataDescription", slots, []);
-    var writable_props = [];
+    var {
+      label = "Label"
+    } = $$props;
+    var {
+      description = "Description"
+    } = $$props;
+    var writable_props = ["label", "description"];
     Object.keys($$props).forEach(key => {
       if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn("<DataDescription> was created with unknown prop '".concat(key, "'"));
     });
-    return [];
+
+    $$self.$$set = $$props => {
+      if ("label" in $$props) $$invalidate(0, label = $$props.label);
+      if ("description" in $$props) $$invalidate(1, description = $$props.description);
+    };
+
+    $$self.$capture_state = () => ({
+      label,
+      description
+    });
+
+    $$self.$inject_state = $$props => {
+      if ("label" in $$props) $$invalidate(0, label = $$props.label);
+      if ("description" in $$props) $$invalidate(1, description = $$props.description);
+    };
+
+    if ($$props && "$$inject" in $$props) {
+      $$self.$inject_state($$props.$$inject);
+    }
+
+    return [label, description];
   }
 
   class DataDescription extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
+      init(this, options, instance$1, create_fragment$1, safe_not_equal, {
+        label: 0,
+        description: 1
+      });
       dispatch_dev("SvelteRegisterComponent", {
         component: this,
         tagName: "DataDescription",
         options,
         id: create_fragment$1.name
       });
+    }
+
+    get label() {
+      throw new Error("<DataDescription>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    set label(value) {
+      throw new Error("<DataDescription>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    get description() {
+      throw new Error("<DataDescription>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    set description(value) {
+      throw new Error("<DataDescription>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     }
 
   }
@@ -1600,6 +1668,362 @@ var app = (function () {
     format = locale.format;
     formatPrefix = locale.formatPrefix;
     return locale;
+  }
+
+  /* src/components/Legend.svelte generated by Svelte v3.29.7 */
+  var file$2 = "src/components/Legend.svelte";
+
+  function get_each_context(ctx, list, i) {
+    var child_ctx = ctx.slice();
+    child_ctx[2] = list[i];
+    child_ctx[4] = i;
+    return child_ctx;
+  } // (98:8) {#if i + 1 < data.length}
+
+
+  function create_if_block$1(ctx) {
+    var span;
+    var t_value = format(".1f")(
+    /*d*/
+    ctx[2].max) + "";
+    var t;
+    var block = {
+      c: function create() {
+        span = element("span");
+        t = text(t_value);
+        this.h();
+      },
+      l: function claim(nodes) {
+        span = claim_element(nodes, "SPAN", {
+          class: true
+        });
+        var span_nodes = children(span);
+        t = claim_text(span_nodes, t_value);
+        span_nodes.forEach(detach_dev);
+        this.h();
+      },
+      h: function hydrate() {
+        attr_dev(span, "class", "legend__list-item__label svelte-936uag");
+        add_location(span, file$2, 97, 33, 1700);
+      },
+      m: function mount(target, anchor) {
+        insert_dev(target, span, anchor);
+        append_dev(span, t);
+      },
+      p: noop,
+      d: function destroy(detaching) {
+        if (detaching) detach_dev(span);
+      }
+    };
+    dispatch_dev("SvelteRegisterBlock", {
+      block,
+      id: create_if_block$1.name,
+      type: "if",
+      source: "(98:8) {#if i + 1 < data.length}",
+      ctx
+    });
+    return block;
+  } // (96:4) {#each fakedata as d, i}
+
+
+  function create_each_block(ctx) {
+    var li;
+    var t0;
+    var span;
+    var t1;
+    var if_block =
+    /*i*/
+    ctx[4] + 1 <
+    /*data*/
+    ctx[0].length && create_if_block$1(ctx);
+    var block = {
+      c: function create() {
+        li = element("li");
+        if (if_block) if_block.c();
+        t0 = space();
+        span = element("span");
+        t1 = space();
+        this.h();
+      },
+      l: function claim(nodes) {
+        li = claim_element(nodes, "LI", {
+          class: true
+        });
+        var li_nodes = children(li);
+        if (if_block) if_block.l(li_nodes);
+        t0 = claim_space(li_nodes);
+        span = claim_element(li_nodes, "SPAN", {
+          style: true,
+          class: true
+        });
+        children(span).forEach(detach_dev);
+        t1 = claim_space(li_nodes);
+        li_nodes.forEach(detach_dev);
+        this.h();
+      },
+      h: function hydrate() {
+        set_style(span, "background",
+        /*d*/
+        ctx[2].color);
+        attr_dev(span, "class", "legend__list-item__box svelte-936uag");
+        add_location(span, file$2, 98, 8, 1782);
+        attr_dev(li, "class", "legend__list-item svelte-936uag");
+        add_location(li, file$2, 96, 6, 1636);
+      },
+      m: function mount(target, anchor) {
+        insert_dev(target, li, anchor);
+        if (if_block) if_block.m(li, null);
+        append_dev(li, t0);
+        append_dev(li, span);
+        append_dev(li, t1);
+      },
+      p: function update(ctx, dirty) {
+        if (
+        /*i*/
+        ctx[4] + 1 <
+        /*data*/
+        ctx[0].length) {
+          if (if_block) {
+            if_block.p(ctx, dirty);
+          } else {
+            if_block = create_if_block$1(ctx);
+            if_block.c();
+            if_block.m(li, t0);
+          }
+        } else if (if_block) {
+          if_block.d(1);
+          if_block = null;
+        }
+      },
+      d: function destroy(detaching) {
+        if (detaching) detach_dev(li);
+        if (if_block) if_block.d();
+      }
+    };
+    dispatch_dev("SvelteRegisterBlock", {
+      block,
+      id: create_each_block.name,
+      type: "each",
+      source: "(96:4) {#each fakedata as d, i}",
+      ctx
+    });
+    return block;
+  }
+
+  function create_fragment$2(ctx) {
+    var div;
+    var span;
+    var t0;
+    var t1;
+    var ol;
+    var each_value =
+    /*fakedata*/
+    ctx[1];
+    validate_each_argument(each_value);
+    var each_blocks = [];
+
+    for (var i = 0; i < each_value.length; i += 1) {
+      each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    }
+
+    var block = {
+      c: function create() {
+        div = element("div");
+        span = element("span");
+        t0 = text("Legend");
+        t1 = space();
+        ol = element("ol");
+
+        for (var _i = 0; _i < each_blocks.length; _i += 1) {
+          each_blocks[_i].c();
+        }
+
+        this.h();
+      },
+      l: function claim(nodes) {
+        div = claim_element(nodes, "DIV", {
+          class: true
+        });
+        var div_nodes = children(div);
+        span = claim_element(div_nodes, "SPAN", {
+          class: true
+        });
+        var span_nodes = children(span);
+        t0 = claim_text(span_nodes, "Legend");
+        span_nodes.forEach(detach_dev);
+        t1 = claim_space(div_nodes);
+        ol = claim_element(div_nodes, "OL", {
+          class: true
+        });
+        var ol_nodes = children(ol);
+
+        for (var _i2 = 0; _i2 < each_blocks.length; _i2 += 1) {
+          each_blocks[_i2].l(ol_nodes);
+        }
+
+        ol_nodes.forEach(detach_dev);
+        div_nodes.forEach(detach_dev);
+        this.h();
+      },
+      h: function hydrate() {
+        attr_dev(span, "class", "label svelte-936uag");
+        add_location(span, file$2, 93, 2, 1539);
+        attr_dev(ol, "class", "legend__list svelte-936uag");
+        add_location(ol, file$2, 94, 2, 1575);
+        attr_dev(div, "class", "legend svelte-936uag");
+        add_location(div, file$2, 92, 0, 1516);
+      },
+      m: function mount(target, anchor) {
+        insert_dev(target, div, anchor);
+        append_dev(div, span);
+        append_dev(span, t0);
+        append_dev(div, t1);
+        append_dev(div, ol);
+
+        for (var _i3 = 0; _i3 < each_blocks.length; _i3 += 1) {
+          each_blocks[_i3].m(ol, null);
+        }
+      },
+      p: function update(ctx, _ref) {
+        var [dirty] = _ref;
+
+        if (dirty &
+        /*fakedata, format, data*/
+        3) {
+          each_value =
+          /*fakedata*/
+          ctx[1];
+          validate_each_argument(each_value);
+
+          var _i4;
+
+          for (_i4 = 0; _i4 < each_value.length; _i4 += 1) {
+            var child_ctx = get_each_context(ctx, each_value, _i4);
+
+            if (each_blocks[_i4]) {
+              each_blocks[_i4].p(child_ctx, dirty);
+            } else {
+              each_blocks[_i4] = create_each_block(child_ctx);
+
+              each_blocks[_i4].c();
+
+              each_blocks[_i4].m(ol, null);
+            }
+          }
+
+          for (; _i4 < each_blocks.length; _i4 += 1) {
+            each_blocks[_i4].d(1);
+          }
+
+          each_blocks.length = each_value.length;
+        }
+      },
+      i: noop,
+      o: noop,
+      d: function destroy(detaching) {
+        if (detaching) detach_dev(div);
+        destroy_each(each_blocks, detaching);
+      }
+    };
+    dispatch_dev("SvelteRegisterBlock", {
+      block,
+      id: create_fragment$2.name,
+      type: "component",
+      source: "",
+      ctx
+    });
+    return block;
+  }
+
+  function instance$2($$self, $$props, $$invalidate) {
+    var {
+      $$slots: slots = {},
+      $$scope
+    } = $$props;
+    validate_slots("Legend", slots, []);
+    var {
+      data
+    } = $$props;
+    var fakedata = [{
+      min: 0.2,
+      max: 1,
+      color: "red"
+    }, {
+      min: 1,
+      max: 2,
+      color: "blue"
+    }, {
+      min: 2,
+      max: 3,
+      color: "orange"
+    }, {
+      min: 3,
+      max: 4,
+      color: "green"
+    }, {
+      min: 4,
+      max: 4.9,
+      color: "purple"
+    }];
+    var writable_props = ["data"];
+    Object.keys($$props).forEach(key => {
+      if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn("<Legend> was created with unknown prop '".concat(key, "'"));
+    });
+
+    $$self.$$set = $$props => {
+      if ("data" in $$props) $$invalidate(0, data = $$props.data);
+    };
+
+    $$self.$capture_state = () => ({
+      format,
+      data,
+      fakedata
+    });
+
+    $$self.$inject_state = $$props => {
+      if ("data" in $$props) $$invalidate(0, data = $$props.data);
+      if ("fakedata" in $$props) $$invalidate(1, fakedata = $$props.fakedata);
+    };
+
+    if ($$props && "$$inject" in $$props) {
+      $$self.$inject_state($$props.$$inject);
+    }
+
+    return [data, fakedata];
+  }
+
+  class Legend extends SvelteComponentDev {
+    constructor(options) {
+      super(options);
+      init(this, options, instance$2, create_fragment$2, safe_not_equal, {
+        data: 0
+      });
+      dispatch_dev("SvelteRegisterComponent", {
+        component: this,
+        tagName: "Legend",
+        options,
+        id: create_fragment$2.name
+      });
+      var {
+        ctx
+      } = this.$$;
+      var props = options.props || {};
+
+      if (
+      /*data*/
+      ctx[0] === undefined && !("data" in props)) {
+        console.warn("<Legend> was created without expected prop 'data'");
+      }
+    }
+
+    get data() {
+      throw new Error("<Legend>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    set data(value) {
+      throw new Error("<Legend>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
   }
 
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
@@ -2196,9 +2620,9 @@ var app = (function () {
   var {
     console: console_1
   } = globals;
-  var file$2 = "src/components/Map.svelte";
+  var file$3 = "src/components/Map.svelte";
 
-  function create_fragment$2(ctx) {
+  function create_fragment$3(ctx) {
     var link;
     var t0;
     var datadescription;
@@ -2252,11 +2676,11 @@ var app = (function () {
       h: function hydrate() {
         attr_dev(link, "href", "https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css");
         attr_dev(link, "rel", "stylesheet");
-        add_location(link, file$2, 222, 2, 5457);
-        attr_dev(div0, "class", "map svelte-ldh4s1");
-        add_location(div0, file$2, 239, 2, 6051);
-        attr_dev(div1, "class", "map-wrapper svelte-ldh4s1");
-        add_location(div1, file$2, 225, 0, 5583);
+        add_location(link, file$3, 145, 2, 4079);
+        attr_dev(div0, "class", "map svelte-1gifn04");
+        add_location(div0, file$3, 151, 2, 4276);
+        attr_dev(div1, "class", "map-wrapper svelte-1gifn04");
+        add_location(div1, file$3, 148, 0, 4205);
       },
       m: function mount(target, anchor) {
         append_dev(document.head, link);
@@ -2269,7 +2693,7 @@ var app = (function () {
         append_dev(div1, div0);
         /*div0_binding*/
 
-        ctx[5](div0);
+        ctx[7](div0);
         current = true;
       },
       p: noop,
@@ -2293,12 +2717,12 @@ var app = (function () {
         destroy_component(loading_1);
         /*div0_binding*/
 
-        ctx[5](null);
+        ctx[7](null);
       }
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$2.name,
+      id: create_fragment$3.name,
       type: "component",
       source: "",
       ctx
@@ -2319,13 +2743,13 @@ var app = (function () {
     return geo;
   }
 
-  function instance$2($$self, $$props, $$invalidate) {
+  function instance$3($$self, $$props, $$invalidate) {
     var $currentYear;
     var $loading;
     validate_store(currentYear, "currentYear");
-    component_subscribe($$self, currentYear, $$value => $$invalidate(8, $currentYear = $$value));
+    component_subscribe($$self, currentYear, $$value => $$invalidate(12, $currentYear = $$value));
     validate_store(loading, "loading");
-    component_subscribe($$self, loading, $$value => $$invalidate(9, $loading = $$value));
+    component_subscribe($$self, loading, $$value => $$invalidate(13, $loading = $$value));
     var {
       $$slots: slots = {},
       $$scope
@@ -2333,16 +2757,23 @@ var app = (function () {
     validate_slots("Map", slots, []);
     var {
       gridFile
-    } = $$props,
-        {
+    } = $$props;
+    var {
       data
-    } = $$props,
-        {
+    } = $$props;
+    var {
       stops
-    } = $$props,
-        {
+    } = $$props;
+    var {
+      activeData
+    } = $$props;
+    var {
       mapFill = "#2f4752"
-    } = $$props; // for the map instance
+    } = $$props;
+    var {
+      years
+    } = $$props;
+    var oldCurrentYear; // for the map instance
 
     var map; // the dom element with the map in it.
 
@@ -2351,45 +2782,23 @@ var app = (function () {
     var layers = []; // CONFIG STUFF
 
     mapboxGl.accessToken = "pk.eyJ1IjoicnlhbmJtYXJ4IiwiYSI6ImNrOWlwcnhuZjAyd3Eza250eWdtZHQyc2YifQ.Z-c62_JHPGtbWZf3c5sqnA";
-    var CENTER = [122.483349, -2.936083]; // let fakedata = [
-    //   {
-    //     min: 0.2,
-    //     max: 1.0,
-    //     color: "red",
-    //   },
-    //   {
-    //     min: 1.0,
-    //     max: 2.0,
-    //     color: "blue",
-    //   },
-    //   {
-    //     min: 2.0,
-    //     max: 3.0,
-    //     color: "orange",
-    //   },
-    //   {
-    //     min: 3,
-    //     max: 4,
-    //     color: "green",
-    //   },
-    //   {
-    //     min: 4,
-    //     max: 4.9,
-    //     color: "purple",
-    //   },
-    // ];
-    // The things we are fetching get stored here, so we can wait until they are fetched.
+    var CENTER = [122.483349, -2.936083];
+    var fetching = []; // The things we are fetching get stored here, so we can wait until they are fetched.
 
-    var fetching = ["./geo/".concat(gridFile, ".topojson"), "./data/".concat(data[0].value)].map(f => {
-      console.log("Starting fetch for", f, f.indexOf(".csv") > -1);
+    fetching = ["./geo/".concat(gridFile, ".topojson"), "./data/".concat(data[activeData].value)].map(f => {
+      console.log("Starting fetch for", f);
       return fetch(f).then(req => f.indexOf(".csv") > -1 ? req.text() : req.json());
     });
     afterUpdate(() => {
-      console.log("Map update. A mapdate!");
-      layers.forEach(l => {
-        var visibilityState = l === "grid-".concat($currentYear) ? "visible" : "none";
-        map.setLayoutProperty(l, "visibility", visibilityState);
-      });
+      console.log("Map update. A mapdate!"); // If the year has changed
+
+      if (oldCurrentYear !== $currentYear) {
+        oldCurrentYear = $currentYear;
+        layers.forEach(l => {
+          var visibilityState = l === "grid-".concat($currentYear) ? "visible" : "none";
+          map.setLayoutProperty(l, "visibility", visibilityState);
+        });
+      }
     });
     onMount(() => {
       // INIT THE MAP
@@ -2405,17 +2814,15 @@ var app = (function () {
       map.on("load", function () {
         // Wait until we got the things
         Promise.all(fetching).then(d => {
-          // console.log({ Data: csvParse(d[1]) });
-          var geoData = mergeProps(csvParse(d[1]), feature(d[0], d[0].objects[gridFile])); // console.log({ geoData });
-          // Add the grid to the map. It was first in our array
-          // of files to fetch, so it will be first here, too.
+          // Merge our shapes with our CSV data
+          var geoData = mergeProps(csvParse(d[1]), feature(d[0], d[0].objects[gridFile])); // Add the grid (now with our CSV data) to the map.
 
           map.addSource("grid", {
             type: "geojson",
             data: geoData
           }); // Add grid for each of our years
 
-          for (var i = 2020; i < 2051; i += 5) {
+          for (var i = years.start; i <= years.end; i += years.step) {
             var gridID = "grid-".concat(i); // Add our grid ID to our list
 
             layers.push(gridID); // Add grid and color it using the stops provided
@@ -2450,7 +2857,7 @@ var app = (function () {
         });
       });
     });
-    var writable_props = ["gridFile", "data", "stops", "mapFill"];
+    var writable_props = ["gridFile", "data", "stops", "activeData", "mapFill", "years"];
     Object.keys($$props).forEach(key => {
       if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn("<Map> was created with unknown prop '".concat(key, "'"));
     });
@@ -2466,16 +2873,17 @@ var app = (function () {
       if ("gridFile" in $$props) $$invalidate(1, gridFile = $$props.gridFile);
       if ("data" in $$props) $$invalidate(2, data = $$props.data);
       if ("stops" in $$props) $$invalidate(3, stops = $$props.stops);
-      if ("mapFill" in $$props) $$invalidate(4, mapFill = $$props.mapFill);
+      if ("activeData" in $$props) $$invalidate(4, activeData = $$props.activeData);
+      if ("mapFill" in $$props) $$invalidate(5, mapFill = $$props.mapFill);
+      if ("years" in $$props) $$invalidate(6, years = $$props.years);
     };
 
     $$self.$capture_state = () => ({
       loading,
-      activeData,
       currentYear,
       Loading,
       DataDescription,
-      format,
+      Legend,
       onMount,
       afterUpdate,
       mapboxgl: mapboxGl,
@@ -2484,7 +2892,10 @@ var app = (function () {
       gridFile,
       data,
       stops,
+      activeData,
       mapFill,
+      years,
+      oldCurrentYear,
       map,
       mapContainer,
       layers,
@@ -2500,33 +2911,39 @@ var app = (function () {
       if ("gridFile" in $$props) $$invalidate(1, gridFile = $$props.gridFile);
       if ("data" in $$props) $$invalidate(2, data = $$props.data);
       if ("stops" in $$props) $$invalidate(3, stops = $$props.stops);
-      if ("mapFill" in $$props) $$invalidate(4, mapFill = $$props.mapFill);
+      if ("activeData" in $$props) $$invalidate(4, activeData = $$props.activeData);
+      if ("mapFill" in $$props) $$invalidate(5, mapFill = $$props.mapFill);
+      if ("years" in $$props) $$invalidate(6, years = $$props.years);
+      if ("oldCurrentYear" in $$props) oldCurrentYear = $$props.oldCurrentYear;
       if ("map" in $$props) map = $$props.map;
       if ("mapContainer" in $$props) $$invalidate(0, mapContainer = $$props.mapContainer);
       if ("layers" in $$props) layers = $$props.layers;
+      if ("fetching" in $$props) fetching = $$props.fetching;
     };
 
     if ($$props && "$$inject" in $$props) {
       $$self.$inject_state($$props.$$inject);
     }
 
-    return [mapContainer, gridFile, data, stops, mapFill, div0_binding];
+    return [mapContainer, gridFile, data, stops, activeData, mapFill, years, div0_binding];
   }
 
   class Map$1 extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$2, create_fragment$2, safe_not_equal, {
+      init(this, options, instance$3, create_fragment$3, safe_not_equal, {
         gridFile: 1,
         data: 2,
         stops: 3,
-        mapFill: 4
+        activeData: 4,
+        mapFill: 5,
+        years: 6
       });
       dispatch_dev("SvelteRegisterComponent", {
         component: this,
         tagName: "Map",
         options,
-        id: create_fragment$2.name
+        id: create_fragment$3.name
       });
       var {
         ctx
@@ -2549,6 +2966,18 @@ var app = (function () {
       /*stops*/
       ctx[3] === undefined && !("stops" in props)) {
         console_1.warn("<Map> was created without expected prop 'stops'");
+      }
+
+      if (
+      /*activeData*/
+      ctx[4] === undefined && !("activeData" in props)) {
+        console_1.warn("<Map> was created without expected prop 'activeData'");
+      }
+
+      if (
+      /*years*/
+      ctx[6] === undefined && !("years" in props)) {
+        console_1.warn("<Map> was created without expected prop 'years'");
       }
     }
 
@@ -2576,6 +3005,14 @@ var app = (function () {
       throw new Error("<Map>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     }
 
+    get activeData() {
+      throw new Error("<Map>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    set activeData(value) {
+      throw new Error("<Map>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
     get mapFill() {
       throw new Error("<Map>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     }
@@ -2584,12 +3021,20 @@ var app = (function () {
       throw new Error("<Map>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     }
 
+    get years() {
+      throw new Error("<Map>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    set years(value) {
+      throw new Error("<Map>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
   }
 
   /* src/components/Timeline.svelte generated by Svelte v3.29.7 */
-  var file$3 = "src/components/Timeline.svelte";
+  var file$4 = "src/components/Timeline.svelte";
 
-  function get_each_context(ctx, list, i) {
+  function get_each_context$1(ctx, list, i) {
     var child_ctx = ctx.slice();
     child_ctx[11] = list[i];
     child_ctx[13] = i;
@@ -2597,7 +3042,7 @@ var app = (function () {
   } // (229:4) {#each years as year, i}
 
 
-  function create_each_block(ctx) {
+  function create_each_block$1(ctx) {
     var li;
     var button;
     var span;
@@ -2640,7 +3085,7 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(span, "class", "timeline__button__year svelte-fag79s");
-        add_location(span, file$3, 230, 135, 5294);
+        add_location(span, file$4, 230, 135, 5294);
         attr_dev(button, "class", "timeline__button svelte-fag79s");
         attr_dev(button, "data-year", button_data_year_value =
         /*year*/
@@ -2650,9 +3095,9 @@ var app = (function () {
         ctx[11] ==
         /*$currentYear*/
         ctx[1]);
-        add_location(button, file$3, 230, 8, 5167);
+        add_location(button, file$4, 230, 8, 5167);
         attr_dev(li, "class", "svelte-fag79s");
-        add_location(li, file$3, 229, 6, 5154);
+        add_location(li, file$4, 229, 6, 5154);
       },
       m: function mount(target, anchor) {
         insert_dev(target, li, anchor);
@@ -2687,7 +3132,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_each_block.name,
+      id: create_each_block$1.name,
       type: "each",
       source: "(229:4) {#each years as year, i}",
       ctx
@@ -2723,7 +3168,7 @@ var app = (function () {
   } // (237:4) {#if playing}
 
 
-  function create_if_block$1(ctx) {
+  function create_if_block$2(ctx) {
     var t;
     var block = {
       c: function create() {
@@ -2741,7 +3186,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_if_block$1.name,
+      id: create_if_block$2.name,
       type: "if",
       source: "(237:4) {#if playing}",
       ctx
@@ -2749,7 +3194,7 @@ var app = (function () {
     return block;
   }
 
-  function create_fragment$3(ctx) {
+  function create_fragment$4(ctx) {
     var div;
     var span;
     var t0;
@@ -2766,13 +3211,13 @@ var app = (function () {
     var each_blocks = [];
 
     for (var i = 0; i < each_value.length; i += 1) {
-      each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+      each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
     }
 
     function select_block_type(ctx, dirty) {
       if (
       /*playing*/
-      ctx[0]) return create_if_block$1;
+      ctx[0]) return create_if_block$2;
       return create_else_block;
     }
 
@@ -2833,18 +3278,18 @@ var app = (function () {
       h: function hydrate() {
         attr_dev(span, "id", "timeline-label");
         attr_dev(span, "class", "label svelte-fag79s");
-        add_location(span, file$3, 226, 2, 5001);
+        add_location(span, file$4, 226, 2, 5001);
         attr_dev(ol, "aria-labelledby", "timeline-label");
         attr_dev(ol, "class", "timeline svelte-fag79s");
-        add_location(ol, file$3, 227, 2, 5064);
+        add_location(ol, file$4, 227, 2, 5064);
         attr_dev(button, "class", "timeline__button timeline__button--play svelte-fag79s");
         attr_dev(button, "aria-label", "Play the animation over time");
         toggle_class(button, "playing",
         /*playing*/
         ctx[0]);
-        add_location(button, file$3, 235, 2, 5421);
+        add_location(button, file$4, 235, 2, 5421);
         attr_dev(div, "class", "timeline-wrapper svelte-fag79s");
-        add_location(div, file$3, 225, 0, 4968);
+        add_location(div, file$4, 225, 0, 4968);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);
@@ -2882,12 +3327,12 @@ var app = (function () {
           var _i4;
 
           for (_i4 = 0; _i4 < each_value.length; _i4 += 1) {
-            var child_ctx = get_each_context(ctx, each_value, _i4);
+            var child_ctx = get_each_context$1(ctx, each_value, _i4);
 
             if (each_blocks[_i4]) {
               each_blocks[_i4].p(child_ctx, dirty);
             } else {
-              each_blocks[_i4] = create_each_block(child_ctx);
+              each_blocks[_i4] = create_each_block$1(child_ctx);
 
               each_blocks[_i4].c();
 
@@ -2932,7 +3377,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$3.name,
+      id: create_fragment$4.name,
       type: "component",
       source: "",
       ctx
@@ -2949,7 +3394,7 @@ var app = (function () {
     return "&#8217;".concat(y - 2000);
   }
 
-  function instance$3($$self, $$props, $$invalidate) {
+  function instance$4($$self, $$props, $$invalidate) {
     var $currentYear;
     validate_store(currentYear, "currentYear");
     component_subscribe($$self, currentYear, $$value => $$invalidate(1, $currentYear = $$value));
@@ -3070,7 +3515,7 @@ var app = (function () {
   class Timeline extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$3, create_fragment$3, safe_not_equal, {
+      init(this, options, instance$4, create_fragment$4, safe_not_equal, {
         start: 5,
         end: 6,
         step: 7
@@ -3079,7 +3524,7 @@ var app = (function () {
         component: this,
         tagName: "Timeline",
         options,
-        id: create_fragment$3.name
+        id: create_fragment$4.name
       });
       var {
         ctx
@@ -3132,9 +3577,9 @@ var app = (function () {
   }
 
   /* src/components/InputSelect.svelte generated by Svelte v3.29.7 */
-  var file$4 = "src/components/InputSelect.svelte";
+  var file$5 = "src/components/InputSelect.svelte";
 
-  function get_each_context$1(ctx, list, i) {
+  function get_each_context$2(ctx, list, i) {
     var child_ctx = ctx.slice();
     child_ctx[0] = list[i].value;
     child_ctx[4] = list[i].label;
@@ -3172,7 +3617,7 @@ var app = (function () {
         ctx[3].value;
         option.value = option.__value;
         option.selected = true;
-        add_location(option, file$4, 85, 6, 1893);
+        add_location(option, file$5, 85, 6, 1893);
       },
       m: function mount(target, anchor) {
         insert_dev(target, option, anchor);
@@ -3209,7 +3654,7 @@ var app = (function () {
   } // (89:6) {#if label}
 
 
-  function create_if_block$2(ctx) {
+  function create_if_block$3(ctx) {
     var option;
     var t_value =
     /*label*/
@@ -3241,7 +3686,7 @@ var app = (function () {
         option.disabled = option_disabled_value =
         /*disabled*/
         ctx[7];
-        add_location(option, file$4, 89, 8, 2051);
+        add_location(option, file$5, 89, 8, 2051);
       },
       m: function mount(target, anchor) {
         insert_dev(target, option, anchor);
@@ -3277,7 +3722,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_if_block$2.name,
+      id: create_if_block$3.name,
       type: "if",
       source: "(89:6) {#if label}",
       ctx
@@ -3286,12 +3731,12 @@ var app = (function () {
   } // (88:4) {#each options as { value, label, disabled }
 
 
-  function create_each_block$1(key_1, ctx) {
+  function create_each_block$2(key_1, ctx) {
     var first;
     var if_block_anchor;
     var if_block =
     /*label*/
-    ctx[4] && create_if_block$2(ctx);
+    ctx[4] && create_if_block$3(ctx);
     var block = {
       key: key_1,
       first: null,
@@ -3322,7 +3767,7 @@ var app = (function () {
           if (if_block) {
             if_block.p(ctx, dirty);
           } else {
-            if_block = create_if_block$2(ctx);
+            if_block = create_if_block$3(ctx);
             if_block.c();
             if_block.m(if_block_anchor.parentNode, if_block_anchor);
           }
@@ -3339,7 +3784,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_each_block$1.name,
+      id: create_each_block$2.name,
       type: "each",
       source: "(88:4) {#each options as { value, label, disabled }",
       ctx
@@ -3347,7 +3792,7 @@ var app = (function () {
     return block;
   }
 
-  function create_fragment$4(ctx) {
+  function create_fragment$5(ctx) {
     var label_1;
     var t0;
     var t1;
@@ -3370,12 +3815,12 @@ var app = (function () {
     /*value*/
     ctx[0];
 
-    validate_each_keys(ctx, each_value, get_each_context$1, get_key);
+    validate_each_keys(ctx, each_value, get_each_context$2, get_key);
 
     for (var i = 0; i < each_value.length; i += 1) {
-      var child_ctx = get_each_context$1(ctx, each_value, i);
+      var child_ctx = get_each_context$2(ctx, each_value, i);
       var key = get_key(child_ctx);
-      each_1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
+      each_1_lookup.set(key, each_blocks[i] = create_each_block$2(key, child_ctx));
     }
 
     var block = {
@@ -3432,7 +3877,7 @@ var app = (function () {
         /*id*/
         ctx[1]);
         attr_dev(label_1, "class", "svelte-1rv2iiv");
-        add_location(label_1, file$4, 81, 0, 1758);
+        add_location(label_1, file$5, 81, 0, 1758);
         attr_dev(select, "class", "select__input svelte-1rv2iiv");
         attr_dev(select, "id",
         /*id*/
@@ -3442,9 +3887,9 @@ var app = (function () {
         ctx[0] === void 0) add_render_callback(() =>
         /*select_change_handler*/
         ctx[6].call(select));
-        add_location(select, file$4, 83, 2, 1813);
+        add_location(select, file$5, 83, 2, 1813);
         attr_dev(div, "class", "select svelte-1rv2iiv");
-        add_location(div, file$4, 82, 0, 1790);
+        add_location(div, file$5, 82, 0, 1790);
       },
       m: function mount(target, anchor) {
         insert_dev(target, label_1, anchor);
@@ -3510,8 +3955,8 @@ var app = (function () {
           /*options*/
           ctx[2];
           validate_each_argument(_each_value);
-          validate_each_keys(ctx, _each_value, get_each_context$1, get_key);
-          each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, _each_value, each_1_lookup, select, destroy_block, create_each_block$1, null, get_each_context$1);
+          validate_each_keys(ctx, _each_value, get_each_context$2, get_key);
+          each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, _each_value, each_1_lookup, select, destroy_block, create_each_block$2, null, get_each_context$2);
         }
 
         if (dirty &
@@ -3548,7 +3993,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$4.name,
+      id: create_fragment$5.name,
       type: "component",
       source: "",
       ctx
@@ -3556,7 +4001,7 @@ var app = (function () {
     return block;
   }
 
-  function instance$4($$self, $$props, $$invalidate) {
+  function instance$5($$self, $$props, $$invalidate) {
     var {
       $$slots: slots = {},
       $$scope
@@ -3627,7 +4072,7 @@ var app = (function () {
   class InputSelect extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$4, create_fragment$4, safe_not_equal, {
+      init(this, options, instance$5, create_fragment$5, safe_not_equal, {
         label: 4,
         id: 1,
         value: 0,
@@ -3638,7 +4083,7 @@ var app = (function () {
         component: this,
         tagName: "InputSelect",
         options,
-        id: create_fragment$4.name
+        id: create_fragment$5.name
       });
       var {
         ctx
@@ -3723,11 +4168,12 @@ var app = (function () {
 
   /* src/components/Nav.svelte generated by Svelte v3.29.7 */
   var {
+    Object: Object_1,
     console: console_1$1
   } = globals;
-  var file$5 = "src/components/Nav.svelte";
+  var file$6 = "src/components/Nav.svelte";
 
-  function create_fragment$5(ctx) {
+  function create_fragment$6(ctx) {
     var nav;
     var timeline;
     var t;
@@ -3737,10 +4183,10 @@ var app = (function () {
     var timeline_spread_levels = [{
       label:
       /*yearLabel*/
-      ctx[1]
+      ctx[0]
     },
     /*years*/
-    ctx[3]];
+    ctx[2]];
     var timeline_props = {};
 
     for (var i = 0; i < timeline_spread_levels.length; i += 1) {
@@ -3755,10 +4201,10 @@ var app = (function () {
       id: "data",
       label:
       /*dataLabel*/
-      ctx[2],
+      ctx[1],
       options:
       /*options*/
-      ctx[0]
+      ctx[4]
     };
     inputselect = new InputSelect({
       props: inputselect_props,
@@ -3766,7 +4212,7 @@ var app = (function () {
     });
     /*inputselect_binding*/
 
-    ctx[6](inputselect);
+    ctx[7](inputselect);
     inputselect.$on("input",
     /*setData*/
     ctx[5]);
@@ -3796,10 +4242,10 @@ var app = (function () {
         this.h();
       },
       h: function hydrate() {
-        attr_dev(div, "class", "select-wrapper svelte-n94yzc");
-        add_location(div, file$5, 47, 2, 1090);
-        attr_dev(nav, "class", "nav svelte-n94yzc");
-        add_location(nav, file$5, 45, 0, 1026);
+        attr_dev(div, "class", "select-wrapper svelte-19y7zka");
+        add_location(div, file$6, 52, 2, 1114);
+        attr_dev(nav, "class", "nav svelte-19y7zka");
+        add_location(nav, file$6, 50, 0, 1050);
       },
       m: function mount(target, anchor) {
         insert_dev(target, nav, anchor);
@@ -3813,29 +4259,24 @@ var app = (function () {
         var [dirty] = _ref;
         var timeline_changes = dirty &
         /*yearLabel, years*/
-        10 ? get_spread_update(timeline_spread_levels, [dirty &
+        5 ? get_spread_update(timeline_spread_levels, [dirty &
         /*yearLabel*/
-        2 && {
+        1 && {
           label:
           /*yearLabel*/
-          ctx[1]
+          ctx[0]
         }, dirty &
         /*years*/
-        8 && get_spread_object(
+        4 && get_spread_object(
         /*years*/
-        ctx[3])]) : {};
+        ctx[2])]) : {};
         timeline.$set(timeline_changes);
         var inputselect_changes = {};
         if (dirty &
         /*dataLabel*/
-        4) inputselect_changes.label =
+        2) inputselect_changes.label =
         /*dataLabel*/
-        ctx[2];
-        if (dirty &
-        /*options*/
-        1) inputselect_changes.options =
-        /*options*/
-        ctx[0];
+        ctx[1];
         inputselect.$set(inputselect_changes);
       },
       i: function intro(local) {
@@ -3854,13 +4295,13 @@ var app = (function () {
         destroy_component(timeline);
         /*inputselect_binding*/
 
-        ctx[6](null);
+        ctx[7](null);
         destroy_component(inputselect);
       }
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$5.name,
+      id: create_fragment$6.name,
       type: "component",
       source: "",
       ctx
@@ -3868,17 +4309,17 @@ var app = (function () {
     return block;
   }
 
-  function instance$5($$self, $$props, $$invalidate) {
+  function instance$6($$self, $$props, $$invalidate) {
     var $activeData;
     validate_store(activeData, "activeData");
-    component_subscribe($$self, activeData, $$value => $$invalidate(7, $activeData = $$value));
+    component_subscribe($$self, activeData, $$value => $$invalidate(8, $activeData = $$value));
     var {
       $$slots: slots = {},
       $$scope
     } = $$props;
     validate_slots("Nav", slots, []);
     var {
-      options = []
+      data
     } = $$props;
     var {
       yearLabel
@@ -3888,35 +4329,38 @@ var app = (function () {
     } = $$props;
     var {
       years
-    } = $$props; // The acutal input el.
+    } = $$props;
+    var options = Object.keys(data).map(d => {
+      return {
+        label: data[d].label,
+        value: d
+      };
+    }); // The acutal input el.
 
     var dataMenu;
 
     function setData() {
-      console.log("Changing data from ".concat($activeData, " to ").concat(dataMenu.value));
       set_store_value(activeData, $activeData = dataMenu.value, $activeData);
+      console.log("Changing data from ".concat($activeData, " to ").concat(dataMenu.value));
     }
 
-    onMount(() => {
-      setData();
-    });
-    var writable_props = ["options", "yearLabel", "dataLabel", "years"];
-    Object.keys($$props).forEach(key => {
+    var writable_props = ["data", "yearLabel", "dataLabel", "years"];
+    Object_1.keys($$props).forEach(key => {
       if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn("<Nav> was created with unknown prop '".concat(key, "'"));
     });
 
     function inputselect_binding($$value) {
       binding_callbacks[$$value ? "unshift" : "push"](() => {
         dataMenu = $$value;
-        $$invalidate(4, dataMenu);
+        $$invalidate(3, dataMenu);
       });
     }
 
     $$self.$$set = $$props => {
-      if ("options" in $$props) $$invalidate(0, options = $$props.options);
-      if ("yearLabel" in $$props) $$invalidate(1, yearLabel = $$props.yearLabel);
-      if ("dataLabel" in $$props) $$invalidate(2, dataLabel = $$props.dataLabel);
-      if ("years" in $$props) $$invalidate(3, years = $$props.years);
+      if ("data" in $$props) $$invalidate(6, data = $$props.data);
+      if ("yearLabel" in $$props) $$invalidate(0, yearLabel = $$props.yearLabel);
+      if ("dataLabel" in $$props) $$invalidate(1, dataLabel = $$props.dataLabel);
+      if ("years" in $$props) $$invalidate(2, years = $$props.years);
     };
 
     $$self.$capture_state = () => ({
@@ -3925,44 +4369,46 @@ var app = (function () {
       loading,
       activeData,
       onMount,
-      options,
+      data,
       yearLabel,
       dataLabel,
       years,
+      options,
       dataMenu,
       setData,
       $activeData
     });
 
     $$self.$inject_state = $$props => {
-      if ("options" in $$props) $$invalidate(0, options = $$props.options);
-      if ("yearLabel" in $$props) $$invalidate(1, yearLabel = $$props.yearLabel);
-      if ("dataLabel" in $$props) $$invalidate(2, dataLabel = $$props.dataLabel);
-      if ("years" in $$props) $$invalidate(3, years = $$props.years);
-      if ("dataMenu" in $$props) $$invalidate(4, dataMenu = $$props.dataMenu);
+      if ("data" in $$props) $$invalidate(6, data = $$props.data);
+      if ("yearLabel" in $$props) $$invalidate(0, yearLabel = $$props.yearLabel);
+      if ("dataLabel" in $$props) $$invalidate(1, dataLabel = $$props.dataLabel);
+      if ("years" in $$props) $$invalidate(2, years = $$props.years);
+      if ("options" in $$props) $$invalidate(4, options = $$props.options);
+      if ("dataMenu" in $$props) $$invalidate(3, dataMenu = $$props.dataMenu);
     };
 
     if ($$props && "$$inject" in $$props) {
       $$self.$inject_state($$props.$$inject);
     }
 
-    return [options, yearLabel, dataLabel, years, dataMenu, setData, inputselect_binding];
+    return [yearLabel, dataLabel, years, dataMenu, options, setData, data, inputselect_binding];
   }
 
   class Nav extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$5, create_fragment$5, safe_not_equal, {
-        options: 0,
-        yearLabel: 1,
-        dataLabel: 2,
-        years: 3
+      init(this, options, instance$6, create_fragment$6, safe_not_equal, {
+        data: 6,
+        yearLabel: 0,
+        dataLabel: 1,
+        years: 2
       });
       dispatch_dev("SvelteRegisterComponent", {
         component: this,
         tagName: "Nav",
         options,
-        id: create_fragment$5.name
+        id: create_fragment$6.name
       });
       var {
         ctx
@@ -3970,29 +4416,35 @@ var app = (function () {
       var props = options.props || {};
 
       if (
+      /*data*/
+      ctx[6] === undefined && !("data" in props)) {
+        console_1$1.warn("<Nav> was created without expected prop 'data'");
+      }
+
+      if (
       /*yearLabel*/
-      ctx[1] === undefined && !("yearLabel" in props)) {
+      ctx[0] === undefined && !("yearLabel" in props)) {
         console_1$1.warn("<Nav> was created without expected prop 'yearLabel'");
       }
 
       if (
       /*dataLabel*/
-      ctx[2] === undefined && !("dataLabel" in props)) {
+      ctx[1] === undefined && !("dataLabel" in props)) {
         console_1$1.warn("<Nav> was created without expected prop 'dataLabel'");
       }
 
       if (
       /*years*/
-      ctx[3] === undefined && !("years" in props)) {
+      ctx[2] === undefined && !("years" in props)) {
         console_1$1.warn("<Nav> was created without expected prop 'years'");
       }
     }
 
-    get options() {
+    get data() {
       throw new Error("<Nav>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     }
 
-    set options(value) {
+    set data(value) {
       throw new Error("<Nav>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     }
 
@@ -4023,17 +4475,124 @@ var app = (function () {
   }
 
   /* src/App.svelte generated by Svelte v3.29.7 */
-  var file$6 = "src/App.svelte";
+  var {
+    console: console_1$2
+  } = globals;
+  var file$7 = "src/App.svelte"; // (62:2) {#if $activeData}
 
-  function create_fragment$6(ctx) {
+  function create_if_block$4(ctx) {
+    var map_1;
+    var current;
+    var map_1_props = {
+      gridFile:
+      /*grid*/
+      ctx[1],
+      data:
+      /*data*/
+      ctx[0],
+      stops:
+      /*stops*/
+      ctx[5],
+      mapFill:
+      /*mapFill*/
+      ctx[6],
+      years:
+      /*years*/
+      ctx[4],
+      activeData:
+      /*$activeData*/
+      ctx[9]
+    };
+    map_1 = new Map$1({
+      props: map_1_props,
+      $$inline: true
+    });
+    /*map_1_binding*/
+
+    ctx[12](map_1);
+    var block = {
+      c: function create() {
+        create_component(map_1.$$.fragment);
+      },
+      l: function claim(nodes) {
+        claim_component(map_1.$$.fragment, nodes);
+      },
+      m: function mount(target, anchor) {
+        mount_component(map_1, target, anchor);
+        current = true;
+      },
+      p: function update(ctx, dirty) {
+        var map_1_changes = {};
+        if (dirty &
+        /*grid*/
+        2) map_1_changes.gridFile =
+        /*grid*/
+        ctx[1];
+        if (dirty &
+        /*data*/
+        1) map_1_changes.data =
+        /*data*/
+        ctx[0];
+        if (dirty &
+        /*stops*/
+        32) map_1_changes.stops =
+        /*stops*/
+        ctx[5];
+        if (dirty &
+        /*mapFill*/
+        64) map_1_changes.mapFill =
+        /*mapFill*/
+        ctx[6];
+        if (dirty &
+        /*years*/
+        16) map_1_changes.years =
+        /*years*/
+        ctx[4];
+        if (dirty &
+        /*$activeData*/
+        512) map_1_changes.activeData =
+        /*$activeData*/
+        ctx[9];
+        map_1.$set(map_1_changes);
+      },
+      i: function intro(local) {
+        if (current) return;
+        transition_in(map_1.$$.fragment, local);
+        current = true;
+      },
+      o: function outro(local) {
+        transition_out(map_1.$$.fragment, local);
+        current = false;
+      },
+      d: function destroy(detaching) {
+        /*map_1_binding*/
+        ctx[12](null);
+        destroy_component(map_1, detaching);
+      }
+    };
+    dispatch_dev("SvelteRegisterBlock", {
+      block,
+      id: create_if_block$4.name,
+      type: "if",
+      source: "(62:2) {#if $activeData}",
+      ctx
+    });
+    return block;
+  }
+
+  function create_fragment$7(ctx) {
+    var button;
+    var t0;
+    var t1;
     var div;
     var nav;
-    var t;
-    var map;
+    var t2;
     var current;
+    var mounted;
+    var dispose;
     nav = new Nav({
       props: {
-        options:
+        data:
         /*data*/
         ctx[0],
         yearLabel:
@@ -4048,62 +4607,67 @@ var app = (function () {
       },
       $$inline: true
     });
-    map = new Map$1({
-      props: {
-        gridFile:
-        /*grid*/
-        ctx[1],
-        data:
-        /*data*/
-        ctx[0],
-        stops:
-        /*stops*/
-        ctx[5],
-        mapFill:
-        /*mapFill*/
-        ctx[6]
-      },
-      $$inline: true
-    });
+    var if_block =
+    /*$activeData*/
+    ctx[9] && create_if_block$4(ctx);
     var block = {
       c: function create() {
+        button = element("button");
+        t0 = text("BOOM!");
+        t1 = space();
         div = element("div");
         create_component(nav.$$.fragment);
-        t = space();
-        create_component(map.$$.fragment);
+        t2 = space();
+        if (if_block) if_block.c();
         this.h();
       },
       l: function claim(nodes) {
+        button = claim_element(nodes, "BUTTON", {});
+        var button_nodes = children(button);
+        t0 = claim_text(button_nodes, "BOOM!");
+        button_nodes.forEach(detach_dev);
+        t1 = claim_space(nodes);
         div = claim_element(nodes, "DIV", {
           class: true
         });
         var div_nodes = children(div);
         claim_component(nav.$$.fragment, div_nodes);
-        t = claim_space(div_nodes);
-        claim_component(map.$$.fragment, div_nodes);
+        t2 = claim_space(div_nodes);
+        if (if_block) if_block.l(div_nodes);
         div_nodes.forEach(detach_dev);
         this.h();
       },
       h: function hydrate() {
+        add_location(button, file$7, 58, 0, 1316);
         attr_dev(div, "class", "projections svelte-ug1gqi");
-        add_location(div, file$6, 57, 0, 1417);
+        add_location(div, file$7, 59, 0, 1356);
       },
       m: function mount(target, anchor) {
+        insert_dev(target, button, anchor);
+        append_dev(button, t0);
+        insert_dev(target, t1, anchor);
         insert_dev(target, div, anchor);
         mount_component(nav, div, null);
-        append_dev(div, t);
-        mount_component(map, div, null);
+        append_dev(div, t2);
+        if (if_block) if_block.m(div, null);
         /*div_binding*/
 
-        ctx[8](div);
+        ctx[13](div);
         current = true;
+
+        if (!mounted) {
+          dispose = listen_dev(button, "click",
+          /*click*/
+          ctx[10], false, false, false);
+          mounted = true;
+        }
       },
       p: function update(ctx, _ref) {
         var [dirty] = _ref;
         var nav_changes = {};
         if (dirty &
         /*data*/
-        1) nav_changes.options =
+        1) nav_changes.data =
         /*data*/
         ctx[0];
         if (dirty &
@@ -4122,52 +4686,59 @@ var app = (function () {
         /*years*/
         ctx[4];
         nav.$set(nav_changes);
-        var map_changes = {};
-        if (dirty &
-        /*grid*/
-        2) map_changes.gridFile =
-        /*grid*/
-        ctx[1];
-        if (dirty &
-        /*data*/
-        1) map_changes.data =
-        /*data*/
-        ctx[0];
-        if (dirty &
-        /*stops*/
-        32) map_changes.stops =
-        /*stops*/
-        ctx[5];
-        if (dirty &
-        /*mapFill*/
-        64) map_changes.mapFill =
-        /*mapFill*/
-        ctx[6];
-        map.$set(map_changes);
+
+        if (
+        /*$activeData*/
+        ctx[9]) {
+          if (if_block) {
+            if_block.p(ctx, dirty);
+
+            if (dirty &
+            /*$activeData*/
+            512) {
+              transition_in(if_block, 1);
+            }
+          } else {
+            if_block = create_if_block$4(ctx);
+            if_block.c();
+            transition_in(if_block, 1);
+            if_block.m(div, null);
+          }
+        } else if (if_block) {
+          group_outros();
+          transition_out(if_block, 1, 1, () => {
+            if_block = null;
+          });
+          check_outros();
+        }
       },
       i: function intro(local) {
         if (current) return;
         transition_in(nav.$$.fragment, local);
-        transition_in(map.$$.fragment, local);
+        transition_in(if_block);
         current = true;
       },
       o: function outro(local) {
         transition_out(nav.$$.fragment, local);
-        transition_out(map.$$.fragment, local);
+        transition_out(if_block);
         current = false;
       },
       d: function destroy(detaching) {
+        if (detaching) detach_dev(button);
+        if (detaching) detach_dev(t1);
         if (detaching) detach_dev(div);
         destroy_component(nav);
-        destroy_component(map);
+        if (if_block) if_block.d();
         /*div_binding*/
 
-        ctx[8](null);
+        ctx[13](null);
+        mounted = false;
+        dispose();
       }
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$6.name,
+      id: create_fragment$7.name,
       type: "component",
       source: "",
       ctx
@@ -4175,10 +4746,13 @@ var app = (function () {
     return block;
   }
 
-  function instance$6($$self, $$props, $$invalidate) {
+  function instance$7($$self, $$props, $$invalidate) {
     var $currentYear;
+    var $activeData;
     validate_store(currentYear, "currentYear");
-    component_subscribe($$self, currentYear, $$value => $$invalidate(9, $currentYear = $$value));
+    component_subscribe($$self, currentYear, $$value => $$invalidate(14, $currentYear = $$value));
+    validate_store(activeData, "activeData");
+    component_subscribe($$self, activeData, $$value => $$invalidate(9, $activeData = $$value));
     var {
       $$slots: slots = {},
       $$scope
@@ -4205,23 +4779,37 @@ var app = (function () {
     var {
       mapFill
     } = $$props;
+    var {
+      firstData
+    } = $$props;
+    var map;
     var container;
     onMount(() => {
       set_store_value(currentYear, $currentYear = years.start, $currentYear);
-    }); // pick our first dataset to show
-    // $activeData = data[0].value;
-    // console.log($activeData, data[0].value);
-    // console.group(slug);
-
-    var writable_props = ["data", "grid", "yearLabel", "dataLabel", "years", "stops", "mapFill"];
-    Object.keys($$props).forEach(key => {
-      if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn("<App> was created with unknown prop '".concat(key, "'"));
+      set_store_value(activeData, $activeData = firstData, $activeData);
     });
+
+    function click() {
+      console.log("CLICK");
+      map.$destroy();
+    }
+
+    var writable_props = ["data", "grid", "yearLabel", "dataLabel", "years", "stops", "mapFill", "firstData"];
+    Object.keys($$props).forEach(key => {
+      if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$2.warn("<App> was created with unknown prop '".concat(key, "'"));
+    });
+
+    function map_1_binding($$value) {
+      binding_callbacks[$$value ? "unshift" : "push"](() => {
+        map = $$value;
+        $$invalidate(7, map);
+      });
+    }
 
     function div_binding($$value) {
       binding_callbacks[$$value ? "unshift" : "push"](() => {
         container = $$value;
-        $$invalidate(7, container);
+        $$invalidate(8, container);
       });
     }
 
@@ -4233,6 +4821,7 @@ var app = (function () {
       if ("years" in $$props) $$invalidate(4, years = $$props.years);
       if ("stops" in $$props) $$invalidate(5, stops = $$props.stops);
       if ("mapFill" in $$props) $$invalidate(6, mapFill = $$props.mapFill);
+      if ("firstData" in $$props) $$invalidate(11, firstData = $$props.firstData);
     };
 
     $$self.$capture_state = () => ({
@@ -4248,8 +4837,12 @@ var app = (function () {
       years,
       stops,
       mapFill,
+      firstData,
+      map,
       container,
-      $currentYear
+      click,
+      $currentYear,
+      $activeData
     });
 
     $$self.$inject_state = $$props => {
@@ -4260,33 +4853,36 @@ var app = (function () {
       if ("years" in $$props) $$invalidate(4, years = $$props.years);
       if ("stops" in $$props) $$invalidate(5, stops = $$props.stops);
       if ("mapFill" in $$props) $$invalidate(6, mapFill = $$props.mapFill);
-      if ("container" in $$props) $$invalidate(7, container = $$props.container);
+      if ("firstData" in $$props) $$invalidate(11, firstData = $$props.firstData);
+      if ("map" in $$props) $$invalidate(7, map = $$props.map);
+      if ("container" in $$props) $$invalidate(8, container = $$props.container);
     };
 
     if ($$props && "$$inject" in $$props) {
       $$self.$inject_state($$props.$$inject);
     }
 
-    return [data, grid, yearLabel, dataLabel, years, stops, mapFill, container, div_binding];
+    return [data, grid, yearLabel, dataLabel, years, stops, mapFill, map, container, $activeData, click, firstData, map_1_binding, div_binding];
   }
 
   class App extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$6, create_fragment$6, safe_not_equal, {
+      init(this, options, instance$7, create_fragment$7, safe_not_equal, {
         data: 0,
         grid: 1,
         yearLabel: 2,
         dataLabel: 3,
         years: 4,
         stops: 5,
-        mapFill: 6
+        mapFill: 6,
+        firstData: 11
       });
       dispatch_dev("SvelteRegisterComponent", {
         component: this,
         tagName: "App",
         options,
-        id: create_fragment$6.name
+        id: create_fragment$7.name
       });
       var {
         ctx
@@ -4296,19 +4892,25 @@ var app = (function () {
       if (
       /*years*/
       ctx[4] === undefined && !("years" in props)) {
-        console.warn("<App> was created without expected prop 'years'");
+        console_1$2.warn("<App> was created without expected prop 'years'");
       }
 
       if (
       /*stops*/
       ctx[5] === undefined && !("stops" in props)) {
-        console.warn("<App> was created without expected prop 'stops'");
+        console_1$2.warn("<App> was created without expected prop 'stops'");
       }
 
       if (
       /*mapFill*/
       ctx[6] === undefined && !("mapFill" in props)) {
-        console.warn("<App> was created without expected prop 'mapFill'");
+        console_1$2.warn("<App> was created without expected prop 'mapFill'");
+      }
+
+      if (
+      /*firstData*/
+      ctx[11] === undefined && !("firstData" in props)) {
+        console_1$2.warn("<App> was created without expected prop 'firstData'");
       }
     }
 
@@ -4368,16 +4970,21 @@ var app = (function () {
       throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     }
 
-  }
+    get firstData() {
+      throw new Error("<App>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
 
-  // Wait for the page to load
+    set firstData(value) {
+      throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+  }
 
   document.addEventListener("DOMContentLoaded", function (e) {
     // Look for our containers
     for (var el of document.querySelectorAll(".orbitas-projections-map")) {
       // Find the first config script
-      var config = JSON.parse(el.parentNode.querySelector("script.config").innerHTML); // $currentYear = config.years.start;
-      // Instantiate our app
+      var config = JSON.parse(el.parentNode.querySelector("script.config").innerHTML); // Instantiate our app
 
       var _app = new App({
         hydrate: true,

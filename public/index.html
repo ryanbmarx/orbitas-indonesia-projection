@@ -72,15 +72,29 @@
             },
             "yearLabel": "Select a year",
             "dataLabel": "Select a projection",
-            "data": [
-              { "label": "BAU", "value": "BAU_CAPACITY_26OCT2020.csv" },
-              { "label": "Aggressive projection", "value": "Aggressive_CAPACITY_26OCT2020.csv" },
-              { "label": "Modest Projection (Option A)", "value": "ModestA_CAPACITY_26OCT2020.csv" },
-              {
+            "data": {
+              "bau": {
+                "label": "BAU",
+                "value": "BAU_CAPACITY_26OCT2020.csv",
+                "description": "A brief description of Bau. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              },
+              "aggressive": {
+                "label": "Aggressive projection",
+                "value": "Aggressive_CAPACITY_26OCT2020.csv",
+                "description": "A brief description of Aggressive. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              },
+              "modest_a": {
+                "label": "Modest Projection (Option A)",
+                "value": "ModestA_CAPACITY_26OCT2020.csv",
+                "description": "A brief description of Modest A. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              },
+              "modest_b": {
                 "label": "Modest Projection (Option B)",
-                "value": "ModestB_CAPACITY_26OCT2020.csv"
+                "value": "ModestB_CAPACITY_26OCT2020.csv",
+                "description": "A brief description of Modest B. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
               }
-            ]
+            },
+            "firstData": "bau"
           }
         </script>
       </figure>
