@@ -55,13 +55,14 @@
             neque
           </p>
         </figcaption>
-        <div class="orbitas-projections-map"></div>
+        <div class="orbitas-projection s-map"></div>
         <script class="config" type="application/json">
           {
             "mapFill": "#2f4752",
             "stops": [
-              [0, 0.5],
-              [1, 0.7]
+              [0, 0.25],
+              [0.5, 0.5],
+              [0.75, 0.75]
             ],
             "slug": "capacity",
             "grid": "grid-sm",
@@ -94,7 +95,8 @@
                 "description": "A brief description of Modest B. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
               }
             },
-            "firstData": "bau"
+            "firstData": "bau",
+            "gridID": "Grid_ID"
           }
         </script>
       </figure>
@@ -132,37 +134,43 @@
             neque
           </p>
         </figcaption>
-        <!-- <div class="orbitas-projections-map"></div> -->
+        <div class="orbitas-projections-map"></div>
         <script class="config" type="application/json">
           {
+            "mapFill": "#2f4752",
             "slug": "tree-cover",
             "years": {
               "start": 2010,
               "end": 2050,
               "step": 5
             },
-            "data": [
-              {
+            "stops": [
+              [0, 0.25],
+              [0.5, 0.5],
+              [0.75, 0.75]
+            ],
+            "grid": "grid-lg",
+            "yearLabel": "Select a year",
+            "dataLabel": "Select a projection",
+            "data": {
+              "bau": {
                 "label": "BAU",
-                "value": "BAU_CAPACITY_26OCT2020.csv",
+                "value": "indonesia_bau_scenario_5yr_step_forestcover_skm.csv",
                 "description": "A brief description of Bau. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
               },
-              {
-                "label": "Aggressive projection",
-                "value": "Aggressive_CAPACITY_26OCT2020.csv",
-                "description": "A brief description of Aggressive. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              "coordinated": {
+                "label": "Coordianted scenario",
+                "value": "indonesia_coordinated_scenario_110agprice_zerodef_5yr_step_forestcover_skm.csv",
+                "description": "A brief description of coordinated. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
               },
-              {
-                "label": "Modest Projection (Option A)",
-                "value": "ModestA_CAPACITY_26OCT2020.csv",
-                "description": "A brief description of Modest A. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
-              },
-              {
-                "label": "Modest Projection (Option B)",
-                "value": "ModestB_CAPACITY_26OCT2020.csv",
-                "description": "A brief description of Modest B. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
+              "stabilising": {
+                "label": "Stabilising scenario",
+                "value": "indonesia_stabilising_scenario_110agprice_zerodef_5yr_step_forestcover_skm.csv",
+                "description": "A brief description of stabilising. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
               }
-            ]
+            },
+            "firstData": "bau",
+            "gridID": "uni_ID"
           }
         </script>
       </figure>

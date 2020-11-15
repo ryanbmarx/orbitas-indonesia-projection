@@ -1,10 +1,4 @@
 <script>
-  // //         {
-  //     "label": "Aggressive projection",
-  //             "value": "Aggressive_CAPACITY_26OCT2020.csv",
-  //             "description": "A brief description of Aggressive. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
-  //           },
-
   export let label = "Label";
   export let description = "Description";
 </script>
@@ -12,6 +6,8 @@
 <style>
   .description {
     margin: 24px 0;
+    font-size: 1rem;
+    line-height: 1.5em;
   }
   .description__name {
     display: inline;

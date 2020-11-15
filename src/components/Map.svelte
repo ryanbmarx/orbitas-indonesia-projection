@@ -1,23 +1,17 @@
 <script>
   // STORES
-  import { loading, currentYear } from "./../utils/stores.js";
+  import { currentYear, loading } from "./../utils/stores.js";
 
   // COMPONENTS
-  import Loading from "./Loading.svelte";
-  import DataDescription from "./DataDescription.svelte";
   import Legend from "./Legend.svelte";
 
   // UTILS
   import { onMount, afterUpdate } from "svelte";
   import mapboxgl from "mapbox-gl";
-  import * as topojson from "topojson-client";
-  import { csvParse } from "../utils/csv-parse";
-
-  export let gridFile;
 
   export let data;
   export let stops;
-  export let mapData;
+  export let geoData;
   export let mapFill = "#2f4752";
 
   export let years;
@@ -33,13 +27,6 @@
   const CENTER = [122.483349, -2.936083];
   const MAP_ZOOM = 3;
 
-  let fetching = [];
-  // The things we are fetching get stored here, so we can wait until they are fetched.
-  fetching = [`./geo/${gridFile}.topojson`, `./data/${data[mapData].value}`].map(f => {
-    console.log("Starting fetch for", f);
-    return fetch(f).then(req => (f.indexOf(".csv") > -1 ? req.text() : req.json()));
-  });
-
   afterUpdate(() => {
     // If the year has changed
     if (oldCurrentYear !== $currentYear) {
@@ -51,20 +38,9 @@
     }
   });
 
-  // Adds downloaded values from CSV into the geojson
-  function mergeProps(data, geo) {
-    geo.features.forEach(g => {
-      const ID = g.properties.Grid_ID;
-      for (let key in data[ID]) {
-        g["properties"][key] = data[ID][key];
-      }
-    });
-    return geo;
-  }
-
   onMount(async () => {
     // INIT THE MAP
-    console.log({ mapData });
+    console.log("Now mapping", { geoData });
     map = new mapboxgl.Map({
       container: mapContainer,
       style: "mapbox://styles/mapbox/streets-v11",
@@ -77,54 +53,49 @@
     // This fires when the map has loaded
     map.on("load", function () {
       // Wait until we got the things
-      Promise.all(fetching)
-        .then(d => {
-          console.log(d);
-          // Merge our shapes with our CSV data
-          const geoData = mergeProps(csvParse(d[1]), topojson.feature(d[0], d[0].objects[gridFile]));
 
-          // Add the grid (now with our CSV data) to the map.
-          map.addSource("grid", {
-            type: "geojson",
-            data: geoData,
-          });
+      map.addSource("grid", {
+        type: "geojson",
+        data: geoData,
+      });
 
-          // Add grid for each of our years
-          for (let i = years.start; i <= years.end; i += years.step) {
-            let gridID = `grid-${i}`;
-            // Add our grid ID to our list
-            layers.push(gridID);
+      // Add grid for each of our years
+      for (let i = years.start; i <= years.end; i += years.step) {
+        let gridID = `grid-${i}`;
+        // Add our grid ID to our list
+        layers.push(gridID);
 
-            // Add grid and color it using the stops provided
-            map.addLayer({
-              id: gridID,
-              type: "fill",
-              source: "grid",
-              layout: {
-                visibility: `grid-${i}` === `grid-${$currentYear}` ? "visible" : "none",
-              },
-              paint: {
-                "fill-opacity": {
-                  property: `${i}`,
-                  stops,
-                },
-                "fill-color": mapFill,
-                "fill-opacity-transition": {
-                  duration: 300,
-                  delay: 0,
-                },
-              },
-            });
-            // Let's not waste our time on grid cells without data.
-            // Filter them out of the display by checking for
-            // a value for the year in questions.
-            map.setFilter(gridID, [">=", `${i}`, 0]);
-          }
-        })
-        .then(() => {
-          //  Turn of the loading indicator.
-          $loading = false;
+        // Add grid and color it using the stops provided
+        map.addLayer({
+          id: gridID,
+          type: "fill",
+          source: "grid",
+          layout: {
+            visibility: `grid-${i}` === `grid-${$currentYear}` ? "visible" : "none",
+          },
+          paint: {
+            "fill-opacity": {
+              property: `${i}`,
+              stops,
+            },
+            "fill-color": mapFill,
+            "fill-opacity-transition": {
+              duration: 300,
+              delay: 0,
+            },
+          },
         });
+        // Let's not waste our time on grid cells without data.
+        // Filter them out of the display by checking for
+        // a value for the year in questions.
+        map.setFilter(gridID, [">=", `${i}`, 0]);
+      }
+    });
+    map.on("sourcedata", e => {
+      if (e.isSourceLoaded) {
+        // Do something when the source has finished loading
+        $loading = false;
+      }
     });
   });
 </script>
@@ -138,7 +109,6 @@
   .map {
     width: 100%;
     height: 400px;
-    background: #eee;
   }
 </style>
 
@@ -147,9 +117,7 @@
 <svelte:head>
   <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
-<DataDescription />
 <div class="map-wrapper">
-  <!-- <Legend {data} /> -->
-  <Loading />
+  <Legend {data} {stops} {mapFill} />
   <div bind:this={mapContainer} class="map" />
 </div>

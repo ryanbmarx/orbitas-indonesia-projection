@@ -1,9 +1,16 @@
 <script>
-  import { activeData, currentYear } from "./utils/stores.js";
-  import { onMount, afterUpdate } from "svelte";
+  import { activeData, currentYear, loading } from "./utils/stores.js";
 
+  // UTILS
+  import { onMount, afterUpdate } from "svelte";
+  import { getMapData } from "./utils/get-map-data";
+
+  // COMPONENTS
   import Map from "./components/Map.svelte";
+  import Loading from "./components/Loading.svelte";
   import Nav from "./components/Nav.svelte";
+  import DataDescription from "./components/DataDescription.svelte";
+
   // export let config = {};
   export let data = [];
   // export let slug = "";
@@ -11,32 +18,34 @@
   export let yearLabel = "year";
   export let dataLabel = "data";
   export let years;
-  export let stops;
+  export let stops = [];
   export let mapFill;
+  export let gridID;
 
   export let firstData;
   let oldData = firstData;
-
+  let geoData;
   let map;
   let container;
-  onMount(() => {
+
+  $: descriptionData = $activeData ? data[$activeData] : data[firstData];
+
+  onMount(async () => {
+    console.log(`APP, MOUNT: Data to map now is ${firstData}`);
     $currentYear = years.start;
-    $activeData = firstData;
+    geoData = await getMapData(grid, firstData, data, gridID);
+    console.log("Initial data is", { geoData });
   });
 
-  afterUpdate(() => {
-    if (oldData !== $activeData) {
-      console.log(`APP: Data to map now is ${$activeData}`);
-      map.$set({
-        mapData: $activeData,
-      });
+  afterUpdate(async () => {
+    if (oldData !== $activeData && $activeData) {
+      console.log(`APP, UPDATE: Data to map now is ${$activeData}. It was ${oldData}`);
+      $loading = true;
+      oldData = $activeData;
+      geoData = await getMapData(grid, $activeData, data, gridID);
+      console.log("New data is", { geoData });
     }
   });
-
-  function click() {
-    console.log("CLICK");
-    map.$set({ mapData: $activeData });
-  }
 </script>
 
 <style>
@@ -65,10 +74,24 @@
     font: 500 14px/1em var(--sans-serif);
     margin: 0 0 16px 0;
   }
+
+  .map-wrapper {
+    width: 100%;
+    height: 400px;
+    background: #eee;
+    position: relative;
+  }
 </style>
 
-<button on:click={click}>BOOM!</button>
 <div bind:this={container} class="projections">
   <Nav {data} {yearLabel} {dataLabel} {years} {firstData} />
-  <Map bind:this={map} bind:$activeData gridFile={grid} {data} {stops} {mapFill} {years} mapData={firstData} />
+  <DataDescription {...descriptionData} />
+  <div class="map-wrapper">
+    {#if $loading}
+      <Loading />
+    {/if}
+    {#if geoData}
+      <Map bind:this={map} {loading} gridFile={grid} {data} {stops} {mapFill} {years} {geoData} />
+    {/if}
+  </div>
 </div>

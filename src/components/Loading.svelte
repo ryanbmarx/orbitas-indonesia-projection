@@ -1,6 +1,5 @@
 <script>
   import { fade } from "svelte/transition";
-  import { loading } from "../utils/stores";
   export let text = "Loading data";
 </script>
 
@@ -69,6 +68,4 @@
   }
 </style>
 
-{#if $loading}
-  <div class="spinner" transition:fade={{ duration: 150 }}><span class="spinner__wrapper"> <span class="spinner__animation" /> </span> <span class="spinner__text">{text}</span></div>
-{/if}
+<div class="spinner" transition:fade={{ duration: 150 }}><span class="spinner__wrapper"> <span class="spinner__animation" /> </span> <span class="spinner__text">{text}</span></div>

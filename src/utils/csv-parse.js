@@ -17,7 +17,6 @@ export function csvParse(text) {
     let row = curr.split(",");
     // Get our grid ID by pulling the first item from that array (removing it from row)
     const ID = row.shift();
-
     // This generates an object of key/value pairs for the remaining row items
     let newRow = row.reduce((accumulator = {}, currentValue, currentIndex) => {
       accumulator[headers[currentIndex]] = parseFloat(currentValue);
@@ -29,25 +28,4 @@ export function csvParse(text) {
     // DO it again ...
     return acc;
   }, {});
-}
-
-export function csvParseToArray(text) {
-  // Split the text into rows
-  const rows = text.split(/\r?\n/);
-
-  // Grab our header row, removing it from the rows
-  const headers = rows.shift().split(",");
-
-  // Map through the rows of the remaining data
-  return rows.map(r => {
-    //   For each row, split on the commas
-    let row = r.split(",");
-    // Reduce each row, now an array of values, but pairing each value with it's corresponding
-    // header. This resulting object of k/v pairs is returned as the new row
-    let newRow = row.reduce((accumulator = {}, currentValue, currentIndex) => {
-      accumulator[headers[currentIndex]] = headers[currentIndex] === "GRID_ID" ? currentValue : parseFloat(currentValue);
-      return accumulator;
-    }, {});
-    return newRow;
-  });
 }

@@ -1,36 +1,12 @@
 <script>
-  import { format } from "d3-format";
-  export let data;
-  let fakedata = [
-    {
-      min: 0.2,
-      max: 1.0,
-      color: "red",
-    },
-    {
-      min: 1.0,
-      max: 2.0,
-      color: "blue",
-    },
-    {
-      min: 2.0,
-      max: 3.0,
-      color: "orange",
-    },
-    {
-      min: 3,
-      max: 4,
-      color: "green",
-    },
-    {
-      min: 4,
-      max: 4.9,
-      color: "purple",
-    },
-  ];
+  export let stops;
+  export let mapFill;
 </script>
 
 <style>
+  .legend {
+    background: var(--color-background);
+  }
   .legend__list {
     margin: 0;
     padding: 0;
@@ -47,18 +23,18 @@
     justify-content: flex-end;
   }
   .legend__list-item__label {
-    text-align: right;
+    text-align: left;
     font: 14px/1em var(--sans-serif);
     position: relative;
-    transform: translate(3px, 0);
+    transform: translate(-3px, 0);
   }
 
   @supports (width: fit-content) or (width: -moz-fit-content) {
     .legend__list-item__label {
-      margin-left: auto;
+      margin-right: auto;
       width: -moz-fit-content;
       width: fit-content;
-      transform: translate(50%, 0);
+      transform: translate(-50%, 0);
     }
   }
   .legend__list-item__box {
@@ -93,10 +69,10 @@
 <div class="legend">
   <span class="label">Legend</span>
   <ol class="legend__list">
-    {#each fakedata as d, i}
+    {#each stops as stop, i}
       <li class="legend__list-item">
-        {#if i + 1 < data.length}<span class="legend__list-item__label">{format('.1f')(d.max)}</span>{/if}
-        <span style="background:{d.color}" class="legend__list-item__box" />
+        {#if i > 0}<span class="legend__list-item__label">{stop[0]}</span>{/if}
+        <span style="background:{mapFill};opacity:{stop[1]}" class="legend__list-item__box" />
       </li>
     {/each}
   </ol>
