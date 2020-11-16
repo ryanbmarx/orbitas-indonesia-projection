@@ -3,8 +3,6 @@ import { feature } from "topojson-client";
 
 // Adds downloaded values from CSV into the geojson
 function mergeProps(data, geo, dataKey, gridKey) {
-  console.log("merging", { data }, { geo }, { dataKey }, { gridKey });
-
   geo["dataKey"] = dataKey;
   geo.features.forEach(g => {
     const ID = g.properties[gridKey];

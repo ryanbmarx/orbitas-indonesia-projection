@@ -24,9 +24,10 @@
   // This will hold IDs of all our added layers
   let layers = [];
   // CONFIG STUFF
-  mapboxgl.accessToken = process.env.MAPBOX_TOKEN_R;
+  mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
   const CENTER = [122.483349, -2.936083];
   const MAP_ZOOM = 3;
+  const MAP_STYLE_URL = "mapbox://styles/lucida-maps/ckhl11xlx05e019pq4tb6d9mx";
 
   afterUpdate(() => {
     // If the year has changed
@@ -44,7 +45,7 @@
     console.log("Now mapping", { geoData });
     map = new mapboxgl.Map({
       container: mapContainer,
-      style: "mapbox://styles/mapbox/streets-v11",
+      style: MAP_STYLE_URL,
       zoom: MAP_ZOOM,
       center: CENTER,
     });
