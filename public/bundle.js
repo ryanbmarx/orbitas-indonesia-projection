@@ -3891,7 +3891,7 @@ var app = (function () {
     child_ctx[3] = list[i];
     child_ctx[5] = i;
     return child_ctx;
-  } // (75:8) {#if i > 0}
+  } // (66:8) {#if i > 0}
 
 
   function create_if_block(ctx) {
@@ -3916,8 +3916,8 @@ var app = (function () {
         this.h();
       },
       h: function hydrate() {
-        attr_dev(span, "class", "legend__list-item__label svelte-xwy2vi");
-        add_location(span, file, 74, 19, 1413);
+        attr_dev(span, "class", "legend__list-item__label svelte-pn4zpk");
+        add_location(span, file, 65, 19, 1292);
       },
       m: function mount(target, anchor) {
         insert_dev(target, span, anchor);
@@ -3938,11 +3938,11 @@ var app = (function () {
       block,
       id: create_if_block.name,
       type: "if",
-      source: "(75:8) {#if i > 0}",
+      source: "(66:8) {#if i > 0}",
       ctx
     });
     return block;
-  } // (73:4) {#each stops as stop, i}
+  } // (64:4) {#each stops as stop, i}
 
 
   function create_each_block(ctx) {
@@ -3985,10 +3985,10 @@ var app = (function () {
         set_style(span, "opacity",
         /*stop*/
         ctx[3][1]);
-        attr_dev(span, "class", "legend__list-item__box svelte-xwy2vi");
-        add_location(span, file, 75, 8, 1482);
-        attr_dev(li, "class", "legend__list-item svelte-xwy2vi");
-        add_location(li, file, 73, 6, 1363);
+        attr_dev(span, "class", "legend__list-item__box svelte-pn4zpk");
+        add_location(span, file, 66, 8, 1361);
+        attr_dev(li, "class", "legend__list-item svelte-pn4zpk");
+        add_location(li, file, 64, 6, 1242);
       },
       m: function mount(target, anchor) {
         insert_dev(target, li, anchor);
@@ -4027,7 +4027,7 @@ var app = (function () {
       block,
       id: create_each_block.name,
       type: "each",
-      source: "(73:4) {#each stops as stop, i}",
+      source: "(64:4) {#each stops as stop, i}",
       ctx
     });
     return block;
@@ -4094,11 +4094,11 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(span, "class", "label");
-        add_location(span, file, 70, 2, 1265);
-        attr_dev(ol, "class", "legend__list svelte-xwy2vi");
-        add_location(ol, file, 71, 2, 1302);
-        attr_dev(div, "class", "legend svelte-xwy2vi");
-        add_location(div, file, 69, 0, 1242);
+        add_location(span, file, 61, 2, 1144);
+        attr_dev(ol, "class", "legend__list svelte-pn4zpk");
+        add_location(ol, file, 62, 2, 1181);
+        attr_dev(div, "class", "legend svelte-pn4zpk");
+        add_location(div, file, 60, 0, 1121);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);

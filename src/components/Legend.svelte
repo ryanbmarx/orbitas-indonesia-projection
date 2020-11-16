@@ -43,12 +43,7 @@
     height: 6px;
     margin-top: 4px;
   }
-  /* 
-  .label {
-    position: absolute;
-    top: 0;
-    left: 0;
-  } */
+
   @media all and (min-width: 768px) {
     .legend {
       background: rgba(255, 255, 255, 0.9);
@@ -60,10 +55,6 @@
       padding: 8px;
       z-index: 90;
     }
-
-    /* .label {
-      position: unset;
-    } */
   }
 </style>
 
