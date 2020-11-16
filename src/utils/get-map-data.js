@@ -19,8 +19,10 @@ export async function getMapData(gridFile, dataKey, dataList, gridID) {
     return fetch(f).then(req => (f.indexOf(".csv") > -1 ? req.text() : req.json()));
   });
 
-  return Promise.all(fetching).then(d => {
-    // Merge our shapes with our CSV data
-    return mergeProps(csvParse(d[1]), feature(d[0], d[0].objects[gridFile]), dataKey, gridID);
-  });
+  return Promise.all(fetching)
+    .then(d => {
+      // Merge our shapes with our CSV data
+      return mergeProps(csvParse(d[1]), feature(d[0], d[0].objects[gridFile]), dataKey, gridID);
+    })
+    .catch(e => console.error(e));
 }
