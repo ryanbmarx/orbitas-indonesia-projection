@@ -4,6 +4,7 @@
   // UTILS
   import { onMount, afterUpdate } from "svelte";
   import { getMapData } from "./utils/get-map-data";
+  import marked from "marked";
 
   // COMPONENTS
   import Map from "./components/Map.svelte";
@@ -20,6 +21,8 @@
   export let stops = [];
   export let mapFill;
   export let gridID;
+  export let legendLabel;
+  export let dataNote;
 
   export let firstData;
   let oldData = firstData;
@@ -62,9 +65,9 @@
 
     --color-accent: var(--color-orb-orange);
     --color-accent-faded: var(--color-orb-orange-faded);
-
     --color-background: white;
-
+    --color-text-muted: #888;
+    --color-text: #3f3f3f;
     --line-width: 3px;
   }
 
@@ -85,6 +88,13 @@
     background: #eee;
     position: relative;
   }
+
+  .note :global(p) {
+    font-size: 14px;
+    line-height: 1.3em;
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
 </style>
 
 <div bind:this={container} class="projections">
@@ -95,7 +105,12 @@
       <Loading />
     {/if}
     {#if geoData}
-      <Map bind:this={map} {loading} gridFile={grid} {data} {stops} {mapFill} {years} {geoData} />
+      <Map bind:this={map} {loading} gridFile={grid} {data} {stops} {mapFill} {years} {geoData} {legendLabel} />
     {/if}
   </div>
+  {#if dataNote}
+    <div class="note">
+      {@html marked(dataNote)}
+    </div>
+  {/if}
 </div>

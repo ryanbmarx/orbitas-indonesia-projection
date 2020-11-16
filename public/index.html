@@ -28,6 +28,7 @@
 
       article p {
         font: 18px/1.5em var(--sans-serif);
+        color: var(--color-text);
         padding-bottom: 1.7em;
       }
 
@@ -49,7 +50,7 @@
       <p>Commodo sed egestas egestas fringilla phasellus faucibus scelerisque. Sed viverra ipsum nunc aliquet bibendum enim.</p>
       <figure class="projections-map-wrapper">
         <figcaption>
-          <h2>Map subhede</h2>
+          <h2>Installed Capacity</h2>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Auctor urna nunc id cursus metus aliquam eleifend mi. Bibendum
             neque
@@ -60,9 +61,11 @@
           {
             "mapFill": "#2f4752",
             "stops": [
-              [0, 0.25],
-              [0.5, 0.5],
-              [0.75, 0.75]
+              [0, 0],
+              [0.2, 0.25],
+              [0.7, 0.55],
+              [1.4, 0.75],
+              [2.7, 0.95]
             ],
             "slug": "capacity",
             "grid": "grid-sm.min",
@@ -73,6 +76,7 @@
             },
             "yearLabel": "Select a year",
             "dataLabel": "Select a projection",
+            "legendLabel": "These units for map",
             "data": {
               "bau": {
                 "label": "BAU",
@@ -95,6 +99,7 @@
                 "description": "A brief description of Modest B. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
               }
             },
+            "dataNote": "This is an auxilliary note in case something needs to be spelled out.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Auctor urna nunc id cursus metus aliquam eleifend mi. Bibendum neque egestas congue quisque. Sit amet porttitor eget dolor morbi. ",
             "firstData": "bau",
             "gridID": "Grid_ID"
           }
@@ -128,13 +133,13 @@
       </p>
       <figure class="projections-map-wrapper">
         <figcaption>
-          <h2>Map subhede</h2>
+          <h2>Osiris Forest Projections</h2>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Auctor urna nunc id cursus metus aliquam eleifend mi. Bibendum
             neque
           </p>
         </figcaption>
-        <div class="orbitas-projections-map"></div>
+        <div class="orbitas-pr ojections-map"></div>
         <script class="config" type="application/json">
           {
             "mapFill": "#2f4752",
@@ -145,14 +150,18 @@
               "step": 5
             },
             "stops": [
-              [0, 0.25],
-              [10, 0.5],
-              [20, 0.75],
-              [30, 1]
+              [0, 0],
+              [1.0, 0.1],
+              [3.3, 0.2],
+              [9.6, 0.4],
+              [16.5, 0.6],
+              [22.8, 0.8],
+              [27.9, 1]
             ],
             "grid": "grid-lg.min",
             "yearLabel": "Select a year",
             "dataLabel": "Select a projection",
+            "legendLabel": "These units for map",
             "data": {
               "bau": {
                 "label": "BAU",
@@ -170,6 +179,7 @@
                 "description": "A brief description of stabilising. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor."
               }
             },
+            "dataNote": "This is an auxilliary note in case something needs to be spelled out. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Auctor urna nunc id cursus metus aliquam eleifend mi. Bibendum neque egestas congue quisque. Sit amet porttitor eget dolor morbi. ",
             "firstData": "bau",
             "gridID": "uni_ID"
           }

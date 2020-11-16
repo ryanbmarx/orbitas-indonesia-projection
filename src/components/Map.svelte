@@ -13,6 +13,7 @@
   export let stops;
   export let geoData;
   export let mapFill = "#2f4752";
+  export let legendLabel;
 
   export let years;
   let oldCurrentYear;
@@ -118,6 +119,6 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
 <div class="map-wrapper">
-  <Legend {data} {stops} {mapFill} />
+  <Legend {data} {stops} {mapFill} label={legendLabel} />
   <div bind:this={mapContainer} class="map" />
 </div>
