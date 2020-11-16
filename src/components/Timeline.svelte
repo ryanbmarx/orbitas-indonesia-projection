@@ -232,12 +232,18 @@
   <ol aria-labelledby="timeline-label" class="timeline">
     {#each years as year, i}
       <li>
-        <button class="timeline__button" class:timeline__button--compressed={years.length > 7} data-year={year} class:timeline__button--active={year == $currentYear} on:click={handleClick}><span
-            class="timeline__button__year">{@html formatYear(year, i)}</span></button>
+        <button
+          class="timeline__button"
+          aria-label="View data for the year {year}"
+          title="View data for the year {year}"
+          class:timeline__button--compressed={years.length > 7}
+          data-year={year}
+          class:timeline__button--active={year == $currentYear}
+          on:click={handleClick}><span class="timeline__button__year">{@html formatYear(year, i)}</span></button>
       </li>
     {/each}
   </ol>
-  <button class:playing class="timeline__button timeline__button--play" aria-label="Play the animation over time" on:click={play}>
+  <button class:playing class="timeline__button timeline__button--play" aria-label="Click here to animate the data over time" title="Click to play animation" on:click={play}>
     {#if playing}
       <!-- Square-->
       &#9724;

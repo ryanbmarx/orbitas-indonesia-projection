@@ -81,7 +81,7 @@
 
 <label for={id}>{label}</label>
 <div class="select">
-  <select class="select__input" {id} on:input bind:value>
+  <select class="select__input" {id} on:input bind:value title={label}>
     {#if showAll}
       <option value={showAll.value} selected>{showAll.label}</option>
     {/if}
