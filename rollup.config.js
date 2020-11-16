@@ -1,4 +1,3 @@
-import * as path from "path";
 import svelte from "rollup-plugin-svelte";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
@@ -9,7 +8,6 @@ import replace from "@rollup/plugin-replace";
 import babel from "rollup-plugin-babel";
 
 const production = !process.env.ROLLUP_WATCH;
-const PROJECT_SLUG = path.basename(__dirname);
 
 export default {
   input: "src/main.js",
@@ -51,7 +49,6 @@ export default {
 
     // use process.env in browser code
     replace({
-      "process.env.MAPBOX_TOKEN_R": JSON.stringify(process.env.MAPBOX_TOKEN_R),
       "process.env.MAPBOX_TOKEN": JSON.stringify(process.env.MAPBOX_TOKEN),
     }),
 
