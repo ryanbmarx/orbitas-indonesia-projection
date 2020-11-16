@@ -1,6 +1,7 @@
 <script>
   export let stops;
   export let mapFill;
+  export let label;
 </script>
 
 <style>
@@ -42,12 +43,12 @@
     height: 6px;
     margin-top: 4px;
   }
-
+  /* 
   .label {
     position: absolute;
     top: 0;
     left: 0;
-  }
+  } */
   @media all and (min-width: 768px) {
     .legend {
       background: rgba(255, 255, 255, 0.9);
@@ -60,14 +61,14 @@
       z-index: 90;
     }
 
-    .label {
+    /* .label {
       position: unset;
-    }
+    } */
   }
 </style>
 
 <div class="legend">
-  <span class="label">Legend</span>
+  <span class="label">{label}</span>
   <ol class="legend__list">
     {#each stops as stop, i}
       <li class="legend__list-item">
