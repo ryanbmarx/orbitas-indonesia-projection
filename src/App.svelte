@@ -23,6 +23,7 @@
   export let gridID;
   export let legendLabel;
   export let dataNote;
+  export let mapOptions = {};
 
   export let firstData;
   let oldData = firstData;
@@ -105,7 +106,7 @@
       <Loading />
     {/if}
     {#if geoData}
-      <Map bind:this={map} {loading} gridFile={grid} {data} {stops} {mapFill} {years} {geoData} {legendLabel} />
+      <Map bind:this={map} {loading} gridFile={grid} {data} {stops} {mapFill} {years} {geoData} {legendLabel} {...mapOptions} />
     {/if}
   </div>
   {#if dataNote}
