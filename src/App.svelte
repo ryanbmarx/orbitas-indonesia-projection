@@ -1,6 +1,4 @@
 <script>
-  import { activeData, currentYear, loading } from "./utils/stores.js";
-
   // UTILS
   import { onMount, afterUpdate } from "svelte";
   import { getMapData } from "./utils/get-map-data";
@@ -12,7 +10,21 @@
   import Nav from "./components/Nav.svelte";
   import DataDescription from "./components/DataDescription.svelte";
 
-  // export let config = {};
+  // SCOPED STORES SOLUTION
+  import { key } from "./utils/stores";
+  import { setContext } from "svelte";
+  import { writable } from "svelte/store";
+
+  let activeData = writable(null);
+  let currentYear = writable(null);
+  let loading = writable(true);
+
+  setContext(key, {
+    activeData,
+    currentYear,
+    loading,
+  });
+
   export let data = [];
   export let grid = "";
   export let yearLabel = "year";
@@ -31,7 +43,7 @@
   let map;
   let container;
 
-  $: descriptionData = $activeData ? data[$activeData] : data[firstData];
+  $: descriptionData = activeData ? data[activeData] : data[firstData];
 
   onMount(async () => {
     $currentYear = years.start;
@@ -106,7 +118,7 @@
       <Loading />
     {/if}
     {#if geoData}
-      <Map bind:this={map} {loading} gridFile={grid} {data} {stops} {mapFill} {years} {geoData} {legendLabel} {...mapOptions} />
+      <Map bind:this={map} gridFile={grid} {data} {stops} {mapFill} {years} {geoData} {legendLabel} {...mapOptions} />
     {/if}
   </div>
   {#if dataNote}

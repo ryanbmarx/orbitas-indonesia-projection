@@ -1,6 +1,11 @@
 <script>
   // STORES
-  import { currentYear, loading } from "./../utils/stores.js";
+  // import { currentYear, loading } from "./../utils/stores.js";
+
+  // OUR SCOPED STORE SOLUTION
+  import { key } from "../utils/stores";
+  import { getContext } from "svelte";
+  let { currentYear, loading } = getContext(key);
 
   // COMPONENTS
   import Legend from "./Legend.svelte";
@@ -102,6 +107,10 @@
         $loading = false;
       }
     });
+
+    return () => {
+      map.remove();
+    };
   });
 </script>
 

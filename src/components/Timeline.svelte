@@ -1,5 +1,11 @@
 <script>
-  import { currentYear } from "../utils/stores";
+  // import { currentYear } from "../utils/stores";
+
+  // OUR SCOPED STORE SOLUTION
+  import { key } from "../utils/stores";
+  import { getContext } from "svelte";
+  let { currentYear } = getContext(key);
+
   export let start;
   export let end;
   export let step;

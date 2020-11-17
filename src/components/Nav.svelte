@@ -1,7 +1,11 @@
 <script>
   import Timeline from "./Timeline.svelte";
   import InputSelect from "./InputSelect.svelte";
-  import { activeData } from "../utils/stores";
+
+  // OUR SCOPED STORE SOLUTION
+  import { key } from "../utils/stores";
+  import { getContext } from "svelte";
+  let { activeData } = getContext(key);
 
   export let data;
   export let yearLabel;
