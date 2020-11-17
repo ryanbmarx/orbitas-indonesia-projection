@@ -43,7 +43,7 @@
   let map;
   let container;
 
-  $: descriptionData = activeData ? data[activeData] : data[firstData];
+  $: descriptionData = $activeData ? data[$activeData] : data[firstData];
 
   onMount(async () => {
     $currentYear = years.start;
