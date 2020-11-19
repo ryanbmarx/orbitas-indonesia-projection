@@ -146,6 +146,22 @@
     border-radius: 50%;
     opacity: 1;
     transition: opacity 150ms ease;
+
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon {
+    display: block;
+    background: var(--color-accent-text);
+    height: 90%;
+    width: 90%;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    height: 40%;
+    width: 30%;
+    transform: translate(10%, 0);
   }
 
   .timeline__button--play::after {
@@ -173,6 +189,12 @@
   /* PLAY BUTTON PLAYING STATE */
   .timeline__button--play.playing {
     animation: pulse 3s linear alternate infinite;
+  }
+
+  .timeline__button--play.playing .icon {
+    clip-path: none;
+    height: 30%;
+    transform: none;
   }
 
   .timeline__button--play.playing::after {
@@ -250,12 +272,6 @@
     {/each}
   </ol>
   <button class:playing class="timeline__button timeline__button--play" aria-label="Click here to animate the data over time" title="Click to play animation" on:click={play}>
-    {#if playing}
-      <!-- Square-->
-      &#9724;
-    {:else}
-      <!-- Triangle -->
-      &#9658;
-    {/if}
+    <span class="icon" />
   </button>
 </div>

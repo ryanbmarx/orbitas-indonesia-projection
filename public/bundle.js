@@ -5466,7 +5466,7 @@ var app = (function () {
     child_ctx[12] = list[i];
     child_ctx[14] = i;
     return child_ctx;
-  } // (239:4) {#each years as year, i}
+  } // (261:4) {#each years as year, i}
 
 
   function create_each_block$1(ctx) {
@@ -5515,9 +5515,9 @@ var app = (function () {
         this.h();
       },
       h: function hydrate() {
-        attr_dev(span, "class", "timeline__button__year svelte-qg2shx");
-        add_location(span, file$4, 247, 33, 5733);
-        attr_dev(button, "class", "timeline__button svelte-qg2shx");
+        attr_dev(span, "class", "timeline__button__year svelte-hqeqd7");
+        add_location(span, file$4, 269, 33, 6154);
+        attr_dev(button, "class", "timeline__button svelte-hqeqd7");
         attr_dev(button, "aria-label", button_aria_label_value = "View data for the year " +
         /*year*/
         ctx[12]);
@@ -5535,9 +5535,9 @@ var app = (function () {
         ctx[12] ==
         /*$currentYear*/
         ctx[1]);
-        add_location(button, file$4, 240, 8, 5401);
-        attr_dev(li, "class", "svelte-qg2shx");
-        add_location(li, file$4, 239, 6, 5388);
+        add_location(button, file$4, 262, 8, 5822);
+        attr_dev(li, "class", "svelte-hqeqd7");
+        add_location(li, file$4, 261, 6, 5809);
       },
       m: function mount(target, anchor) {
         insert_dev(target, li, anchor);
@@ -5582,61 +5582,7 @@ var app = (function () {
       block,
       id: create_each_block$1.name,
       type: "each",
-      source: "(239:4) {#each years as year, i}",
-      ctx
-    });
-    return block;
-  } // (256:4) {:else}
-
-
-  function create_else_block$1(ctx) {
-    var t;
-    var block = {
-      c: function create() {
-        t = text("►");
-      },
-      l: function claim(nodes) {
-        t = claim_text(nodes, "►");
-      },
-      m: function mount(target, anchor) {
-        insert_dev(target, t, anchor);
-      },
-      d: function destroy(detaching) {
-        if (detaching) detach_dev(t);
-      }
-    };
-    dispatch_dev("SvelteRegisterBlock", {
-      block,
-      id: create_else_block$1.name,
-      type: "else",
-      source: "(256:4) {:else}",
-      ctx
-    });
-    return block;
-  } // (253:4) {#if playing}
-
-
-  function create_if_block$3(ctx) {
-    var t;
-    var block = {
-      c: function create() {
-        t = text("◼");
-      },
-      l: function claim(nodes) {
-        t = claim_text(nodes, "◼");
-      },
-      m: function mount(target, anchor) {
-        insert_dev(target, t, anchor);
-      },
-      d: function destroy(detaching) {
-        if (detaching) detach_dev(t);
-      }
-    };
-    dispatch_dev("SvelteRegisterBlock", {
-      block,
-      id: create_if_block$3.name,
-      type: "if",
-      source: "(253:4) {#if playing}",
+      source: "(261:4) {#each years as year, i}",
       ctx
     });
     return block;
@@ -5644,12 +5590,13 @@ var app = (function () {
 
   function create_fragment$4(ctx) {
     var div;
-    var span;
+    var span0;
     var t0;
     var t1;
     var ol;
     var t2;
     var button;
+    var span1;
     var mounted;
     var dispose;
     var each_value =
@@ -5662,19 +5609,10 @@ var app = (function () {
       each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
     }
 
-    function select_block_type(ctx, dirty) {
-      if (
-      /*playing*/
-      ctx[0]) return create_if_block$3;
-      return create_else_block$1;
-    }
-
-    var current_block_type = select_block_type(ctx);
-    var if_block = current_block_type(ctx);
     var block = {
       c: function create() {
         div = element("div");
-        span = element("span");
+        span0 = element("span");
         t0 = text("Select a year");
         t1 = space();
         ol = element("ol");
@@ -5685,7 +5623,7 @@ var app = (function () {
 
         t2 = space();
         button = element("button");
-        if_block.c();
+        span1 = element("span");
         this.h();
       },
       l: function claim(nodes) {
@@ -5693,13 +5631,13 @@ var app = (function () {
           class: true
         });
         var div_nodes = children(div);
-        span = claim_element(div_nodes, "SPAN", {
+        span0 = claim_element(div_nodes, "SPAN", {
           id: true,
           class: true
         });
-        var span_nodes = children(span);
-        t0 = claim_text(span_nodes, "Select a year");
-        span_nodes.forEach(detach_dev);
+        var span0_nodes = children(span0);
+        t0 = claim_text(span0_nodes, "Select a year");
+        span0_nodes.forEach(detach_dev);
         t1 = claim_space(div_nodes);
         ol = claim_element(div_nodes, "OL", {
           "aria-labelledby": true,
@@ -5719,32 +5657,37 @@ var app = (function () {
           title: true
         });
         var button_nodes = children(button);
-        if_block.l(button_nodes);
+        span1 = claim_element(button_nodes, "SPAN", {
+          class: true
+        });
+        children(span1).forEach(detach_dev);
         button_nodes.forEach(detach_dev);
         div_nodes.forEach(detach_dev);
         this.h();
       },
       h: function hydrate() {
-        attr_dev(span, "id", "timeline-label");
-        attr_dev(span, "class", "label svelte-qg2shx");
-        add_location(span, file$4, 236, 2, 5235);
+        attr_dev(span0, "id", "timeline-label");
+        attr_dev(span0, "class", "label svelte-hqeqd7");
+        add_location(span0, file$4, 258, 2, 5656);
         attr_dev(ol, "aria-labelledby", "timeline-label");
-        attr_dev(ol, "class", "timeline svelte-qg2shx");
-        add_location(ol, file$4, 237, 2, 5298);
-        attr_dev(button, "class", "timeline__button timeline__button--play svelte-qg2shx");
+        attr_dev(ol, "class", "timeline svelte-hqeqd7");
+        add_location(ol, file$4, 259, 2, 5719);
+        attr_dev(span1, "class", "icon svelte-hqeqd7");
+        add_location(span1, file$4, 274, 4, 6446);
+        attr_dev(button, "class", "timeline__button timeline__button--play svelte-hqeqd7");
         attr_dev(button, "aria-label", "Click here to animate the data over time");
         attr_dev(button, "title", "Click to play animation");
         toggle_class(button, "playing",
         /*playing*/
         ctx[0]);
-        add_location(button, file$4, 251, 2, 5848);
-        attr_dev(div, "class", "timeline-wrapper svelte-qg2shx");
-        add_location(div, file$4, 235, 0, 5202);
+        add_location(button, file$4, 273, 2, 6269);
+        attr_dev(div, "class", "timeline-wrapper svelte-hqeqd7");
+        add_location(div, file$4, 257, 0, 5623);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);
-        append_dev(div, span);
-        append_dev(span, t0);
+        append_dev(div, span0);
+        append_dev(span0, t0);
         append_dev(div, t1);
         append_dev(div, ol);
 
@@ -5754,7 +5697,7 @@ var app = (function () {
 
         append_dev(div, t2);
         append_dev(div, button);
-        if_block.m(button, null);
+        append_dev(button, span1);
 
         if (!mounted) {
           dispose = listen_dev(button, "click",
@@ -5797,16 +5740,6 @@ var app = (function () {
           each_blocks.length = each_value.length;
         }
 
-        if (current_block_type !== (current_block_type = select_block_type(ctx))) {
-          if_block.d(1);
-          if_block = current_block_type(ctx);
-
-          if (if_block) {
-            if_block.c();
-            if_block.m(button, null);
-          }
-        }
-
         if (dirty &
         /*playing*/
         1) {
@@ -5820,7 +5753,6 @@ var app = (function () {
       d: function destroy(detaching) {
         if (detaching) detach_dev(div);
         destroy_each(each_blocks, detaching);
-        if_block.d();
         mounted = false;
         dispose();
       }
@@ -6111,7 +6043,7 @@ var app = (function () {
   } // (89:6) {#if label}
 
 
-  function create_if_block$4(ctx) {
+  function create_if_block$3(ctx) {
     var option;
     var t_value =
     /*label*/
@@ -6192,7 +6124,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_if_block$4.name,
+      id: create_if_block$3.name,
       type: "if",
       source: "(89:6) {#if label}",
       ctx
@@ -6206,7 +6138,7 @@ var app = (function () {
     var if_block_anchor;
     var if_block =
     /*label*/
-    ctx[4] && create_if_block$4(ctx);
+    ctx[4] && create_if_block$3(ctx);
     var block = {
       key: key_1,
       first: null,
@@ -6237,7 +6169,7 @@ var app = (function () {
           if (if_block) {
             if_block.p(ctx, dirty);
           } else {
-            if_block = create_if_block$4(ctx);
+            if_block = create_if_block$3(ctx);
             if_block.c();
             if_block.m(if_block_anchor.parentNode, if_block_anchor);
           }
@@ -7218,7 +7150,7 @@ var app = (function () {
       return { set, update, subscribe };
   }
 
-  var file$8 = "src/App.svelte"; // (118:4) {#if $loading}
+  var file$8 = "src/App.svelte"; // (120:4) {#if $loading}
 
   function create_if_block_2(ctx) {
     var loading_1;
@@ -7254,11 +7186,11 @@ var app = (function () {
       block,
       id: create_if_block_2.name,
       type: "if",
-      source: "(118:4) {#if $loading}",
+      source: "(120:4) {#if $loading}",
       ctx
     });
     return block;
-  } // (121:4) {#if geoData}
+  } // (123:4) {#if geoData}
 
 
   function create_if_block_1$1(ctx) {
@@ -7400,14 +7332,14 @@ var app = (function () {
       block,
       id: create_if_block_1$1.name,
       type: "if",
-      source: "(121:4) {#if geoData}",
+      source: "(123:4) {#if geoData}",
       ctx
     });
     return block;
-  } // (125:2) {#if dataNote}
+  } // (127:2) {#if dataNote}
 
 
-  function create_if_block$5(ctx) {
+  function create_if_block$4(ctx) {
     var div;
     var raw_value = marked(
     /*dataNote*/
@@ -7426,8 +7358,8 @@ var app = (function () {
         this.h();
       },
       h: function hydrate() {
-        attr_dev(div, "class", "note svelte-dwkbwa");
-        add_location(div, file$8, 125, 4, 3244);
+        attr_dev(div, "class", "note svelte-9bupb4");
+        add_location(div, file$8, 127, 4, 3277);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);
@@ -7446,9 +7378,9 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_if_block$5.name,
+      id: create_if_block$4.name,
       type: "if",
-      source: "(125:2) {#if dataNote}",
+      source: "(127:2) {#if dataNote}",
       ctx
     });
     return block;
@@ -7505,7 +7437,7 @@ var app = (function () {
     ctx[12] && create_if_block_1$1(ctx);
     var if_block2 =
     /*dataNote*/
-    ctx[8] && create_if_block$5(ctx);
+    ctx[8] && create_if_block$4(ctx);
     var block = {
       c: function create() {
         div1 = element("div");
@@ -7544,10 +7476,10 @@ var app = (function () {
         this.h();
       },
       h: function hydrate() {
-        attr_dev(div0, "class", "map-wrapper svelte-dwkbwa");
-        add_location(div0, file$8, 116, 2, 2982);
-        attr_dev(div1, "class", "projections svelte-dwkbwa");
-        add_location(div1, file$8, 113, 0, 2828);
+        attr_dev(div0, "class", "map-wrapper svelte-9bupb4");
+        add_location(div0, file$8, 118, 2, 3015);
+        attr_dev(div1, "class", "projections svelte-9bupb4");
+        add_location(div1, file$8, 115, 0, 2861);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div1, anchor);
@@ -7656,7 +7588,7 @@ var app = (function () {
           if (if_block2) {
             if_block2.p(ctx, dirty);
           } else {
-            if_block2 = create_if_block$5(ctx);
+            if_block2 = create_if_block$4(ctx);
             if_block2.c();
             if_block2.m(div1, null);
           }

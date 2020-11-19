@@ -78,6 +78,8 @@
     --color-org-soft-grey: #f0f0ef;
 
     --color-accent: var(--color-orb-orange);
+    --color-accent-text: white;
+
     --color-accent-faded: var(--color-orb-orange-faded);
     --color-background: white;
     --color-text-muted: #888;
