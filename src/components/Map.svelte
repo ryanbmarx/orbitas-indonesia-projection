@@ -9,10 +9,12 @@
 
   // COMPONENTS
   import Legend from "./Legend.svelte";
+  import ButtonPeat from "./ButtonPeat.svelte";
 
   // UTILS
   import { onMount, afterUpdate } from "svelte";
   import mapboxgl from "mapbox-gl";
+  import { mesh } from "topojson-client";
 
   export let data;
   export let stops;
@@ -29,10 +31,14 @@
   // This will hold IDs of all our added layers
   let layers = [];
 
+  // PEAT!
+  let hasPeat = false;
+  let peatVisible = false;
+  export let peatColor;
+
   // CONFIG STUFF
-  // These are props only so it's easy to make switches based on feedback.
+  // These are props only so it's easy to make switches based on feedback. These are in `config.mapOptions`
   mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
-  // const CENTER = [122.483349, -2.936083];
   export let MAP_CENTER = [119.108664, 3.120056];
   export let MAP_ZOOM = 3;
   export let MAP_STYLE_URL = "mapbox://styles/lucida-maps/ckhl11xlx05e019pq4tb6d9mx";
@@ -101,6 +107,40 @@
         map.setFilter(gridID, [">=", `${i}`, 0]);
       }
     });
+
+    map.on("load", function (e) {
+      console.log(e);
+      fetch("./geo/peat.min.topojson")
+        .then(data => data.json())
+        .then(peat => {
+          console.log(peat);
+          map.addSource("peat", {
+            type: "geojson",
+            data: mesh(peat),
+          });
+
+          map.addLayer({
+            id: "peat-layer",
+            type: "fill",
+            source: "peat",
+            layout: {
+              visibility: "none",
+            },
+            paint: {
+              "fill-opacity": 0.9,
+              "fill-color": peatColor,
+              "fill-opacity-transition": {
+                duration: 300,
+                delay: 0,
+              },
+            },
+          });
+        })
+        .then(() => {
+          hasPeat = true;
+        });
+    });
+
     map.on("sourcedata", e => {
       if (e.isSourceLoaded) {
         // Do something when the source has finished loading
@@ -112,6 +152,10 @@
       map.remove();
     };
   });
+  function togglePeat() {
+    peatVisible = !peatVisible;
+    map.setLayoutProperty("peat-layer", "visibility", peatVisible ? "visible" : "none");
+  }
 </script>
 
 <style>
@@ -133,5 +177,8 @@
 </svelte:head>
 <div class="map-wrapper">
   <Legend {data} {stops} {mapFill} label={legendLabel} />
+  {#if hasPeat}
+    <ButtonPeat on:click={togglePeat} {peatVisible} {peatColor} />
+  {/if}
   <div bind:this={mapContainer} class="map" />
 </div>

@@ -22,6 +22,7 @@ export async function getMapData(gridFile, dataKey, dataList, gridID) {
   return Promise.all(fetching)
     .then(d => {
       // Merge our shapes with our CSV data
+      console.log(d[0].objects, gridFile);
       return mergeProps(csvParse(d[1]), feature(d[0], d[0].objects[gridFile]), dataKey, gridID);
     })
     .catch(e => console.error(e));

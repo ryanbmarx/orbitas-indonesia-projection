@@ -1064,6 +1064,131 @@ var app = (function () {
     return geometry(o);
   }
 
+  function stitch(topology, arcs) {
+    var stitchedArcs = {},
+        fragmentByStart = {},
+        fragmentByEnd = {},
+        fragments = [],
+        emptyIndex = -1;
+
+    // Stitch empty arcs first, since they may be subsumed by other arcs.
+    arcs.forEach(function(i, j) {
+      var arc = topology.arcs[i < 0 ? ~i : i], t;
+      if (arc.length < 3 && !arc[1][0] && !arc[1][1]) {
+        t = arcs[++emptyIndex], arcs[emptyIndex] = i, arcs[j] = t;
+      }
+    });
+
+    arcs.forEach(function(i) {
+      var e = ends(i),
+          start = e[0],
+          end = e[1],
+          f, g;
+
+      if (f = fragmentByEnd[start]) {
+        delete fragmentByEnd[f.end];
+        f.push(i);
+        f.end = end;
+        if (g = fragmentByStart[end]) {
+          delete fragmentByStart[g.start];
+          var fg = g === f ? f : f.concat(g);
+          fragmentByStart[fg.start = f.start] = fragmentByEnd[fg.end = g.end] = fg;
+        } else {
+          fragmentByStart[f.start] = fragmentByEnd[f.end] = f;
+        }
+      } else if (f = fragmentByStart[end]) {
+        delete fragmentByStart[f.start];
+        f.unshift(i);
+        f.start = start;
+        if (g = fragmentByEnd[start]) {
+          delete fragmentByEnd[g.end];
+          var gf = g === f ? f : g.concat(f);
+          fragmentByStart[gf.start = g.start] = fragmentByEnd[gf.end = f.end] = gf;
+        } else {
+          fragmentByStart[f.start] = fragmentByEnd[f.end] = f;
+        }
+      } else {
+        f = [i];
+        fragmentByStart[f.start = start] = fragmentByEnd[f.end = end] = f;
+      }
+    });
+
+    function ends(i) {
+      var arc = topology.arcs[i < 0 ? ~i : i], p0 = arc[0], p1;
+      if (topology.transform) p1 = [0, 0], arc.forEach(function(dp) { p1[0] += dp[0], p1[1] += dp[1]; });
+      else p1 = arc[arc.length - 1];
+      return i < 0 ? [p1, p0] : [p0, p1];
+    }
+
+    function flush(fragmentByEnd, fragmentByStart) {
+      for (var k in fragmentByEnd) {
+        var f = fragmentByEnd[k];
+        delete fragmentByStart[f.start];
+        delete f.start;
+        delete f.end;
+        f.forEach(function(i) { stitchedArcs[i < 0 ? ~i : i] = 1; });
+        fragments.push(f);
+      }
+    }
+
+    flush(fragmentByEnd, fragmentByStart);
+    flush(fragmentByStart, fragmentByEnd);
+    arcs.forEach(function(i) { if (!stitchedArcs[i < 0 ? ~i : i]) fragments.push([i]); });
+
+    return fragments;
+  }
+
+  function mesh(topology) {
+    return object(topology, meshArcs.apply(this, arguments));
+  }
+
+  function meshArcs(topology, object, filter) {
+    var arcs, i, n;
+    if (arguments.length > 1) arcs = extractArcs(topology, object, filter);
+    else for (i = 0, arcs = new Array(n = topology.arcs.length); i < n; ++i) arcs[i] = i;
+    return {type: "MultiLineString", arcs: stitch(topology, arcs)};
+  }
+
+  function extractArcs(topology, object, filter) {
+    var arcs = [],
+        geomsByArc = [],
+        geom;
+
+    function extract0(i) {
+      var j = i < 0 ? ~i : i;
+      (geomsByArc[j] || (geomsByArc[j] = [])).push({i: i, g: geom});
+    }
+
+    function extract1(arcs) {
+      arcs.forEach(extract0);
+    }
+
+    function extract2(arcs) {
+      arcs.forEach(extract1);
+    }
+
+    function extract3(arcs) {
+      arcs.forEach(extract2);
+    }
+
+    function geometry(o) {
+      switch (geom = o, o.type) {
+        case "GeometryCollection": o.geometries.forEach(geometry); break;
+        case "LineString": extract1(o.arcs); break;
+        case "MultiLineString": case "Polygon": extract2(o.arcs); break;
+        case "MultiPolygon": extract3(o.arcs); break;
+      }
+    }
+
+    geometry(object);
+
+    geomsByArc.forEach(filter == null
+        ? function(geoms) { arcs.push(geoms[0].i); }
+        : function(geoms) { if (filter(geoms[0].g, geoms[geoms.length - 1].g)) arcs.push(geoms[0].i); });
+
+    return arcs;
+  }
+
   function mergeProps(data, geo, dataKey, gridKey) {
     geo["dataKey"] = dataKey;
     geo.features.forEach(g => {
@@ -1089,6 +1214,7 @@ var app = (function () {
       });
       return Promise.all(fetching).then(d => {
         // Merge our shapes with our CSV data
+        console.log(d[0].objects, gridFile);
         return mergeProps(csvParse(d[1]), feature(d[0], d[0].objects[gridFile]), dataKey, gridID);
       }).catch(e => console.error(e));
     });
@@ -3860,7 +3986,7 @@ var app = (function () {
         this.h();
       },
       h: function hydrate() {
-        attr_dev(span, "class", "legend__list-item__label svelte-pn4zpk");
+        attr_dev(span, "class", "legend__list-item__label svelte-u6k8mg");
         add_location(span, file, 65, 19, 1292);
       },
       m: function mount(target, anchor) {
@@ -3929,9 +4055,9 @@ var app = (function () {
         set_style(span, "opacity",
         /*stop*/
         ctx[3][1]);
-        attr_dev(span, "class", "legend__list-item__box svelte-pn4zpk");
+        attr_dev(span, "class", "legend__list-item__box svelte-u6k8mg");
         add_location(span, file, 66, 8, 1361);
-        attr_dev(li, "class", "legend__list-item svelte-pn4zpk");
+        attr_dev(li, "class", "legend__list-item svelte-u6k8mg");
         add_location(li, file, 64, 6, 1242);
       },
       m: function mount(target, anchor) {
@@ -4039,9 +4165,9 @@ var app = (function () {
       h: function hydrate() {
         attr_dev(span, "class", "label");
         add_location(span, file, 61, 2, 1144);
-        attr_dev(ol, "class", "legend__list svelte-pn4zpk");
+        attr_dev(ol, "class", "legend__list svelte-u6k8mg");
         add_location(ol, file, 62, 2, 1181);
-        attr_dev(div, "class", "legend svelte-pn4zpk");
+        attr_dev(div, "class", "legend svelte-u6k8mg");
         add_location(div, file, 60, 0, 1121);
       },
       m: function mount(target, anchor) {
@@ -4220,6 +4346,236 @@ var app = (function () {
 
   }
 
+  /* src/components/ButtonPeat.svelte generated by Svelte v3.29.7 */
+  var file$1 = "src/components/ButtonPeat.svelte"; // (37:28) {:else}
+
+  function create_else_block(ctx) {
+    var t;
+    var block = {
+      c: function create() {
+        t = text("Display peat");
+      },
+      l: function claim(nodes) {
+        t = claim_text(nodes, "Display peat");
+      },
+      m: function mount(target, anchor) {
+        insert_dev(target, t, anchor);
+      },
+      d: function destroy(detaching) {
+        if (detaching) detach_dev(t);
+      }
+    };
+    dispatch_dev("SvelteRegisterBlock", {
+      block,
+      id: create_else_block.name,
+      type: "else",
+      source: "(37:28) {:else}",
+      ctx
+    });
+    return block;
+  } // (37:2) {#if peatVisible}
+
+
+  function create_if_block$1(ctx) {
+    var t;
+    var block = {
+      c: function create() {
+        t = text("Hide peat");
+      },
+      l: function claim(nodes) {
+        t = claim_text(nodes, "Hide peat");
+      },
+      m: function mount(target, anchor) {
+        insert_dev(target, t, anchor);
+      },
+      d: function destroy(detaching) {
+        if (detaching) detach_dev(t);
+      }
+    };
+    dispatch_dev("SvelteRegisterBlock", {
+      block,
+      id: create_if_block$1.name,
+      type: "if",
+      source: "(37:2) {#if peatVisible}",
+      ctx
+    });
+    return block;
+  }
+
+  function create_fragment$1(ctx) {
+    var button;
+    var mounted;
+    var dispose;
+
+    function select_block_type(ctx, dirty) {
+      if (
+      /*peatVisible*/
+      ctx[0]) return create_if_block$1;
+      return create_else_block;
+    }
+
+    var current_block_type = select_block_type(ctx);
+    var if_block = current_block_type(ctx);
+    var block = {
+      c: function create() {
+        button = element("button");
+        if_block.c();
+        this.h();
+      },
+      l: function claim(nodes) {
+        button = claim_element(nodes, "BUTTON", {
+          style: true,
+          class: true
+        });
+        var button_nodes = children(button);
+        if_block.l(button_nodes);
+        button_nodes.forEach(detach_dev);
+        this.h();
+      },
+      h: function hydrate() {
+        set_style(button, "--color",
+        /*peatColor*/
+        ctx[1]);
+        attr_dev(button, "class", "svelte-1dcsqo0");
+        add_location(button, file$1, 35, 0, 594);
+      },
+      m: function mount(target, anchor) {
+        insert_dev(target, button, anchor);
+        if_block.m(button, null);
+
+        if (!mounted) {
+          dispose = listen_dev(button, "click",
+          /*click_handler*/
+          ctx[2], false, false, false);
+          mounted = true;
+        }
+      },
+      p: function update(ctx, _ref) {
+        var [dirty] = _ref;
+
+        if (current_block_type !== (current_block_type = select_block_type(ctx))) {
+          if_block.d(1);
+          if_block = current_block_type(ctx);
+
+          if (if_block) {
+            if_block.c();
+            if_block.m(button, null);
+          }
+        }
+
+        if (dirty &
+        /*peatColor*/
+        2) {
+          set_style(button, "--color",
+          /*peatColor*/
+          ctx[1]);
+        }
+      },
+      i: noop,
+      o: noop,
+      d: function destroy(detaching) {
+        if (detaching) detach_dev(button);
+        if_block.d();
+        mounted = false;
+        dispose();
+      }
+    };
+    dispatch_dev("SvelteRegisterBlock", {
+      block,
+      id: create_fragment$1.name,
+      type: "component",
+      source: "",
+      ctx
+    });
+    return block;
+  }
+
+  function instance$1($$self, $$props, $$invalidate) {
+    var {
+      $$slots: slots = {},
+      $$scope
+    } = $$props;
+    validate_slots("ButtonPeat", slots, []);
+    var {
+      peatVisible = false
+    } = $$props;
+    var {
+      peatColor
+    } = $$props;
+    var writable_props = ["peatVisible", "peatColor"];
+    Object.keys($$props).forEach(key => {
+      if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn("<ButtonPeat> was created with unknown prop '".concat(key, "'"));
+    });
+
+    function click_handler(event) {
+      bubble($$self, event);
+    }
+
+    $$self.$$set = $$props => {
+      if ("peatVisible" in $$props) $$invalidate(0, peatVisible = $$props.peatVisible);
+      if ("peatColor" in $$props) $$invalidate(1, peatColor = $$props.peatColor);
+    };
+
+    $$self.$capture_state = () => ({
+      peatVisible,
+      peatColor
+    });
+
+    $$self.$inject_state = $$props => {
+      if ("peatVisible" in $$props) $$invalidate(0, peatVisible = $$props.peatVisible);
+      if ("peatColor" in $$props) $$invalidate(1, peatColor = $$props.peatColor);
+    };
+
+    if ($$props && "$$inject" in $$props) {
+      $$self.$inject_state($$props.$$inject);
+    }
+
+    return [peatVisible, peatColor, click_handler];
+  }
+
+  class ButtonPeat extends SvelteComponentDev {
+    constructor(options) {
+      super(options);
+      init(this, options, instance$1, create_fragment$1, safe_not_equal, {
+        peatVisible: 0,
+        peatColor: 1
+      });
+      dispatch_dev("SvelteRegisterComponent", {
+        component: this,
+        tagName: "ButtonPeat",
+        options,
+        id: create_fragment$1.name
+      });
+      var {
+        ctx
+      } = this.$$;
+      var props = options.props || {};
+
+      if (
+      /*peatColor*/
+      ctx[1] === undefined && !("peatColor" in props)) {
+        console.warn("<ButtonPeat> was created without expected prop 'peatColor'");
+      }
+    }
+
+    get peatVisible() {
+      throw new Error("<ButtonPeat>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    set peatVisible(value) {
+      throw new Error("<ButtonPeat>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    get peatColor() {
+      throw new Error("<ButtonPeat>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    set peatColor(value) {
+      throw new Error("<ButtonPeat>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+  }
+
   var mapboxGl = createCommonjsModule(function (module, exports) {
   /* Mapbox GL JS is licensed under the 3-Clause BSD License. Full text of license: https://github.com/mapbox/mapbox-gl-js/blob/v1.12.0/LICENSE.txt */
   (function (global, factory) {
@@ -4265,14 +4621,80 @@ var app = (function () {
   var {
     console: console_1
   } = globals;
-  var file$1 = "src/components/Map.svelte";
+  var file$2 = "src/components/Map.svelte"; // (180:2) {#if hasPeat}
 
-  function create_fragment$1(ctx) {
+  function create_if_block$2(ctx) {
+    var buttonpeat;
+    var current;
+    buttonpeat = new ButtonPeat({
+      props: {
+        peatVisible:
+        /*peatVisible*/
+        ctx[7],
+        peatColor:
+        /*peatColor*/
+        ctx[4]
+      },
+      $$inline: true
+    });
+    buttonpeat.$on("click",
+    /*togglePeat*/
+    ctx[10]);
+    var block = {
+      c: function create() {
+        create_component(buttonpeat.$$.fragment);
+      },
+      l: function claim(nodes) {
+        claim_component(buttonpeat.$$.fragment, nodes);
+      },
+      m: function mount(target, anchor) {
+        mount_component(buttonpeat, target, anchor);
+        current = true;
+      },
+      p: function update(ctx, dirty) {
+        var buttonpeat_changes = {};
+        if (dirty &
+        /*peatVisible*/
+        128) buttonpeat_changes.peatVisible =
+        /*peatVisible*/
+        ctx[7];
+        if (dirty &
+        /*peatColor*/
+        16) buttonpeat_changes.peatColor =
+        /*peatColor*/
+        ctx[4];
+        buttonpeat.$set(buttonpeat_changes);
+      },
+      i: function intro(local) {
+        if (current) return;
+        transition_in(buttonpeat.$$.fragment, local);
+        current = true;
+      },
+      o: function outro(local) {
+        transition_out(buttonpeat.$$.fragment, local);
+        current = false;
+      },
+      d: function destroy(detaching) {
+        destroy_component(buttonpeat, detaching);
+      }
+    };
+    dispatch_dev("SvelteRegisterBlock", {
+      block,
+      id: create_if_block$2.name,
+      type: "if",
+      source: "(180:2) {#if hasPeat}",
+      ctx
+    });
+    return block;
+  }
+
+  function create_fragment$2(ctx) {
     var link;
     var t0;
     var div1;
     var legend;
     var t1;
+    var t2;
     var div0;
     var current;
     legend = new Legend({
@@ -4292,6 +4714,9 @@ var app = (function () {
       },
       $$inline: true
     });
+    var if_block =
+    /*hasPeat*/
+    ctx[6] && create_if_block$2(ctx);
     var block = {
       c: function create() {
         link = element("link");
@@ -4299,6 +4724,8 @@ var app = (function () {
         div1 = element("div");
         create_component(legend.$$.fragment);
         t1 = space();
+        if (if_block) if_block.c();
+        t2 = space();
         div0 = element("div");
         this.h();
       },
@@ -4316,6 +4743,8 @@ var app = (function () {
         var div1_nodes = children(div1);
         claim_component(legend.$$.fragment, div1_nodes);
         t1 = claim_space(div1_nodes);
+        if (if_block) if_block.l(div1_nodes);
+        t2 = claim_space(div1_nodes);
         div0 = claim_element(div1_nodes, "DIV", {
           class: true
         });
@@ -4326,11 +4755,11 @@ var app = (function () {
       h: function hydrate() {
         attr_dev(link, "href", "https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css");
         attr_dev(link, "rel", "stylesheet");
-        add_location(link, file$1, 131, 2, 3354);
+        add_location(link, file$2, 175, 2, 4462);
         attr_dev(div0, "class", "map svelte-lsrd4t");
-        add_location(div0, file$1, 135, 2, 3546);
+        add_location(div0, file$2, 182, 2, 4745);
         attr_dev(div1, "class", "map-wrapper svelte-lsrd4t");
-        add_location(div1, file$1, 133, 0, 3460);
+        add_location(div1, file$2, 177, 0, 4568);
       },
       m: function mount(target, anchor) {
         append_dev(document.head, link);
@@ -4338,10 +4767,12 @@ var app = (function () {
         insert_dev(target, div1, anchor);
         mount_component(legend, div1, null);
         append_dev(div1, t1);
+        if (if_block) if_block.m(div1, null);
+        append_dev(div1, t2);
         append_dev(div1, div0);
         /*div0_binding*/
 
-        ctx[12](div0);
+        ctx[16](div0);
         current = true;
       },
       p: function update(ctx, _ref) {
@@ -4368,14 +4799,41 @@ var app = (function () {
         /*legendLabel*/
         ctx[3];
         legend.$set(legend_changes);
+
+        if (
+        /*hasPeat*/
+        ctx[6]) {
+          if (if_block) {
+            if_block.p(ctx, dirty);
+
+            if (dirty &
+            /*hasPeat*/
+            64) {
+              transition_in(if_block, 1);
+            }
+          } else {
+            if_block = create_if_block$2(ctx);
+            if_block.c();
+            transition_in(if_block, 1);
+            if_block.m(div1, t2);
+          }
+        } else if (if_block) {
+          group_outros();
+          transition_out(if_block, 1, 1, () => {
+            if_block = null;
+          });
+          check_outros();
+        }
       },
       i: function intro(local) {
         if (current) return;
         transition_in(legend.$$.fragment, local);
+        transition_in(if_block);
         current = true;
       },
       o: function outro(local) {
         transition_out(legend.$$.fragment, local);
+        transition_out(if_block);
         current = false;
       },
       d: function destroy(detaching) {
@@ -4383,14 +4841,15 @@ var app = (function () {
         if (detaching) detach_dev(t0);
         if (detaching) detach_dev(div1);
         destroy_component(legend);
+        if (if_block) if_block.d();
         /*div0_binding*/
 
-        ctx[12](null);
+        ctx[16](null);
       }
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$1.name,
+      id: create_fragment$2.name,
       type: "component",
       source: "",
       ctx
@@ -4398,7 +4857,7 @@ var app = (function () {
     return block;
   }
 
-  function instance$1($$self, $$props, $$invalidate) {
+  function instance$2($$self, $$props, $$invalidate) {
     var $currentYear;
     var $loading;
     var {
@@ -4411,9 +4870,9 @@ var app = (function () {
       loading
     } = getContext(key);
     validate_store(currentYear, "currentYear");
-    component_subscribe($$self, currentYear, value => $$invalidate(16, $currentYear = value));
+    component_subscribe($$self, currentYear, value => $$invalidate(20, $currentYear = value));
     validate_store(loading, "loading");
-    component_subscribe($$self, loading, value => $$invalidate(17, $loading = value));
+    component_subscribe($$self, loading, value => $$invalidate(21, $loading = value));
     var {
       data
     } = $$props;
@@ -4438,8 +4897,14 @@ var app = (function () {
 
     var mapContainer; // This will hold IDs of all our added layers
 
-    var layers = []; // CONFIG STUFF
-    // These are props only so it's easy to make switches based on feedback.
+    var layers = []; // PEAT!
+
+    var hasPeat = false;
+    var peatVisible = false;
+    var {
+      peatColor
+    } = $$props; // CONFIG STUFF
+    // These are props only so it's easy to make switches based on feedback. These are in `config.mapOptions`
 
     mapboxGl.accessToken = "pk.eyJ1IjoibHVjaWRhLW1hcHMiLCJhIjoiY2tha2RkOXM4MG53NzJ2cXppdzZvdzN2aSJ9.X5HdsaEoLR6uFPFzt_gbVQ";
     var {
@@ -4512,6 +4977,34 @@ var app = (function () {
           map.setFilter(gridID, [">=", "".concat(i), 0]);
         }
       });
+      map.on("load", function (e) {
+        console.log(e);
+        fetch("./geo/peat.min.topojson").then(data => data.json()).then(peat => {
+          console.log(peat);
+          map.addSource("peat", {
+            type: "geojson",
+            data: mesh(peat)
+          });
+          map.addLayer({
+            id: "peat-layer",
+            type: "fill",
+            source: "peat",
+            layout: {
+              visibility: "none"
+            },
+            paint: {
+              "fill-opacity": 0.9,
+              "fill-color": peatColor,
+              "fill-opacity-transition": {
+                duration: 300,
+                delay: 0
+              }
+            }
+          });
+        }).then(() => {
+          $$invalidate(6, hasPeat = true);
+        });
+      });
       map.on("sourcedata", e => {
         if (e.isSourceLoaded) {
           // Do something when the source has finished loading
@@ -4522,7 +5015,13 @@ var app = (function () {
         map.remove();
       };
     }));
-    var writable_props = ["data", "stops", "geoData", "mapFill", "legendLabel", "years", "MAP_CENTER", "MAP_ZOOM", "MAP_STYLE_URL"];
+
+    function togglePeat() {
+      $$invalidate(7, peatVisible = !peatVisible);
+      map.setLayoutProperty("peat-layer", "visibility", peatVisible ? "visible" : "none");
+    }
+
+    var writable_props = ["data", "stops", "geoData", "mapFill", "legendLabel", "years", "peatColor", "MAP_CENTER", "MAP_ZOOM", "MAP_STYLE_URL"];
     Object.keys($$props).forEach(key => {
       if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn("<Map> was created with unknown prop '".concat(key, "'"));
     });
@@ -4530,20 +5029,21 @@ var app = (function () {
     function div0_binding($$value) {
       binding_callbacks[$$value ? "unshift" : "push"](() => {
         mapContainer = $$value;
-        $$invalidate(4, mapContainer);
+        $$invalidate(5, mapContainer);
       });
     }
 
     $$self.$$set = $$props => {
       if ("data" in $$props) $$invalidate(0, data = $$props.data);
       if ("stops" in $$props) $$invalidate(1, stops = $$props.stops);
-      if ("geoData" in $$props) $$invalidate(7, geoData = $$props.geoData);
+      if ("geoData" in $$props) $$invalidate(11, geoData = $$props.geoData);
       if ("mapFill" in $$props) $$invalidate(2, mapFill = $$props.mapFill);
       if ("legendLabel" in $$props) $$invalidate(3, legendLabel = $$props.legendLabel);
-      if ("years" in $$props) $$invalidate(8, years = $$props.years);
-      if ("MAP_CENTER" in $$props) $$invalidate(9, MAP_CENTER = $$props.MAP_CENTER);
-      if ("MAP_ZOOM" in $$props) $$invalidate(10, MAP_ZOOM = $$props.MAP_ZOOM);
-      if ("MAP_STYLE_URL" in $$props) $$invalidate(11, MAP_STYLE_URL = $$props.MAP_STYLE_URL);
+      if ("years" in $$props) $$invalidate(12, years = $$props.years);
+      if ("peatColor" in $$props) $$invalidate(4, peatColor = $$props.peatColor);
+      if ("MAP_CENTER" in $$props) $$invalidate(13, MAP_CENTER = $$props.MAP_CENTER);
+      if ("MAP_ZOOM" in $$props) $$invalidate(14, MAP_ZOOM = $$props.MAP_ZOOM);
+      if ("MAP_STYLE_URL" in $$props) $$invalidate(15, MAP_STYLE_URL = $$props.MAP_STYLE_URL);
     };
 
     $$self.$capture_state = () => ({
@@ -4552,9 +5052,11 @@ var app = (function () {
       currentYear,
       loading,
       Legend,
+      ButtonPeat,
       onMount,
       afterUpdate,
       mapboxgl: mapboxGl,
+      mesh,
       data,
       stops,
       geoData,
@@ -4565,57 +5067,65 @@ var app = (function () {
       map,
       mapContainer,
       layers,
+      hasPeat,
+      peatVisible,
+      peatColor,
       MAP_CENTER,
       MAP_ZOOM,
       MAP_STYLE_URL,
+      togglePeat,
       $currentYear,
       $loading
     });
 
     $$self.$inject_state = $$props => {
-      if ("currentYear" in $$props) $$invalidate(5, currentYear = $$props.currentYear);
-      if ("loading" in $$props) $$invalidate(6, loading = $$props.loading);
+      if ("currentYear" in $$props) $$invalidate(8, currentYear = $$props.currentYear);
+      if ("loading" in $$props) $$invalidate(9, loading = $$props.loading);
       if ("data" in $$props) $$invalidate(0, data = $$props.data);
       if ("stops" in $$props) $$invalidate(1, stops = $$props.stops);
-      if ("geoData" in $$props) $$invalidate(7, geoData = $$props.geoData);
+      if ("geoData" in $$props) $$invalidate(11, geoData = $$props.geoData);
       if ("mapFill" in $$props) $$invalidate(2, mapFill = $$props.mapFill);
       if ("legendLabel" in $$props) $$invalidate(3, legendLabel = $$props.legendLabel);
-      if ("years" in $$props) $$invalidate(8, years = $$props.years);
+      if ("years" in $$props) $$invalidate(12, years = $$props.years);
       if ("oldCurrentYear" in $$props) oldCurrentYear = $$props.oldCurrentYear;
       if ("map" in $$props) map = $$props.map;
-      if ("mapContainer" in $$props) $$invalidate(4, mapContainer = $$props.mapContainer);
+      if ("mapContainer" in $$props) $$invalidate(5, mapContainer = $$props.mapContainer);
       if ("layers" in $$props) layers = $$props.layers;
-      if ("MAP_CENTER" in $$props) $$invalidate(9, MAP_CENTER = $$props.MAP_CENTER);
-      if ("MAP_ZOOM" in $$props) $$invalidate(10, MAP_ZOOM = $$props.MAP_ZOOM);
-      if ("MAP_STYLE_URL" in $$props) $$invalidate(11, MAP_STYLE_URL = $$props.MAP_STYLE_URL);
+      if ("hasPeat" in $$props) $$invalidate(6, hasPeat = $$props.hasPeat);
+      if ("peatVisible" in $$props) $$invalidate(7, peatVisible = $$props.peatVisible);
+      if ("peatColor" in $$props) $$invalidate(4, peatColor = $$props.peatColor);
+      if ("MAP_CENTER" in $$props) $$invalidate(13, MAP_CENTER = $$props.MAP_CENTER);
+      if ("MAP_ZOOM" in $$props) $$invalidate(14, MAP_ZOOM = $$props.MAP_ZOOM);
+      if ("MAP_STYLE_URL" in $$props) $$invalidate(15, MAP_STYLE_URL = $$props.MAP_STYLE_URL);
     };
 
     if ($$props && "$$inject" in $$props) {
       $$self.$inject_state($$props.$$inject);
     }
 
-    return [data, stops, mapFill, legendLabel, mapContainer, currentYear, loading, geoData, years, MAP_CENTER, MAP_ZOOM, MAP_STYLE_URL, div0_binding];
+    return [data, stops, mapFill, legendLabel, peatColor, mapContainer, hasPeat, peatVisible, currentYear, loading, togglePeat, geoData, years, MAP_CENTER, MAP_ZOOM, MAP_STYLE_URL, div0_binding];
   }
 
   class Map$1 extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$1, create_fragment$1, safe_not_equal, {
+      init(this, options, instance$2, create_fragment$2, safe_not_equal, {
         data: 0,
         stops: 1,
-        geoData: 7,
+        geoData: 11,
         mapFill: 2,
         legendLabel: 3,
-        years: 8,
-        MAP_CENTER: 9,
-        MAP_ZOOM: 10,
-        MAP_STYLE_URL: 11
+        years: 12,
+        peatColor: 4,
+        MAP_CENTER: 13,
+        MAP_ZOOM: 14,
+        MAP_STYLE_URL: 15
       });
       dispatch_dev("SvelteRegisterComponent", {
         component: this,
         tagName: "Map",
         options,
-        id: create_fragment$1.name
+        id: create_fragment$2.name
       });
       var {
         ctx
@@ -4636,7 +5146,7 @@ var app = (function () {
 
       if (
       /*geoData*/
-      ctx[7] === undefined && !("geoData" in props)) {
+      ctx[11] === undefined && !("geoData" in props)) {
         console_1.warn("<Map> was created without expected prop 'geoData'");
       }
 
@@ -4648,8 +5158,14 @@ var app = (function () {
 
       if (
       /*years*/
-      ctx[8] === undefined && !("years" in props)) {
+      ctx[12] === undefined && !("years" in props)) {
         console_1.warn("<Map> was created without expected prop 'years'");
+      }
+
+      if (
+      /*peatColor*/
+      ctx[4] === undefined && !("peatColor" in props)) {
+        console_1.warn("<Map> was created without expected prop 'peatColor'");
       }
     }
 
@@ -4676,7 +5192,7 @@ var app = (function () {
     }
 
     get geoData() {
-      return this.$$.ctx[7];
+      return this.$$.ctx[11];
     }
 
     set geoData(geoData) {
@@ -4709,7 +5225,7 @@ var app = (function () {
     }
 
     get years() {
-      return this.$$.ctx[8];
+      return this.$$.ctx[12];
     }
 
     set years(years) {
@@ -4719,8 +5235,19 @@ var app = (function () {
       flush();
     }
 
+    get peatColor() {
+      return this.$$.ctx[4];
+    }
+
+    set peatColor(peatColor) {
+      this.$set({
+        peatColor
+      });
+      flush();
+    }
+
     get MAP_CENTER() {
-      return this.$$.ctx[9];
+      return this.$$.ctx[13];
     }
 
     set MAP_CENTER(MAP_CENTER) {
@@ -4731,7 +5258,7 @@ var app = (function () {
     }
 
     get MAP_ZOOM() {
-      return this.$$.ctx[10];
+      return this.$$.ctx[14];
     }
 
     set MAP_ZOOM(MAP_ZOOM) {
@@ -4742,7 +5269,7 @@ var app = (function () {
     }
 
     get MAP_STYLE_URL() {
-      return this.$$.ctx[11];
+      return this.$$.ctx[15];
     }
 
     set MAP_STYLE_URL(MAP_STYLE_URL) {
@@ -4765,9 +5292,9 @@ var app = (function () {
   }
 
   /* src/components/Loading.svelte generated by Svelte v3.29.7 */
-  var file$2 = "src/components/Loading.svelte";
+  var file$3 = "src/components/Loading.svelte";
 
-  function create_fragment$2(ctx) {
+  function create_fragment$3(ctx) {
     var div;
     var span1;
     var span0;
@@ -4816,13 +5343,13 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(span0, "class", "spinner__animation svelte-us4dxl");
-        add_location(span0, file$2, 70, 89, 1406);
+        add_location(span0, file$3, 70, 89, 1406);
         attr_dev(span1, "class", "spinner__wrapper svelte-us4dxl");
-        add_location(span1, file$2, 70, 57, 1374);
+        add_location(span1, file$3, 70, 57, 1374);
         attr_dev(span2, "class", "spinner__text svelte-us4dxl");
-        add_location(span2, file$2, 70, 133, 1450);
+        add_location(span2, file$3, 70, 133, 1450);
         attr_dev(div, "class", "spinner svelte-us4dxl");
-        add_location(div, file$2, 70, 0, 1317);
+        add_location(div, file$3, 70, 0, 1317);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);
@@ -4865,7 +5392,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$2.name,
+      id: create_fragment$3.name,
       type: "component",
       source: "",
       ctx
@@ -4873,7 +5400,7 @@ var app = (function () {
     return block;
   }
 
-  function instance$2($$self, $$props, $$invalidate) {
+  function instance$3($$self, $$props, $$invalidate) {
     var {
       $$slots: slots = {},
       $$scope
@@ -4910,14 +5437,14 @@ var app = (function () {
   class Loading extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$2, create_fragment$2, safe_not_equal, {
+      init(this, options, instance$3, create_fragment$3, safe_not_equal, {
         text: 0
       });
       dispatch_dev("SvelteRegisterComponent", {
         component: this,
         tagName: "Loading",
         options,
-        id: create_fragment$2.name
+        id: create_fragment$3.name
       });
     }
 
@@ -4932,7 +5459,7 @@ var app = (function () {
   }
 
   /* src/components/Timeline.svelte generated by Svelte v3.29.7 */
-  var file$3 = "src/components/Timeline.svelte";
+  var file$4 = "src/components/Timeline.svelte";
 
   function get_each_context$1(ctx, list, i) {
     var child_ctx = ctx.slice();
@@ -4989,7 +5516,7 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(span, "class", "timeline__button__year svelte-qg2shx");
-        add_location(span, file$3, 247, 33, 5733);
+        add_location(span, file$4, 247, 33, 5733);
         attr_dev(button, "class", "timeline__button svelte-qg2shx");
         attr_dev(button, "aria-label", button_aria_label_value = "View data for the year " +
         /*year*/
@@ -5008,9 +5535,9 @@ var app = (function () {
         ctx[12] ==
         /*$currentYear*/
         ctx[1]);
-        add_location(button, file$3, 240, 8, 5401);
+        add_location(button, file$4, 240, 8, 5401);
         attr_dev(li, "class", "svelte-qg2shx");
-        add_location(li, file$3, 239, 6, 5388);
+        add_location(li, file$4, 239, 6, 5388);
       },
       m: function mount(target, anchor) {
         insert_dev(target, li, anchor);
@@ -5062,7 +5589,7 @@ var app = (function () {
   } // (256:4) {:else}
 
 
-  function create_else_block(ctx) {
+  function create_else_block$1(ctx) {
     var t;
     var block = {
       c: function create() {
@@ -5080,7 +5607,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_else_block.name,
+      id: create_else_block$1.name,
       type: "else",
       source: "(256:4) {:else}",
       ctx
@@ -5089,7 +5616,7 @@ var app = (function () {
   } // (253:4) {#if playing}
 
 
-  function create_if_block$1(ctx) {
+  function create_if_block$3(ctx) {
     var t;
     var block = {
       c: function create() {
@@ -5107,7 +5634,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_if_block$1.name,
+      id: create_if_block$3.name,
       type: "if",
       source: "(253:4) {#if playing}",
       ctx
@@ -5115,7 +5642,7 @@ var app = (function () {
     return block;
   }
 
-  function create_fragment$3(ctx) {
+  function create_fragment$4(ctx) {
     var div;
     var span;
     var t0;
@@ -5138,8 +5665,8 @@ var app = (function () {
     function select_block_type(ctx, dirty) {
       if (
       /*playing*/
-      ctx[0]) return create_if_block$1;
-      return create_else_block;
+      ctx[0]) return create_if_block$3;
+      return create_else_block$1;
     }
 
     var current_block_type = select_block_type(ctx);
@@ -5200,19 +5727,19 @@ var app = (function () {
       h: function hydrate() {
         attr_dev(span, "id", "timeline-label");
         attr_dev(span, "class", "label svelte-qg2shx");
-        add_location(span, file$3, 236, 2, 5235);
+        add_location(span, file$4, 236, 2, 5235);
         attr_dev(ol, "aria-labelledby", "timeline-label");
         attr_dev(ol, "class", "timeline svelte-qg2shx");
-        add_location(ol, file$3, 237, 2, 5298);
+        add_location(ol, file$4, 237, 2, 5298);
         attr_dev(button, "class", "timeline__button timeline__button--play svelte-qg2shx");
         attr_dev(button, "aria-label", "Click here to animate the data over time");
         attr_dev(button, "title", "Click to play animation");
         toggle_class(button, "playing",
         /*playing*/
         ctx[0]);
-        add_location(button, file$3, 251, 2, 5848);
+        add_location(button, file$4, 251, 2, 5848);
         attr_dev(div, "class", "timeline-wrapper svelte-qg2shx");
-        add_location(div, file$3, 235, 0, 5202);
+        add_location(div, file$4, 235, 0, 5202);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);
@@ -5300,7 +5827,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$3.name,
+      id: create_fragment$4.name,
       type: "component",
       source: "",
       ctx
@@ -5317,7 +5844,7 @@ var app = (function () {
     return "&#8217;".concat(y - 2000);
   }
 
-  function instance$3($$self, $$props, $$invalidate) {
+  function instance$4($$self, $$props, $$invalidate) {
     var $currentYear;
     var {
       $$slots: slots = {},
@@ -5444,7 +5971,7 @@ var app = (function () {
   class Timeline extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$3, create_fragment$3, safe_not_equal, {
+      init(this, options, instance$4, create_fragment$4, safe_not_equal, {
         start: 6,
         end: 7,
         step: 8
@@ -5453,7 +5980,7 @@ var app = (function () {
         component: this,
         tagName: "Timeline",
         options,
-        id: create_fragment$3.name
+        id: create_fragment$4.name
       });
       var {
         ctx
@@ -5506,7 +6033,7 @@ var app = (function () {
   }
 
   /* src/components/InputSelect.svelte generated by Svelte v3.29.7 */
-  var file$4 = "src/components/InputSelect.svelte";
+  var file$5 = "src/components/InputSelect.svelte";
 
   function get_each_context$2(ctx, list, i) {
     var child_ctx = ctx.slice();
@@ -5547,7 +6074,7 @@ var app = (function () {
         ctx[3].value;
         option.value = option.__value;
         option.selected = true;
-        add_location(option, file$4, 85, 6, 1907);
+        add_location(option, file$5, 85, 6, 1907);
       },
       m: function mount(target, anchor) {
         insert_dev(target, option, anchor);
@@ -5584,7 +6111,7 @@ var app = (function () {
   } // (89:6) {#if label}
 
 
-  function create_if_block$2(ctx) {
+  function create_if_block$4(ctx) {
     var option;
     var t_value =
     /*label*/
@@ -5621,7 +6148,7 @@ var app = (function () {
         option.selected = option_selected_value =
         /*selected*/
         ctx[8];
-        add_location(option, file$4, 89, 8, 2075);
+        add_location(option, file$5, 89, 8, 2075);
       },
       m: function mount(target, anchor) {
         insert_dev(target, option, anchor);
@@ -5665,7 +6192,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_if_block$2.name,
+      id: create_if_block$4.name,
       type: "if",
       source: "(89:6) {#if label}",
       ctx
@@ -5679,7 +6206,7 @@ var app = (function () {
     var if_block_anchor;
     var if_block =
     /*label*/
-    ctx[4] && create_if_block$2(ctx);
+    ctx[4] && create_if_block$4(ctx);
     var block = {
       key: key_1,
       first: null,
@@ -5710,7 +6237,7 @@ var app = (function () {
           if (if_block) {
             if_block.p(ctx, dirty);
           } else {
-            if_block = create_if_block$2(ctx);
+            if_block = create_if_block$4(ctx);
             if_block.c();
             if_block.m(if_block_anchor.parentNode, if_block_anchor);
           }
@@ -5735,7 +6262,7 @@ var app = (function () {
     return block;
   }
 
-  function create_fragment$4(ctx) {
+  function create_fragment$5(ctx) {
     var label_1;
     var t0;
     var t1;
@@ -5821,7 +6348,7 @@ var app = (function () {
         /*id*/
         ctx[1]);
         attr_dev(label_1, "class", "svelte-1rv2iiv");
-        add_location(label_1, file$4, 81, 0, 1758);
+        add_location(label_1, file$5, 81, 0, 1758);
         attr_dev(select, "class", "select__input svelte-1rv2iiv");
         attr_dev(select, "id",
         /*id*/
@@ -5834,9 +6361,9 @@ var app = (function () {
         ctx[0] === void 0) add_render_callback(() =>
         /*select_change_handler*/
         ctx[6].call(select));
-        add_location(select, file$4, 83, 2, 1813);
+        add_location(select, file$5, 83, 2, 1813);
         attr_dev(div, "class", "select svelte-1rv2iiv");
-        add_location(div, file$4, 82, 0, 1790);
+        add_location(div, file$5, 82, 0, 1790);
       },
       m: function mount(target, anchor) {
         insert_dev(target, label_1, anchor);
@@ -5948,7 +6475,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$4.name,
+      id: create_fragment$5.name,
       type: "component",
       source: "",
       ctx
@@ -5956,7 +6483,7 @@ var app = (function () {
     return block;
   }
 
-  function instance$4($$self, $$props, $$invalidate) {
+  function instance$5($$self, $$props, $$invalidate) {
     var {
       $$slots: slots = {},
       $$scope
@@ -6027,7 +6554,7 @@ var app = (function () {
   class InputSelect extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$4, create_fragment$4, safe_not_equal, {
+      init(this, options, instance$5, create_fragment$5, safe_not_equal, {
         label: 4,
         id: 1,
         value: 0,
@@ -6038,7 +6565,7 @@ var app = (function () {
         component: this,
         tagName: "InputSelect",
         options,
-        id: create_fragment$4.name
+        id: create_fragment$5.name
       });
       var {
         ctx
@@ -6125,9 +6652,9 @@ var app = (function () {
   var {
     Object: Object_1
   } = globals;
-  var file$5 = "src/components/Nav.svelte";
+  var file$6 = "src/components/Nav.svelte";
 
-  function create_fragment$5(ctx) {
+  function create_fragment$6(ctx) {
     var nav;
     var timeline;
     var t;
@@ -6211,9 +6738,9 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(div, "class", "select-wrapper svelte-v4cxpm");
-        add_location(div, file$5, 49, 2, 1042);
+        add_location(div, file$6, 49, 2, 1042);
         attr_dev(nav, "class", "nav svelte-v4cxpm");
-        add_location(nav, file$5, 47, 0, 978);
+        add_location(nav, file$6, 47, 0, 978);
       },
       m: function mount(target, anchor) {
         insert_dev(target, nav, anchor);
@@ -6280,7 +6807,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$5.name,
+      id: create_fragment$6.name,
       type: "component",
       source: "",
       ctx
@@ -6288,7 +6815,7 @@ var app = (function () {
     return block;
   }
 
-  function instance$5($$self, $$props, $$invalidate) {
+  function instance$6($$self, $$props, $$invalidate) {
     var $activeData;
     var {
       $$slots: slots = {},
@@ -6386,7 +6913,7 @@ var app = (function () {
   class Nav extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$5, create_fragment$5, safe_not_equal, {
+      init(this, options, instance$6, create_fragment$6, safe_not_equal, {
         data: 7,
         yearLabel: 0,
         dataLabel: 1,
@@ -6397,7 +6924,7 @@ var app = (function () {
         component: this,
         tagName: "Nav",
         options,
-        id: create_fragment$5.name
+        id: create_fragment$6.name
       });
       var {
         ctx
@@ -6478,9 +7005,9 @@ var app = (function () {
   }
 
   /* src/components/DataDescription.svelte generated by Svelte v3.29.7 */
-  var file$6 = "src/components/DataDescription.svelte";
+  var file$7 = "src/components/DataDescription.svelte";
 
-  function create_fragment$6(ctx) {
+  function create_fragment$7(ctx) {
     var dl;
     var dt;
     var t0;
@@ -6525,11 +7052,11 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(dt, "class", "description__name svelte-x695rw");
-        add_location(dt, file$6, 27, 2, 466);
+        add_location(dt, file$7, 27, 2, 466);
         attr_dev(dd, "class", "description__text svelte-x695rw");
-        add_location(dd, file$6, 28, 2, 511);
+        add_location(dd, file$7, 28, 2, 511);
         attr_dev(dl, "class", "description svelte-x695rw");
-        add_location(dl, file$6, 26, 0, 439);
+        add_location(dl, file$7, 26, 0, 439);
       },
       m: function mount(target, anchor) {
         insert_dev(target, dl, anchor);
@@ -6559,7 +7086,7 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$6.name,
+      id: create_fragment$7.name,
       type: "component",
       source: "",
       ctx
@@ -6567,7 +7094,7 @@ var app = (function () {
     return block;
   }
 
-  function instance$6($$self, $$props, $$invalidate) {
+  function instance$7($$self, $$props, $$invalidate) {
     var {
       $$slots: slots = {},
       $$scope
@@ -6609,7 +7136,7 @@ var app = (function () {
   class DataDescription extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$6, create_fragment$6, safe_not_equal, {
+      init(this, options, instance$7, create_fragment$7, safe_not_equal, {
         label: 0,
         description: 1
       });
@@ -6617,7 +7144,7 @@ var app = (function () {
         component: this,
         tagName: "DataDescription",
         options,
-        id: create_fragment$6.name
+        id: create_fragment$7.name
       });
     }
 
@@ -6691,7 +7218,7 @@ var app = (function () {
       return { set, update, subscribe };
   }
 
-  var file$7 = "src/App.svelte"; // (117:4) {#if $loading}
+  var file$8 = "src/App.svelte"; // (118:4) {#if $loading}
 
   function create_if_block_2(ctx) {
     var loading_1;
@@ -6727,11 +7254,11 @@ var app = (function () {
       block,
       id: create_if_block_2.name,
       type: "if",
-      source: "(117:4) {#if $loading}",
+      source: "(118:4) {#if $loading}",
       ctx
     });
     return block;
-  } // (120:4) {#if geoData}
+  } // (121:4) {#if geoData}
 
 
   function create_if_block_1$1(ctx) {
@@ -6760,7 +7287,11 @@ var app = (function () {
     }, {
       geoData:
       /*geoData*/
-      ctx[11]
+      ctx[12]
+    }, {
+      peatColor:
+      /*peatColor*/
+      ctx[10]
     }, {
       legendLabel:
       /*legendLabel*/
@@ -6780,7 +7311,7 @@ var app = (function () {
     });
     /*map_1_binding*/
 
-    ctx[20](map_1);
+    ctx[21](map_1);
     var block = {
       c: function create() {
         create_component(map_1.$$.fragment);
@@ -6794,8 +7325,8 @@ var app = (function () {
       },
       p: function update(ctx, dirty) {
         var map_1_changes = dirty &
-        /*grid, data, stops, mapFill, years, geoData, legendLabel, mapOptions*/
-        2803 ? get_spread_update(map_1_spread_levels, [dirty &
+        /*grid, data, stops, mapFill, years, geoData, peatColor, legendLabel, mapOptions*/
+        5875 ? get_spread_update(map_1_spread_levels, [dirty &
         /*grid*/
         2 && {
           gridFile:
@@ -6827,10 +7358,16 @@ var app = (function () {
           ctx[4]
         }, dirty &
         /*geoData*/
-        2048 && {
+        4096 && {
           geoData:
           /*geoData*/
-          ctx[11]
+          ctx[12]
+        }, dirty &
+        /*peatColor*/
+        1024 && {
+          peatColor:
+          /*peatColor*/
+          ctx[10]
         }, dirty &
         /*legendLabel*/
         128 && {
@@ -6855,7 +7392,7 @@ var app = (function () {
       },
       d: function destroy(detaching) {
         /*map_1_binding*/
-        ctx[20](null);
+        ctx[21](null);
         destroy_component(map_1, detaching);
       }
     };
@@ -6863,14 +7400,14 @@ var app = (function () {
       block,
       id: create_if_block_1$1.name,
       type: "if",
-      source: "(120:4) {#if geoData}",
+      source: "(121:4) {#if geoData}",
       ctx
     });
     return block;
-  } // (124:2) {#if dataNote}
+  } // (125:2) {#if dataNote}
 
 
-  function create_if_block$3(ctx) {
+  function create_if_block$5(ctx) {
     var div;
     var raw_value = marked(
     /*dataNote*/
@@ -6890,7 +7427,7 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(div, "class", "note svelte-dwkbwa");
-        add_location(div, file$7, 124, 4, 3194);
+        add_location(div, file$8, 125, 4, 3244);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);
@@ -6909,15 +7446,15 @@ var app = (function () {
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_if_block$3.name,
+      id: create_if_block$5.name,
       type: "if",
-      source: "(124:2) {#if dataNote}",
+      source: "(125:2) {#if dataNote}",
       ctx
     });
     return block;
   }
 
-  function create_fragment$7(ctx) {
+  function create_fragment$8(ctx) {
     var div1;
     var nav;
     var t0;
@@ -6943,13 +7480,13 @@ var app = (function () {
         ctx[4],
         firstData:
         /*firstData*/
-        ctx[10]
+        ctx[11]
       },
       $$inline: true
     });
     var datadescription_spread_levels = [
     /*descriptionData*/
-    ctx[14]];
+    ctx[15]];
     var datadescription_props = {};
 
     for (var i = 0; i < datadescription_spread_levels.length; i += 1) {
@@ -6962,13 +7499,13 @@ var app = (function () {
     });
     var if_block0 =
     /*$loading*/
-    ctx[15] && create_if_block_2(ctx);
+    ctx[16] && create_if_block_2(ctx);
     var if_block1 =
     /*geoData*/
-    ctx[11] && create_if_block_1$1(ctx);
+    ctx[12] && create_if_block_1$1(ctx);
     var if_block2 =
     /*dataNote*/
-    ctx[8] && create_if_block$3(ctx);
+    ctx[8] && create_if_block$5(ctx);
     var block = {
       c: function create() {
         div1 = element("div");
@@ -7008,9 +7545,9 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(div0, "class", "map-wrapper svelte-dwkbwa");
-        add_location(div0, file$7, 115, 2, 2944);
+        add_location(div0, file$8, 116, 2, 2982);
         attr_dev(div1, "class", "projections svelte-dwkbwa");
-        add_location(div1, file$7, 112, 0, 2790);
+        add_location(div1, file$8, 113, 0, 2828);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div1, anchor);
@@ -7026,7 +7563,7 @@ var app = (function () {
         if (if_block2) if_block2.m(div1, null);
         /*div1_binding*/
 
-        ctx[21](div1);
+        ctx[22](div1);
         current = true;
       },
       p: function update(ctx, _ref) {
@@ -7054,24 +7591,24 @@ var app = (function () {
         ctx[4];
         if (dirty &
         /*firstData*/
-        1024) nav_changes.firstData =
+        2048) nav_changes.firstData =
         /*firstData*/
-        ctx[10];
+        ctx[11];
         nav.$set(nav_changes);
         var datadescription_changes = dirty &
         /*descriptionData*/
-        16384 ? get_spread_update(datadescription_spread_levels, [get_spread_object(
+        32768 ? get_spread_update(datadescription_spread_levels, [get_spread_object(
         /*descriptionData*/
-        ctx[14])]) : {};
+        ctx[15])]) : {};
         datadescription.$set(datadescription_changes);
 
         if (
         /*$loading*/
-        ctx[15]) {
+        ctx[16]) {
           if (if_block0) {
             if (dirty &
             /*$loading*/
-            32768) {
+            65536) {
               transition_in(if_block0, 1);
             }
           } else {
@@ -7090,13 +7627,13 @@ var app = (function () {
 
         if (
         /*geoData*/
-        ctx[11]) {
+        ctx[12]) {
           if (if_block1) {
             if_block1.p(ctx, dirty);
 
             if (dirty &
             /*geoData*/
-            2048) {
+            4096) {
               transition_in(if_block1, 1);
             }
           } else {
@@ -7119,7 +7656,7 @@ var app = (function () {
           if (if_block2) {
             if_block2.p(ctx, dirty);
           } else {
-            if_block2 = create_if_block$3(ctx);
+            if_block2 = create_if_block$5(ctx);
             if_block2.c();
             if_block2.m(div1, null);
           }
@@ -7152,12 +7689,12 @@ var app = (function () {
         if (if_block2) if_block2.d();
         /*div1_binding*/
 
-        ctx[21](null);
+        ctx[22](null);
       }
     };
     dispatch_dev("SvelteRegisterBlock", {
       block,
-      id: create_fragment$7.name,
+      id: create_fragment$8.name,
       type: "component",
       source: "",
       ctx
@@ -7165,9 +7702,9 @@ var app = (function () {
     return block;
   }
 
-  function instance$7($$self, $$props, $$invalidate) {
-    var $currentYear;
+  function instance$8($$self, $$props, $$invalidate) {
     var $activeData;
+    var $currentYear;
     var $loading;
     var {
       $$slots: slots = {},
@@ -7179,10 +7716,10 @@ var app = (function () {
     component_subscribe($$self, activeData, value => $$invalidate(24, $activeData = value));
     var currentYear = writable(null);
     validate_store(currentYear, "currentYear");
-    component_subscribe($$self, currentYear, value => $$invalidate(23, $currentYear = value));
+    component_subscribe($$self, currentYear, value => $$invalidate(25, $currentYear = value));
     var loading = writable(true);
     validate_store(loading, "loading");
-    component_subscribe($$self, loading, value => $$invalidate(15, $loading = value));
+    component_subscribe($$self, loading, value => $$invalidate(16, $loading = value));
     setContext(key, {
       activeData,
       currentYear,
@@ -7222,6 +7759,9 @@ var app = (function () {
       mapOptions = {}
     } = $$props;
     var {
+      peatColor = "#82563D"
+    } = $$props;
+    var {
       firstData
     } = $$props;
     var oldData = firstData;
@@ -7230,7 +7770,7 @@ var app = (function () {
     var container;
     onMount( /*#__PURE__*/_asyncToGenerator(function* () {
       set_store_value(currentYear, $currentYear = years.start, $currentYear);
-      $$invalidate(11, geoData = yield getMapData(grid, firstData, data, gridID));
+      $$invalidate(12, geoData = yield getMapData(grid, firstData, data, gridID));
     }));
     afterUpdate( /*#__PURE__*/_asyncToGenerator(function* () {
       // Check to make sure this update is for new data
@@ -7240,12 +7780,12 @@ var app = (function () {
 
         oldData = $activeData; // Clear out the mapped data, which will destroy the instance of the component
 
-        $$invalidate(11, geoData = null); // get the new data for the map. When it loads, this will trigger a new map.
+        $$invalidate(12, geoData = null); // get the new data for the map. When it loads, this will trigger a new map.
 
-        $$invalidate(11, geoData = yield getMapData(grid, $activeData, data, gridID));
+        $$invalidate(12, geoData = yield getMapData(grid, $activeData, data, gridID));
       }
     }));
-    var writable_props = ["data", "grid", "yearLabel", "dataLabel", "years", "stops", "mapFill", "gridID", "legendLabel", "dataNote", "mapOptions", "firstData"];
+    var writable_props = ["data", "grid", "yearLabel", "dataLabel", "years", "stops", "mapFill", "gridID", "legendLabel", "dataNote", "mapOptions", "peatColor", "firstData"];
     Object.keys($$props).forEach(key => {
       if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn("<App> was created with unknown prop '".concat(key, "'"));
     });
@@ -7253,14 +7793,14 @@ var app = (function () {
     function map_1_binding($$value) {
       binding_callbacks[$$value ? "unshift" : "push"](() => {
         map = $$value;
-        $$invalidate(12, map);
+        $$invalidate(13, map);
       });
     }
 
     function div1_binding($$value) {
       binding_callbacks[$$value ? "unshift" : "push"](() => {
         container = $$value;
-        $$invalidate(13, container);
+        $$invalidate(14, container);
       });
     }
 
@@ -7272,11 +7812,12 @@ var app = (function () {
       if ("years" in $$props) $$invalidate(4, years = $$props.years);
       if ("stops" in $$props) $$invalidate(5, stops = $$props.stops);
       if ("mapFill" in $$props) $$invalidate(6, mapFill = $$props.mapFill);
-      if ("gridID" in $$props) $$invalidate(19, gridID = $$props.gridID);
+      if ("gridID" in $$props) $$invalidate(20, gridID = $$props.gridID);
       if ("legendLabel" in $$props) $$invalidate(7, legendLabel = $$props.legendLabel);
       if ("dataNote" in $$props) $$invalidate(8, dataNote = $$props.dataNote);
       if ("mapOptions" in $$props) $$invalidate(9, mapOptions = $$props.mapOptions);
-      if ("firstData" in $$props) $$invalidate(10, firstData = $$props.firstData);
+      if ("peatColor" in $$props) $$invalidate(10, peatColor = $$props.peatColor);
+      if ("firstData" in $$props) $$invalidate(11, firstData = $$props.firstData);
     };
 
     $$self.$capture_state = () => ({
@@ -7305,21 +7846,22 @@ var app = (function () {
       legendLabel,
       dataNote,
       mapOptions,
+      peatColor,
       firstData,
       oldData,
       geoData,
       map,
       container,
       descriptionData,
-      $currentYear,
       $activeData,
+      $currentYear,
       $loading
     });
 
     $$self.$inject_state = $$props => {
-      if ("activeData" in $$props) $$invalidate(16, activeData = $$props.activeData);
-      if ("currentYear" in $$props) $$invalidate(17, currentYear = $$props.currentYear);
-      if ("loading" in $$props) $$invalidate(18, loading = $$props.loading);
+      if ("activeData" in $$props) $$invalidate(17, activeData = $$props.activeData);
+      if ("currentYear" in $$props) $$invalidate(18, currentYear = $$props.currentYear);
+      if ("loading" in $$props) $$invalidate(19, loading = $$props.loading);
       if ("data" in $$props) $$invalidate(0, data = $$props.data);
       if ("grid" in $$props) $$invalidate(1, grid = $$props.grid);
       if ("yearLabel" in $$props) $$invalidate(2, yearLabel = $$props.yearLabel);
@@ -7327,16 +7869,17 @@ var app = (function () {
       if ("years" in $$props) $$invalidate(4, years = $$props.years);
       if ("stops" in $$props) $$invalidate(5, stops = $$props.stops);
       if ("mapFill" in $$props) $$invalidate(6, mapFill = $$props.mapFill);
-      if ("gridID" in $$props) $$invalidate(19, gridID = $$props.gridID);
+      if ("gridID" in $$props) $$invalidate(20, gridID = $$props.gridID);
       if ("legendLabel" in $$props) $$invalidate(7, legendLabel = $$props.legendLabel);
       if ("dataNote" in $$props) $$invalidate(8, dataNote = $$props.dataNote);
       if ("mapOptions" in $$props) $$invalidate(9, mapOptions = $$props.mapOptions);
-      if ("firstData" in $$props) $$invalidate(10, firstData = $$props.firstData);
+      if ("peatColor" in $$props) $$invalidate(10, peatColor = $$props.peatColor);
+      if ("firstData" in $$props) $$invalidate(11, firstData = $$props.firstData);
       if ("oldData" in $$props) oldData = $$props.oldData;
-      if ("geoData" in $$props) $$invalidate(11, geoData = $$props.geoData);
-      if ("map" in $$props) $$invalidate(12, map = $$props.map);
-      if ("container" in $$props) $$invalidate(13, container = $$props.container);
-      if ("descriptionData" in $$props) $$invalidate(14, descriptionData = $$props.descriptionData);
+      if ("geoData" in $$props) $$invalidate(12, geoData = $$props.geoData);
+      if ("map" in $$props) $$invalidate(13, map = $$props.map);
+      if ("container" in $$props) $$invalidate(14, container = $$props.container);
+      if ("descriptionData" in $$props) $$invalidate(15, descriptionData = $$props.descriptionData);
     };
 
     var descriptionData;
@@ -7347,19 +7890,19 @@ var app = (function () {
 
     $$self.$$.update = () => {
       if ($$self.$$.dirty &
-      /*data, firstData*/
-      1025) {
-         $$invalidate(14, descriptionData = activeData ? data[activeData] : data[firstData]);
+      /*$activeData, data, firstData*/
+      16779265) {
+         $$invalidate(15, descriptionData = $activeData ? data[$activeData] : data[firstData]);
       }
     };
 
-    return [data, grid, yearLabel, dataLabel, years, stops, mapFill, legendLabel, dataNote, mapOptions, firstData, geoData, map, container, descriptionData, $loading, activeData, currentYear, loading, gridID, map_1_binding, div1_binding];
+    return [data, grid, yearLabel, dataLabel, years, stops, mapFill, legendLabel, dataNote, mapOptions, peatColor, firstData, geoData, map, container, descriptionData, $loading, activeData, currentYear, loading, gridID, map_1_binding, div1_binding];
   }
 
   class App extends SvelteComponentDev {
     constructor(options) {
       super(options);
-      init(this, options, instance$7, create_fragment$7, safe_not_equal, {
+      init(this, options, instance$8, create_fragment$8, safe_not_equal, {
         data: 0,
         grid: 1,
         yearLabel: 2,
@@ -7367,17 +7910,18 @@ var app = (function () {
         years: 4,
         stops: 5,
         mapFill: 6,
-        gridID: 19,
+        gridID: 20,
         legendLabel: 7,
         dataNote: 8,
         mapOptions: 9,
-        firstData: 10
+        peatColor: 10,
+        firstData: 11
       });
       dispatch_dev("SvelteRegisterComponent", {
         component: this,
         tagName: "App",
         options,
-        id: create_fragment$7.name
+        id: create_fragment$8.name
       });
       var {
         ctx
@@ -7398,7 +7942,7 @@ var app = (function () {
 
       if (
       /*gridID*/
-      ctx[19] === undefined && !("gridID" in props)) {
+      ctx[20] === undefined && !("gridID" in props)) {
         console.warn("<App> was created without expected prop 'gridID'");
       }
 
@@ -7416,7 +7960,7 @@ var app = (function () {
 
       if (
       /*firstData*/
-      ctx[10] === undefined && !("firstData" in props)) {
+      ctx[11] === undefined && !("firstData" in props)) {
         console.warn("<App> was created without expected prop 'firstData'");
       }
     }
@@ -7506,6 +8050,14 @@ var app = (function () {
     }
 
     set mapOptions(value) {
+      throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    get peatColor() {
+      throw new Error("<App>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    set peatColor(value) {
       throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     }
 

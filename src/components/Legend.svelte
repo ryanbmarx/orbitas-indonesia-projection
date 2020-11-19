@@ -48,8 +48,8 @@
     .legend {
       background: rgba(255, 255, 255, 0.9);
       position: absolute;
-      top: 16px;
-      left: 16px;
+      top: 10px;
+      left: 10px;
       width: 33vw;
       max-width: 380px;
       padding: 8px;
