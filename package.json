@@ -35,7 +35,8 @@
     "start:dev": " sirv public --single --dev",
     "static:geo": "mkdir -p public/geo && cp -rf src/geo/* public/geo",
     "static:data": "mkdir -p public/data && cp -rf src/data/* public/data",
-    "static": "run-p static:*"
+    "static:assets": "mkdir -p public/static && cp -rf src/static/* public",
+    "static": "mkdir -p public && run-p static:*"
   },
   "browserslist": "> 0.25%, not dead"
 }
