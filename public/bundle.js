@@ -5369,14 +5369,14 @@ var app = (function () {
         this.h();
       },
       h: function hydrate() {
-        attr_dev(span0, "class", "spinner__animation svelte-us4dxl");
-        add_location(span0, file$3, 70, 89, 1406);
-        attr_dev(span1, "class", "spinner__wrapper svelte-us4dxl");
-        add_location(span1, file$3, 70, 57, 1374);
-        attr_dev(span2, "class", "spinner__text svelte-us4dxl");
-        add_location(span2, file$3, 70, 133, 1450);
-        attr_dev(div, "class", "spinner svelte-us4dxl");
-        add_location(div, file$3, 70, 0, 1317);
+        attr_dev(span0, "class", "spinner__animation svelte-1gv0dyz");
+        add_location(span0, file$3, 71, 89, 1444);
+        attr_dev(span1, "class", "spinner__wrapper svelte-1gv0dyz");
+        add_location(span1, file$3, 71, 57, 1412);
+        attr_dev(span2, "class", "spinner__text svelte-1gv0dyz");
+        add_location(span2, file$3, 71, 133, 1488);
+        attr_dev(div, "class", "spinner svelte-1gv0dyz");
+        add_location(div, file$3, 71, 0, 1355);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);

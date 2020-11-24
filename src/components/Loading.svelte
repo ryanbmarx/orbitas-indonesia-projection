@@ -43,6 +43,7 @@
   }
 
   .spinner__text {
+    font: 16px/1em var(--sans-serif);
     animation-name: fade;
     animation-duration: 1.5s;
     animation-iteration-count: infinite;
