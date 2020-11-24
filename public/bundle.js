@@ -4621,7 +4621,7 @@ var app = (function () {
   var {
     console: console_1
   } = globals;
-  var file$2 = "src/components/Map.svelte"; // (180:2) {#if hasPeat}
+  var file$2 = "src/components/Map.svelte"; // (183:2) {#if hasPeat}
 
   function create_if_block$2(ctx) {
     var buttonpeat;
@@ -4682,7 +4682,7 @@ var app = (function () {
       block,
       id: create_if_block$2.name,
       type: "if",
-      source: "(180:2) {#if hasPeat}",
+      source: "(183:2) {#if hasPeat}",
       ctx
     });
     return block;
@@ -4755,11 +4755,11 @@ var app = (function () {
       h: function hydrate() {
         attr_dev(link, "href", "https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css");
         attr_dev(link, "rel", "stylesheet");
-        add_location(link, file$2, 175, 2, 4462);
+        add_location(link, file$2, 178, 2, 4632);
         attr_dev(div0, "class", "map svelte-lsrd4t");
-        add_location(div0, file$2, 182, 2, 4745);
+        add_location(div0, file$2, 185, 2, 4915);
         attr_dev(div1, "class", "map-wrapper svelte-lsrd4t");
-        add_location(div1, file$2, 177, 0, 4568);
+        add_location(div1, file$2, 180, 0, 4738);
       },
       m: function mount(target, anchor) {
         append_dev(document.head, link);
@@ -4772,7 +4772,7 @@ var app = (function () {
         append_dev(div1, div0);
         /*div0_binding*/
 
-        ctx[16](div0);
+        ctx[17](div0);
         current = true;
       },
       p: function update(ctx, _ref) {
@@ -4844,7 +4844,7 @@ var app = (function () {
         if (if_block) if_block.d();
         /*div0_binding*/
 
-        ctx[16](null);
+        ctx[17](null);
       }
     };
     dispatch_dev("SvelteRegisterBlock", {
@@ -4870,9 +4870,9 @@ var app = (function () {
       loading
     } = getContext(key);
     validate_store(currentYear, "currentYear");
-    component_subscribe($$self, currentYear, value => $$invalidate(20, $currentYear = value));
+    component_subscribe($$self, currentYear, value => $$invalidate(21, $currentYear = value));
     validate_store(loading, "loading");
-    component_subscribe($$self, loading, value => $$invalidate(21, $loading = value));
+    component_subscribe($$self, loading, value => $$invalidate(22, $loading = value));
     var {
       data
     } = $$props;
@@ -4897,8 +4897,10 @@ var app = (function () {
 
     var mapContainer; // This will hold IDs of all our added layers
 
-    var layers = []; // PEAT!
-
+    var layers = [];
+    var {
+      displayPeat
+    } = $$props;
     var hasPeat = false;
     var peatVisible = false;
     var {
@@ -4976,35 +4978,39 @@ var app = (function () {
 
           map.setFilter(gridID, [">=", "".concat(i), 0]);
         }
-      });
-      map.on("load", function (e) {
-        console.log(e);
-        fetch("./geo/peat.min.topojson").then(data => data.json()).then(peat => {
-          console.log(peat);
-          map.addSource("peat", {
-            type: "geojson",
-            data: mesh(peat)
-          });
-          map.addLayer({
-            id: "peat-layer",
-            type: "fill",
-            source: "peat",
-            layout: {
-              visibility: "none"
-            },
-            paint: {
-              "fill-opacity": 0.9,
-              "fill-color": peatColor,
-              "fill-opacity-transition": {
-                duration: 300,
-                delay: 0
+      }); // If we want to see peat, then display it.
+      // Otherwise skip this entirely.
+
+      if (displayPeat) {
+        map.on("load", function (e) {
+          console.log(e);
+          fetch("./geo/peat.min.topojson").then(data => data.json()).then(peat => {
+            map.addSource("peat", {
+              type: "geojson",
+              data: mesh(peat)
+            });
+            map.addLayer({
+              id: "peat-layer",
+              type: "fill",
+              source: "peat",
+              layout: {
+                visibility: "none"
+              },
+              paint: {
+                "fill-opacity": 0.9,
+                "fill-color": peatColor,
+                "fill-opacity-transition": {
+                  duration: 300,
+                  delay: 0
+                }
               }
-            }
+            });
+          }).then(() => {
+            $$invalidate(6, hasPeat = true);
           });
-        }).then(() => {
-          $$invalidate(6, hasPeat = true);
         });
-      });
+      }
+
       map.on("sourcedata", e => {
         if (e.isSourceLoaded) {
           // Do something when the source has finished loading
@@ -5021,7 +5027,7 @@ var app = (function () {
       map.setLayoutProperty("peat-layer", "visibility", peatVisible ? "visible" : "none");
     }
 
-    var writable_props = ["data", "stops", "geoData", "mapFill", "legendLabel", "years", "peatColor", "MAP_CENTER", "MAP_ZOOM", "MAP_STYLE_URL"];
+    var writable_props = ["data", "stops", "geoData", "mapFill", "legendLabel", "years", "displayPeat", "peatColor", "MAP_CENTER", "MAP_ZOOM", "MAP_STYLE_URL"];
     Object.keys($$props).forEach(key => {
       if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn("<Map> was created with unknown prop '".concat(key, "'"));
     });
@@ -5040,10 +5046,11 @@ var app = (function () {
       if ("mapFill" in $$props) $$invalidate(2, mapFill = $$props.mapFill);
       if ("legendLabel" in $$props) $$invalidate(3, legendLabel = $$props.legendLabel);
       if ("years" in $$props) $$invalidate(12, years = $$props.years);
+      if ("displayPeat" in $$props) $$invalidate(13, displayPeat = $$props.displayPeat);
       if ("peatColor" in $$props) $$invalidate(4, peatColor = $$props.peatColor);
-      if ("MAP_CENTER" in $$props) $$invalidate(13, MAP_CENTER = $$props.MAP_CENTER);
-      if ("MAP_ZOOM" in $$props) $$invalidate(14, MAP_ZOOM = $$props.MAP_ZOOM);
-      if ("MAP_STYLE_URL" in $$props) $$invalidate(15, MAP_STYLE_URL = $$props.MAP_STYLE_URL);
+      if ("MAP_CENTER" in $$props) $$invalidate(14, MAP_CENTER = $$props.MAP_CENTER);
+      if ("MAP_ZOOM" in $$props) $$invalidate(15, MAP_ZOOM = $$props.MAP_ZOOM);
+      if ("MAP_STYLE_URL" in $$props) $$invalidate(16, MAP_STYLE_URL = $$props.MAP_STYLE_URL);
     };
 
     $$self.$capture_state = () => ({
@@ -5067,6 +5074,7 @@ var app = (function () {
       map,
       mapContainer,
       layers,
+      displayPeat,
       hasPeat,
       peatVisible,
       peatColor,
@@ -5091,19 +5099,20 @@ var app = (function () {
       if ("map" in $$props) map = $$props.map;
       if ("mapContainer" in $$props) $$invalidate(5, mapContainer = $$props.mapContainer);
       if ("layers" in $$props) layers = $$props.layers;
+      if ("displayPeat" in $$props) $$invalidate(13, displayPeat = $$props.displayPeat);
       if ("hasPeat" in $$props) $$invalidate(6, hasPeat = $$props.hasPeat);
       if ("peatVisible" in $$props) $$invalidate(7, peatVisible = $$props.peatVisible);
       if ("peatColor" in $$props) $$invalidate(4, peatColor = $$props.peatColor);
-      if ("MAP_CENTER" in $$props) $$invalidate(13, MAP_CENTER = $$props.MAP_CENTER);
-      if ("MAP_ZOOM" in $$props) $$invalidate(14, MAP_ZOOM = $$props.MAP_ZOOM);
-      if ("MAP_STYLE_URL" in $$props) $$invalidate(15, MAP_STYLE_URL = $$props.MAP_STYLE_URL);
+      if ("MAP_CENTER" in $$props) $$invalidate(14, MAP_CENTER = $$props.MAP_CENTER);
+      if ("MAP_ZOOM" in $$props) $$invalidate(15, MAP_ZOOM = $$props.MAP_ZOOM);
+      if ("MAP_STYLE_URL" in $$props) $$invalidate(16, MAP_STYLE_URL = $$props.MAP_STYLE_URL);
     };
 
     if ($$props && "$$inject" in $$props) {
       $$self.$inject_state($$props.$$inject);
     }
 
-    return [data, stops, mapFill, legendLabel, peatColor, mapContainer, hasPeat, peatVisible, currentYear, loading, togglePeat, geoData, years, MAP_CENTER, MAP_ZOOM, MAP_STYLE_URL, div0_binding];
+    return [data, stops, mapFill, legendLabel, peatColor, mapContainer, hasPeat, peatVisible, currentYear, loading, togglePeat, geoData, years, displayPeat, MAP_CENTER, MAP_ZOOM, MAP_STYLE_URL, div0_binding];
   }
 
   class Map$1 extends SvelteComponentDev {
@@ -5116,10 +5125,11 @@ var app = (function () {
         mapFill: 2,
         legendLabel: 3,
         years: 12,
+        displayPeat: 13,
         peatColor: 4,
-        MAP_CENTER: 13,
-        MAP_ZOOM: 14,
-        MAP_STYLE_URL: 15
+        MAP_CENTER: 14,
+        MAP_ZOOM: 15,
+        MAP_STYLE_URL: 16
       });
       dispatch_dev("SvelteRegisterComponent", {
         component: this,
@@ -5160,6 +5170,12 @@ var app = (function () {
       /*years*/
       ctx[12] === undefined && !("years" in props)) {
         console_1.warn("<Map> was created without expected prop 'years'");
+      }
+
+      if (
+      /*displayPeat*/
+      ctx[13] === undefined && !("displayPeat" in props)) {
+        console_1.warn("<Map> was created without expected prop 'displayPeat'");
       }
 
       if (
@@ -5235,6 +5251,17 @@ var app = (function () {
       flush();
     }
 
+    get displayPeat() {
+      return this.$$.ctx[13];
+    }
+
+    set displayPeat(displayPeat) {
+      this.$set({
+        displayPeat
+      });
+      flush();
+    }
+
     get peatColor() {
       return this.$$.ctx[4];
     }
@@ -5247,7 +5274,7 @@ var app = (function () {
     }
 
     get MAP_CENTER() {
-      return this.$$.ctx[13];
+      return this.$$.ctx[14];
     }
 
     set MAP_CENTER(MAP_CENTER) {
@@ -5258,7 +5285,7 @@ var app = (function () {
     }
 
     get MAP_ZOOM() {
-      return this.$$.ctx[14];
+      return this.$$.ctx[15];
     }
 
     set MAP_ZOOM(MAP_ZOOM) {
@@ -5269,7 +5296,7 @@ var app = (function () {
     }
 
     get MAP_STYLE_URL() {
-      return this.$$.ctx[15];
+      return this.$$.ctx[16];
     }
 
     set MAP_STYLE_URL(MAP_STYLE_URL) {
@@ -7150,7 +7177,7 @@ var app = (function () {
       return { set, update, subscribe };
   }
 
-  var file$8 = "src/App.svelte"; // (120:4) {#if $loading}
+  var file$8 = "src/App.svelte"; // (121:4) {#if $loading}
 
   function create_if_block_2(ctx) {
     var loading_1;
@@ -7186,17 +7213,21 @@ var app = (function () {
       block,
       id: create_if_block_2.name,
       type: "if",
-      source: "(120:4) {#if $loading}",
+      source: "(121:4) {#if $loading}",
       ctx
     });
     return block;
-  } // (123:4) {#if geoData}
+  } // (124:4) {#if geoData}
 
 
   function create_if_block_1$1(ctx) {
     var map_1;
     var current;
     var map_1_spread_levels = [{
+      displayPeat:
+      /*displayPeat*/
+      ctx[11]
+    }, {
       gridFile:
       /*grid*/
       ctx[1]
@@ -7219,7 +7250,7 @@ var app = (function () {
     }, {
       geoData:
       /*geoData*/
-      ctx[12]
+      ctx[13]
     }, {
       peatColor:
       /*peatColor*/
@@ -7243,7 +7274,7 @@ var app = (function () {
     });
     /*map_1_binding*/
 
-    ctx[21](map_1);
+    ctx[22](map_1);
     var block = {
       c: function create() {
         create_component(map_1.$$.fragment);
@@ -7257,8 +7288,14 @@ var app = (function () {
       },
       p: function update(ctx, dirty) {
         var map_1_changes = dirty &
-        /*grid, data, stops, mapFill, years, geoData, peatColor, legendLabel, mapOptions*/
-        5875 ? get_spread_update(map_1_spread_levels, [dirty &
+        /*displayPeat, grid, data, stops, mapFill, years, geoData, peatColor, legendLabel, mapOptions*/
+        12019 ? get_spread_update(map_1_spread_levels, [dirty &
+        /*displayPeat*/
+        2048 && {
+          displayPeat:
+          /*displayPeat*/
+          ctx[11]
+        }, dirty &
         /*grid*/
         2 && {
           gridFile:
@@ -7290,10 +7327,10 @@ var app = (function () {
           ctx[4]
         }, dirty &
         /*geoData*/
-        4096 && {
+        8192 && {
           geoData:
           /*geoData*/
-          ctx[12]
+          ctx[13]
         }, dirty &
         /*peatColor*/
         1024 && {
@@ -7324,7 +7361,7 @@ var app = (function () {
       },
       d: function destroy(detaching) {
         /*map_1_binding*/
-        ctx[21](null);
+        ctx[22](null);
         destroy_component(map_1, detaching);
       }
     };
@@ -7332,11 +7369,11 @@ var app = (function () {
       block,
       id: create_if_block_1$1.name,
       type: "if",
-      source: "(123:4) {#if geoData}",
+      source: "(124:4) {#if geoData}",
       ctx
     });
     return block;
-  } // (127:2) {#if dataNote}
+  } // (128:2) {#if dataNote}
 
 
   function create_if_block$4(ctx) {
@@ -7359,7 +7396,7 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(div, "class", "note svelte-9bupb4");
-        add_location(div, file$8, 127, 4, 3277);
+        add_location(div, file$8, 128, 4, 3325);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);
@@ -7380,7 +7417,7 @@ var app = (function () {
       block,
       id: create_if_block$4.name,
       type: "if",
-      source: "(127:2) {#if dataNote}",
+      source: "(128:2) {#if dataNote}",
       ctx
     });
     return block;
@@ -7412,13 +7449,13 @@ var app = (function () {
         ctx[4],
         firstData:
         /*firstData*/
-        ctx[11]
+        ctx[12]
       },
       $$inline: true
     });
     var datadescription_spread_levels = [
     /*descriptionData*/
-    ctx[15]];
+    ctx[16]];
     var datadescription_props = {};
 
     for (var i = 0; i < datadescription_spread_levels.length; i += 1) {
@@ -7431,10 +7468,10 @@ var app = (function () {
     });
     var if_block0 =
     /*$loading*/
-    ctx[16] && create_if_block_2(ctx);
+    ctx[17] && create_if_block_2(ctx);
     var if_block1 =
     /*geoData*/
-    ctx[12] && create_if_block_1$1(ctx);
+    ctx[13] && create_if_block_1$1(ctx);
     var if_block2 =
     /*dataNote*/
     ctx[8] && create_if_block$4(ctx);
@@ -7477,9 +7514,9 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(div0, "class", "map-wrapper svelte-9bupb4");
-        add_location(div0, file$8, 118, 2, 3015);
+        add_location(div0, file$8, 119, 2, 3049);
         attr_dev(div1, "class", "projections svelte-9bupb4");
-        add_location(div1, file$8, 115, 0, 2861);
+        add_location(div1, file$8, 116, 0, 2895);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div1, anchor);
@@ -7495,7 +7532,7 @@ var app = (function () {
         if (if_block2) if_block2.m(div1, null);
         /*div1_binding*/
 
-        ctx[22](div1);
+        ctx[23](div1);
         current = true;
       },
       p: function update(ctx, _ref) {
@@ -7523,24 +7560,24 @@ var app = (function () {
         ctx[4];
         if (dirty &
         /*firstData*/
-        2048) nav_changes.firstData =
+        4096) nav_changes.firstData =
         /*firstData*/
-        ctx[11];
+        ctx[12];
         nav.$set(nav_changes);
         var datadescription_changes = dirty &
         /*descriptionData*/
-        32768 ? get_spread_update(datadescription_spread_levels, [get_spread_object(
+        65536 ? get_spread_update(datadescription_spread_levels, [get_spread_object(
         /*descriptionData*/
-        ctx[15])]) : {};
+        ctx[16])]) : {};
         datadescription.$set(datadescription_changes);
 
         if (
         /*$loading*/
-        ctx[16]) {
+        ctx[17]) {
           if (if_block0) {
             if (dirty &
             /*$loading*/
-            65536) {
+            131072) {
               transition_in(if_block0, 1);
             }
           } else {
@@ -7559,13 +7596,13 @@ var app = (function () {
 
         if (
         /*geoData*/
-        ctx[12]) {
+        ctx[13]) {
           if (if_block1) {
             if_block1.p(ctx, dirty);
 
             if (dirty &
             /*geoData*/
-            4096) {
+            8192) {
               transition_in(if_block1, 1);
             }
           } else {
@@ -7621,7 +7658,7 @@ var app = (function () {
         if (if_block2) if_block2.d();
         /*div1_binding*/
 
-        ctx[22](null);
+        ctx[23](null);
       }
     };
     dispatch_dev("SvelteRegisterBlock", {
@@ -7645,13 +7682,13 @@ var app = (function () {
     validate_slots("App", slots, []);
     var activeData = writable(null);
     validate_store(activeData, "activeData");
-    component_subscribe($$self, activeData, value => $$invalidate(24, $activeData = value));
+    component_subscribe($$self, activeData, value => $$invalidate(25, $activeData = value));
     var currentYear = writable(null);
     validate_store(currentYear, "currentYear");
-    component_subscribe($$self, currentYear, value => $$invalidate(25, $currentYear = value));
+    component_subscribe($$self, currentYear, value => $$invalidate(26, $currentYear = value));
     var loading = writable(true);
     validate_store(loading, "loading");
-    component_subscribe($$self, loading, value => $$invalidate(16, $loading = value));
+    component_subscribe($$self, loading, value => $$invalidate(17, $loading = value));
     setContext(key, {
       activeData,
       currentYear,
@@ -7694,6 +7731,9 @@ var app = (function () {
       peatColor = "#82563D"
     } = $$props;
     var {
+      displayPeat = false
+    } = $$props;
+    var {
       firstData
     } = $$props;
     var oldData = firstData;
@@ -7702,7 +7742,7 @@ var app = (function () {
     var container;
     onMount( /*#__PURE__*/_asyncToGenerator(function* () {
       set_store_value(currentYear, $currentYear = years.start, $currentYear);
-      $$invalidate(12, geoData = yield getMapData(grid, firstData, data, gridID));
+      $$invalidate(13, geoData = yield getMapData(grid, firstData, data, gridID));
     }));
     afterUpdate( /*#__PURE__*/_asyncToGenerator(function* () {
       // Check to make sure this update is for new data
@@ -7712,12 +7752,12 @@ var app = (function () {
 
         oldData = $activeData; // Clear out the mapped data, which will destroy the instance of the component
 
-        $$invalidate(12, geoData = null); // get the new data for the map. When it loads, this will trigger a new map.
+        $$invalidate(13, geoData = null); // get the new data for the map. When it loads, this will trigger a new map.
 
-        $$invalidate(12, geoData = yield getMapData(grid, $activeData, data, gridID));
+        $$invalidate(13, geoData = yield getMapData(grid, $activeData, data, gridID));
       }
     }));
-    var writable_props = ["data", "grid", "yearLabel", "dataLabel", "years", "stops", "mapFill", "gridID", "legendLabel", "dataNote", "mapOptions", "peatColor", "firstData"];
+    var writable_props = ["data", "grid", "yearLabel", "dataLabel", "years", "stops", "mapFill", "gridID", "legendLabel", "dataNote", "mapOptions", "peatColor", "displayPeat", "firstData"];
     Object.keys($$props).forEach(key => {
       if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn("<App> was created with unknown prop '".concat(key, "'"));
     });
@@ -7725,14 +7765,14 @@ var app = (function () {
     function map_1_binding($$value) {
       binding_callbacks[$$value ? "unshift" : "push"](() => {
         map = $$value;
-        $$invalidate(13, map);
+        $$invalidate(14, map);
       });
     }
 
     function div1_binding($$value) {
       binding_callbacks[$$value ? "unshift" : "push"](() => {
         container = $$value;
-        $$invalidate(14, container);
+        $$invalidate(15, container);
       });
     }
 
@@ -7744,12 +7784,13 @@ var app = (function () {
       if ("years" in $$props) $$invalidate(4, years = $$props.years);
       if ("stops" in $$props) $$invalidate(5, stops = $$props.stops);
       if ("mapFill" in $$props) $$invalidate(6, mapFill = $$props.mapFill);
-      if ("gridID" in $$props) $$invalidate(20, gridID = $$props.gridID);
+      if ("gridID" in $$props) $$invalidate(21, gridID = $$props.gridID);
       if ("legendLabel" in $$props) $$invalidate(7, legendLabel = $$props.legendLabel);
       if ("dataNote" in $$props) $$invalidate(8, dataNote = $$props.dataNote);
       if ("mapOptions" in $$props) $$invalidate(9, mapOptions = $$props.mapOptions);
       if ("peatColor" in $$props) $$invalidate(10, peatColor = $$props.peatColor);
-      if ("firstData" in $$props) $$invalidate(11, firstData = $$props.firstData);
+      if ("displayPeat" in $$props) $$invalidate(11, displayPeat = $$props.displayPeat);
+      if ("firstData" in $$props) $$invalidate(12, firstData = $$props.firstData);
     };
 
     $$self.$capture_state = () => ({
@@ -7779,6 +7820,7 @@ var app = (function () {
       dataNote,
       mapOptions,
       peatColor,
+      displayPeat,
       firstData,
       oldData,
       geoData,
@@ -7791,9 +7833,9 @@ var app = (function () {
     });
 
     $$self.$inject_state = $$props => {
-      if ("activeData" in $$props) $$invalidate(17, activeData = $$props.activeData);
-      if ("currentYear" in $$props) $$invalidate(18, currentYear = $$props.currentYear);
-      if ("loading" in $$props) $$invalidate(19, loading = $$props.loading);
+      if ("activeData" in $$props) $$invalidate(18, activeData = $$props.activeData);
+      if ("currentYear" in $$props) $$invalidate(19, currentYear = $$props.currentYear);
+      if ("loading" in $$props) $$invalidate(20, loading = $$props.loading);
       if ("data" in $$props) $$invalidate(0, data = $$props.data);
       if ("grid" in $$props) $$invalidate(1, grid = $$props.grid);
       if ("yearLabel" in $$props) $$invalidate(2, yearLabel = $$props.yearLabel);
@@ -7801,17 +7843,18 @@ var app = (function () {
       if ("years" in $$props) $$invalidate(4, years = $$props.years);
       if ("stops" in $$props) $$invalidate(5, stops = $$props.stops);
       if ("mapFill" in $$props) $$invalidate(6, mapFill = $$props.mapFill);
-      if ("gridID" in $$props) $$invalidate(20, gridID = $$props.gridID);
+      if ("gridID" in $$props) $$invalidate(21, gridID = $$props.gridID);
       if ("legendLabel" in $$props) $$invalidate(7, legendLabel = $$props.legendLabel);
       if ("dataNote" in $$props) $$invalidate(8, dataNote = $$props.dataNote);
       if ("mapOptions" in $$props) $$invalidate(9, mapOptions = $$props.mapOptions);
       if ("peatColor" in $$props) $$invalidate(10, peatColor = $$props.peatColor);
-      if ("firstData" in $$props) $$invalidate(11, firstData = $$props.firstData);
+      if ("displayPeat" in $$props) $$invalidate(11, displayPeat = $$props.displayPeat);
+      if ("firstData" in $$props) $$invalidate(12, firstData = $$props.firstData);
       if ("oldData" in $$props) oldData = $$props.oldData;
-      if ("geoData" in $$props) $$invalidate(12, geoData = $$props.geoData);
-      if ("map" in $$props) $$invalidate(13, map = $$props.map);
-      if ("container" in $$props) $$invalidate(14, container = $$props.container);
-      if ("descriptionData" in $$props) $$invalidate(15, descriptionData = $$props.descriptionData);
+      if ("geoData" in $$props) $$invalidate(13, geoData = $$props.geoData);
+      if ("map" in $$props) $$invalidate(14, map = $$props.map);
+      if ("container" in $$props) $$invalidate(15, container = $$props.container);
+      if ("descriptionData" in $$props) $$invalidate(16, descriptionData = $$props.descriptionData);
     };
 
     var descriptionData;
@@ -7823,12 +7866,12 @@ var app = (function () {
     $$self.$$.update = () => {
       if ($$self.$$.dirty &
       /*$activeData, data, firstData*/
-      16779265) {
-         $$invalidate(15, descriptionData = $activeData ? data[$activeData] : data[firstData]);
+      33558529) {
+         $$invalidate(16, descriptionData = $activeData ? data[$activeData] : data[firstData]);
       }
     };
 
-    return [data, grid, yearLabel, dataLabel, years, stops, mapFill, legendLabel, dataNote, mapOptions, peatColor, firstData, geoData, map, container, descriptionData, $loading, activeData, currentYear, loading, gridID, map_1_binding, div1_binding];
+    return [data, grid, yearLabel, dataLabel, years, stops, mapFill, legendLabel, dataNote, mapOptions, peatColor, displayPeat, firstData, geoData, map, container, descriptionData, $loading, activeData, currentYear, loading, gridID, map_1_binding, div1_binding];
   }
 
   class App extends SvelteComponentDev {
@@ -7842,12 +7885,13 @@ var app = (function () {
         years: 4,
         stops: 5,
         mapFill: 6,
-        gridID: 20,
+        gridID: 21,
         legendLabel: 7,
         dataNote: 8,
         mapOptions: 9,
         peatColor: 10,
-        firstData: 11
+        displayPeat: 11,
+        firstData: 12
       });
       dispatch_dev("SvelteRegisterComponent", {
         component: this,
@@ -7874,7 +7918,7 @@ var app = (function () {
 
       if (
       /*gridID*/
-      ctx[20] === undefined && !("gridID" in props)) {
+      ctx[21] === undefined && !("gridID" in props)) {
         console.warn("<App> was created without expected prop 'gridID'");
       }
 
@@ -7892,7 +7936,7 @@ var app = (function () {
 
       if (
       /*firstData*/
-      ctx[11] === undefined && !("firstData" in props)) {
+      ctx[12] === undefined && !("firstData" in props)) {
         console.warn("<App> was created without expected prop 'firstData'");
       }
     }
@@ -7990,6 +8034,14 @@ var app = (function () {
     }
 
     set peatColor(value) {
+      throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    get displayPeat() {
+      throw new Error("<App>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    }
+
+    set displayPeat(value) {
       throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     }
 

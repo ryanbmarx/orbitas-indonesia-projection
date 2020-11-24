@@ -32,6 +32,7 @@
   let layers = [];
 
   // PEAT!
+  export let displayPeat;
   let hasPeat = false;
   let peatVisible = false;
   export let peatColor;
@@ -108,39 +109,41 @@
       }
     });
 
-    map.on("load", function (e) {
-      console.log(e);
-      fetch("./geo/peat.min.topojson")
-        .then(data => data.json())
-        .then(peat => {
-          console.log(peat);
-          map.addSource("peat", {
-            type: "geojson",
-            data: mesh(peat),
-          });
+    // If we want to see peat, then display it.
+    // Otherwise skip this entirely.
+    if (displayPeat) {
+      map.on("load", function (e) {
+        console.log(e);
+        fetch("./geo/peat.min.topojson")
+          .then(data => data.json())
+          .then(peat => {
+            map.addSource("peat", {
+              type: "geojson",
+              data: mesh(peat),
+            });
 
-          map.addLayer({
-            id: "peat-layer",
-            type: "fill",
-            source: "peat",
-            layout: {
-              visibility: "none",
-            },
-            paint: {
-              "fill-opacity": 0.9,
-              "fill-color": peatColor,
-              "fill-opacity-transition": {
-                duration: 300,
-                delay: 0,
+            map.addLayer({
+              id: "peat-layer",
+              type: "fill",
+              source: "peat",
+              layout: {
+                visibility: "none",
               },
-            },
+              paint: {
+                "fill-opacity": 0.9,
+                "fill-color": peatColor,
+                "fill-opacity-transition": {
+                  duration: 300,
+                  delay: 0,
+                },
+              },
+            });
+          })
+          .then(() => {
+            hasPeat = true;
           });
-        })
-        .then(() => {
-          hasPeat = true;
-        });
-    });
-
+      });
+    }
     map.on("sourcedata", e => {
       if (e.isSourceLoaded) {
         // Do something when the source has finished loading

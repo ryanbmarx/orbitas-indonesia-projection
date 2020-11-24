@@ -37,6 +37,7 @@
   export let dataNote;
   export let mapOptions = {};
   export let peatColor = "#82563D";
+  export let displayPeat = false;
 
   export let firstData;
   let oldData = firstData;
@@ -121,7 +122,7 @@
       <Loading />
     {/if}
     {#if geoData}
-      <Map bind:this={map} gridFile={grid} {data} {stops} {mapFill} {years} {geoData} {peatColor} {legendLabel} {...mapOptions} />
+      <Map {displayPeat} bind:this={map} gridFile={grid} {data} {stops} {mapFill} {years} {geoData} {peatColor} {legendLabel} {...mapOptions} />
     {/if}
   </div>
   {#if dataNote}
