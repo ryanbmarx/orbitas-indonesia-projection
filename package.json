@@ -8,6 +8,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@rollup/plugin-replace": "^2.3.4",
+    "chokidar": "^3.4.3",
     "d3": "^6.2.0",
     "d3-format": "^2.0.0",
     "gulp": "^4.0.2",
@@ -35,8 +36,9 @@
     "start:dev": " sirv public --single --dev",
     "static:geo": "mkdir -p public/geo && cp -rf src/geo/* public/geo",
     "static:data": "mkdir -p public/data && cp -rf src/data/* public/data",
-    "static:assets": "mkdir -p public/static && cp -rf src/static/* public",
-    "static": "mkdir -p public && run-p static:*"
+    "static:assets": "mkdir -p public/assets && cp -rf src/assets/* public",
+    "static": "mkdir -p public && run-p static:*",
+    "watch": "node scripts/watch-static.js geo data assets"
   },
   "browserslist": "> 0.25%, not dead"
 }
