@@ -31,7 +31,7 @@
   "scripts": {
     "autobuild": "rollup -c -w",
     "build": ". .env && npm run static && rollup -c",
-    "dev": ". .env && run-p start:dev autobuild",
+    "dev": ". .env && run-p start:dev autobuild watch",
     "start": ". .env && sirv public --single",
     "start:dev": " sirv public --single --dev",
     "static:geo": "mkdir -p public/geo && cp -rf src/geo/* public/geo",

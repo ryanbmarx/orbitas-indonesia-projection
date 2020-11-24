@@ -1,6 +1,6 @@
 <script>
-  export let label = "Label";
-  export let description = "Description";
+  export let label = "";
+  export let description = "";
 </script>
 
 <style>
@@ -24,7 +24,9 @@
   }
 </style>
 
-<dl class="description">
-  <dt class="description__name">{label}</dt>
-  <dd class="description__text">{description}</dd>
-</dl>
+{#if label && description}
+  <dl class="description">
+    <dt class="description__name">{label}</dt>
+    <dd class="description__text">{description}</dd>
+  </dl>
+{/if}
