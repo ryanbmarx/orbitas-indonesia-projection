@@ -5,6 +5,7 @@
 
 <style>
   button {
+    font-size: 14px;
     position: absolute;
     top: 50%;
     right: 10px;
@@ -16,6 +17,7 @@
     cursor: pointer;
     transition: opacity 150ms ease;
     min-width: 100px;
+    min-height: 44px;
   }
 
   button:hover,
