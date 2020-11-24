@@ -80,6 +80,8 @@ There are several options and bits of text written here which affect the present
   //   Which data (by unique key) should be displayed on load?
   "firstData": "bau",
   //   What is the name of the unique ID to be used to join the data to the geo file?
-  "gridID": "uni_ID"
+  "gridID": "uni_ID",
+  dataNote
+  mapOptions
 }
 ```

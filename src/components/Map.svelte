@@ -27,7 +27,7 @@
   // for the map instance
   let map;
   // the dom element with the map in it.
-  let mapContainer;
+  let container;
   // This will hold IDs of all our added layers
   let layers = [];
 
@@ -38,11 +38,23 @@
   export let peatColor;
 
   // CONFIG STUFF
+  // export let MAP_CENTER = [119.108664, 3.120056];
+  // export let MAX_BOUNDS = [
+  //   [88.34694524999765, -14.305533476859381], // Southwest coordinates
+  //   [149.87038274999645, 20.263587388602616], // Northeast coordinates
+  // ];
+
   // These are props only so it's easy to make switches based on feedback. These are in `config.mapOptions`
   mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
-  export let MAP_CENTER = [119.108664, 3.120056];
-  export let MAP_ZOOM = 3;
-  export let MAP_STYLE_URL = "mapbox://styles/lucida-maps/ckhl11xlx05e019pq4tb6d9mx";
+  // CONFIGURABLE VALUES WITH DEFAULTS
+  export let style = "mapbox://styles/lucida-maps/ckhl11xlx05e019pq4tb6d9mx";
+  export let minZoom = 1;
+  export let maxZoom = 16;
+
+  export let zoom = 1; // Initial zoom
+  export let center; // The initial view
+  export let bounds; // The initial view
+  export let maxBounds; // The max allowed view
 
   afterUpdate(() => {
     // If the year has changed
@@ -57,13 +69,17 @@
 
   onMount(async () => {
     // INIT THE MAP
-    console.log("Now mapping", { geoData });
     map = new mapboxgl.Map({
-      container: mapContainer,
-      style: MAP_STYLE_URL,
-      zoom: MAP_ZOOM,
-      center: MAP_CENTER,
+      container,
+      style,
+      maxZoom,
+      minZoom,
+      zoom,
+      center,
+      bounds,
+      maxBounds,
     });
+
     map.scrollZoom.disable();
     map.addControl(new mapboxgl.NavigationControl());
 
@@ -183,5 +199,5 @@
   {#if hasPeat}
     <ButtonPeat on:click={togglePeat} {peatVisible} {peatColor} />
   {/if}
-  <div bind:this={mapContainer} class="map" />
+  <div bind:this={container} class="map" />
 </div>

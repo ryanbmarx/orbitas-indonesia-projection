@@ -4621,7 +4621,7 @@ var app = (function () {
   var {
     console: console_1
   } = globals;
-  var file$2 = "src/components/Map.svelte"; // (183:2) {#if hasPeat}
+  var file$2 = "src/components/Map.svelte"; // (199:2) {#if hasPeat}
 
   function create_if_block$2(ctx) {
     var buttonpeat;
@@ -4682,7 +4682,7 @@ var app = (function () {
       block,
       id: create_if_block$2.name,
       type: "if",
-      source: "(183:2) {#if hasPeat}",
+      source: "(199:2) {#if hasPeat}",
       ctx
     });
     return block;
@@ -4755,11 +4755,11 @@ var app = (function () {
       h: function hydrate() {
         attr_dev(link, "href", "https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css");
         attr_dev(link, "rel", "stylesheet");
-        add_location(link, file$2, 178, 2, 4632);
+        add_location(link, file$2, 194, 2, 5013);
         attr_dev(div0, "class", "map svelte-lsrd4t");
-        add_location(div0, file$2, 185, 2, 4915);
+        add_location(div0, file$2, 201, 2, 5296);
         attr_dev(div1, "class", "map-wrapper svelte-lsrd4t");
-        add_location(div1, file$2, 180, 0, 4738);
+        add_location(div1, file$2, 196, 0, 5119);
       },
       m: function mount(target, anchor) {
         append_dev(document.head, link);
@@ -4772,7 +4772,7 @@ var app = (function () {
         append_dev(div1, div0);
         /*div0_binding*/
 
-        ctx[17](div0);
+        ctx[21](div0);
         current = true;
       },
       p: function update(ctx, _ref) {
@@ -4844,7 +4844,7 @@ var app = (function () {
         if (if_block) if_block.d();
         /*div0_binding*/
 
-        ctx[17](null);
+        ctx[21](null);
       }
     };
     dispatch_dev("SvelteRegisterBlock", {
@@ -4870,9 +4870,9 @@ var app = (function () {
       loading
     } = getContext(key);
     validate_store(currentYear, "currentYear");
-    component_subscribe($$self, currentYear, value => $$invalidate(21, $currentYear = value));
+    component_subscribe($$self, currentYear, value => $$invalidate(25, $currentYear = value));
     validate_store(loading, "loading");
-    component_subscribe($$self, loading, value => $$invalidate(22, $loading = value));
+    component_subscribe($$self, loading, value => $$invalidate(26, $loading = value));
     var {
       data
     } = $$props;
@@ -4895,7 +4895,7 @@ var app = (function () {
 
     var map; // the dom element with the map in it.
 
-    var mapContainer; // This will hold IDs of all our added layers
+    var container; // This will hold IDs of all our added layers
 
     var layers = [];
     var {
@@ -4906,18 +4906,39 @@ var app = (function () {
     var {
       peatColor
     } = $$props; // CONFIG STUFF
+    // export let MAP_CENTER = [119.108664, 3.120056];
+    // export let MAX_BOUNDS = [
+    //   [88.34694524999765, -14.305533476859381], // Southwest coordinates
+    //   [149.87038274999645, 20.263587388602616], // Northeast coordinates
+    // ];
     // These are props only so it's easy to make switches based on feedback. These are in `config.mapOptions`
 
     mapboxGl.accessToken = "pk.eyJ1IjoibHVjaWRhLW1hcHMiLCJhIjoiY2tha2RkOXM4MG53NzJ2cXppdzZvdzN2aSJ9.X5HdsaEoLR6uFPFzt_gbVQ";
     var {
-      MAP_CENTER = [119.108664, 3.120056]
+      style = "mapbox://styles/lucida-maps/ckhl11xlx05e019pq4tb6d9mx"
     } = $$props;
     var {
-      MAP_ZOOM = 3
+      minZoom = 1
     } = $$props;
     var {
-      MAP_STYLE_URL = "mapbox://styles/lucida-maps/ckhl11xlx05e019pq4tb6d9mx"
+      maxZoom = 16
     } = $$props;
+    var {
+      zoom = 1
+    } = $$props; // Initial zoom
+
+    var {
+      center
+    } = $$props; // The initial view
+
+    var {
+      bounds
+    } = $$props; // The initial view
+
+    var {
+      maxBounds
+    } = $$props; // The max allowed view
+
     afterUpdate(() => {
       // If the year has changed
       if (oldCurrentYear !== $currentYear) {
@@ -4930,14 +4951,15 @@ var app = (function () {
     });
     onMount( /*#__PURE__*/_asyncToGenerator(function* () {
       // INIT THE MAP
-      console.log("Now mapping", {
-        geoData
-      });
       map = new mapboxGl.Map({
-        container: mapContainer,
-        style: MAP_STYLE_URL,
-        zoom: MAP_ZOOM,
-        center: MAP_CENTER
+        container,
+        style,
+        maxZoom,
+        minZoom,
+        zoom,
+        center,
+        bounds,
+        maxBounds
       });
       map.scrollZoom.disable();
       map.addControl(new mapboxGl.NavigationControl()); // This fires when the map has loaded
@@ -5027,15 +5049,15 @@ var app = (function () {
       map.setLayoutProperty("peat-layer", "visibility", peatVisible ? "visible" : "none");
     }
 
-    var writable_props = ["data", "stops", "geoData", "mapFill", "legendLabel", "years", "displayPeat", "peatColor", "MAP_CENTER", "MAP_ZOOM", "MAP_STYLE_URL"];
+    var writable_props = ["data", "stops", "geoData", "mapFill", "legendLabel", "years", "displayPeat", "peatColor", "style", "minZoom", "maxZoom", "zoom", "center", "bounds", "maxBounds"];
     Object.keys($$props).forEach(key => {
       if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn("<Map> was created with unknown prop '".concat(key, "'"));
     });
 
     function div0_binding($$value) {
       binding_callbacks[$$value ? "unshift" : "push"](() => {
-        mapContainer = $$value;
-        $$invalidate(5, mapContainer);
+        container = $$value;
+        $$invalidate(5, container);
       });
     }
 
@@ -5048,9 +5070,13 @@ var app = (function () {
       if ("years" in $$props) $$invalidate(12, years = $$props.years);
       if ("displayPeat" in $$props) $$invalidate(13, displayPeat = $$props.displayPeat);
       if ("peatColor" in $$props) $$invalidate(4, peatColor = $$props.peatColor);
-      if ("MAP_CENTER" in $$props) $$invalidate(14, MAP_CENTER = $$props.MAP_CENTER);
-      if ("MAP_ZOOM" in $$props) $$invalidate(15, MAP_ZOOM = $$props.MAP_ZOOM);
-      if ("MAP_STYLE_URL" in $$props) $$invalidate(16, MAP_STYLE_URL = $$props.MAP_STYLE_URL);
+      if ("style" in $$props) $$invalidate(14, style = $$props.style);
+      if ("minZoom" in $$props) $$invalidate(15, minZoom = $$props.minZoom);
+      if ("maxZoom" in $$props) $$invalidate(16, maxZoom = $$props.maxZoom);
+      if ("zoom" in $$props) $$invalidate(17, zoom = $$props.zoom);
+      if ("center" in $$props) $$invalidate(18, center = $$props.center);
+      if ("bounds" in $$props) $$invalidate(19, bounds = $$props.bounds);
+      if ("maxBounds" in $$props) $$invalidate(20, maxBounds = $$props.maxBounds);
     };
 
     $$self.$capture_state = () => ({
@@ -5072,15 +5098,19 @@ var app = (function () {
       years,
       oldCurrentYear,
       map,
-      mapContainer,
+      container,
       layers,
       displayPeat,
       hasPeat,
       peatVisible,
       peatColor,
-      MAP_CENTER,
-      MAP_ZOOM,
-      MAP_STYLE_URL,
+      style,
+      minZoom,
+      maxZoom,
+      zoom,
+      center,
+      bounds,
+      maxBounds,
       togglePeat,
       $currentYear,
       $loading
@@ -5097,22 +5127,26 @@ var app = (function () {
       if ("years" in $$props) $$invalidate(12, years = $$props.years);
       if ("oldCurrentYear" in $$props) oldCurrentYear = $$props.oldCurrentYear;
       if ("map" in $$props) map = $$props.map;
-      if ("mapContainer" in $$props) $$invalidate(5, mapContainer = $$props.mapContainer);
+      if ("container" in $$props) $$invalidate(5, container = $$props.container);
       if ("layers" in $$props) layers = $$props.layers;
       if ("displayPeat" in $$props) $$invalidate(13, displayPeat = $$props.displayPeat);
       if ("hasPeat" in $$props) $$invalidate(6, hasPeat = $$props.hasPeat);
       if ("peatVisible" in $$props) $$invalidate(7, peatVisible = $$props.peatVisible);
       if ("peatColor" in $$props) $$invalidate(4, peatColor = $$props.peatColor);
-      if ("MAP_CENTER" in $$props) $$invalidate(14, MAP_CENTER = $$props.MAP_CENTER);
-      if ("MAP_ZOOM" in $$props) $$invalidate(15, MAP_ZOOM = $$props.MAP_ZOOM);
-      if ("MAP_STYLE_URL" in $$props) $$invalidate(16, MAP_STYLE_URL = $$props.MAP_STYLE_URL);
+      if ("style" in $$props) $$invalidate(14, style = $$props.style);
+      if ("minZoom" in $$props) $$invalidate(15, minZoom = $$props.minZoom);
+      if ("maxZoom" in $$props) $$invalidate(16, maxZoom = $$props.maxZoom);
+      if ("zoom" in $$props) $$invalidate(17, zoom = $$props.zoom);
+      if ("center" in $$props) $$invalidate(18, center = $$props.center);
+      if ("bounds" in $$props) $$invalidate(19, bounds = $$props.bounds);
+      if ("maxBounds" in $$props) $$invalidate(20, maxBounds = $$props.maxBounds);
     };
 
     if ($$props && "$$inject" in $$props) {
       $$self.$inject_state($$props.$$inject);
     }
 
-    return [data, stops, mapFill, legendLabel, peatColor, mapContainer, hasPeat, peatVisible, currentYear, loading, togglePeat, geoData, years, displayPeat, MAP_CENTER, MAP_ZOOM, MAP_STYLE_URL, div0_binding];
+    return [data, stops, mapFill, legendLabel, peatColor, container, hasPeat, peatVisible, currentYear, loading, togglePeat, geoData, years, displayPeat, style, minZoom, maxZoom, zoom, center, bounds, maxBounds, div0_binding];
   }
 
   class Map$1 extends SvelteComponentDev {
@@ -5127,9 +5161,13 @@ var app = (function () {
         years: 12,
         displayPeat: 13,
         peatColor: 4,
-        MAP_CENTER: 14,
-        MAP_ZOOM: 15,
-        MAP_STYLE_URL: 16
+        style: 14,
+        minZoom: 15,
+        maxZoom: 16,
+        zoom: 17,
+        center: 18,
+        bounds: 19,
+        maxBounds: 20
       });
       dispatch_dev("SvelteRegisterComponent", {
         component: this,
@@ -5182,6 +5220,24 @@ var app = (function () {
       /*peatColor*/
       ctx[4] === undefined && !("peatColor" in props)) {
         console_1.warn("<Map> was created without expected prop 'peatColor'");
+      }
+
+      if (
+      /*center*/
+      ctx[18] === undefined && !("center" in props)) {
+        console_1.warn("<Map> was created without expected prop 'center'");
+      }
+
+      if (
+      /*bounds*/
+      ctx[19] === undefined && !("bounds" in props)) {
+        console_1.warn("<Map> was created without expected prop 'bounds'");
+      }
+
+      if (
+      /*maxBounds*/
+      ctx[20] === undefined && !("maxBounds" in props)) {
+        console_1.warn("<Map> was created without expected prop 'maxBounds'");
       }
     }
 
@@ -5273,35 +5329,79 @@ var app = (function () {
       flush();
     }
 
-    get MAP_CENTER() {
+    get style() {
       return this.$$.ctx[14];
     }
 
-    set MAP_CENTER(MAP_CENTER) {
+    set style(style) {
       this.$set({
-        MAP_CENTER
+        style
       });
       flush();
     }
 
-    get MAP_ZOOM() {
+    get minZoom() {
       return this.$$.ctx[15];
     }
 
-    set MAP_ZOOM(MAP_ZOOM) {
+    set minZoom(minZoom) {
       this.$set({
-        MAP_ZOOM
+        minZoom
       });
       flush();
     }
 
-    get MAP_STYLE_URL() {
+    get maxZoom() {
       return this.$$.ctx[16];
     }
 
-    set MAP_STYLE_URL(MAP_STYLE_URL) {
+    set maxZoom(maxZoom) {
       this.$set({
-        MAP_STYLE_URL
+        maxZoom
+      });
+      flush();
+    }
+
+    get zoom() {
+      return this.$$.ctx[17];
+    }
+
+    set zoom(zoom) {
+      this.$set({
+        zoom
+      });
+      flush();
+    }
+
+    get center() {
+      return this.$$.ctx[18];
+    }
+
+    set center(center) {
+      this.$set({
+        center
+      });
+      flush();
+    }
+
+    get bounds() {
+      return this.$$.ctx[19];
+    }
+
+    set bounds(bounds) {
+      this.$set({
+        bounds
+      });
+      flush();
+    }
+
+    get maxBounds() {
+      return this.$$.ctx[20];
+    }
+
+    set maxBounds(maxBounds) {
+      this.$set({
+        maxBounds
       });
       flush();
     }

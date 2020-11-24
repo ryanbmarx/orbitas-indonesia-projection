@@ -68,7 +68,7 @@
         egestas congue quisque. Sitas pulvinar mattis nunc. Convallis convallis tellus id interdum velit laoreet. Urna porttitor rhoncus dolor purus non enim.
       </p>
       <p>Commodo sed egestas egestas fringilla phasellus faucibus scelerisque. Sed viverra ipsum nunc aliquet bibendum enim.</p>
-      <figure class="projections-map-wrapper">
+      <figure class="projectio ns-map-wrapper">
         <figcaption>
           <h2>Installed Capacity</h2>
           <p>
@@ -79,6 +79,15 @@
         <div class="orbitas-projections-map"></div>
         <script class="config" type="application/json">
           {
+            "mapOptions": {
+              "center": [119.108664, 3.120056],
+              "zoom": 3,
+              "minZoom": 3,
+              "maxBounds": [
+                [88.34694524999765, -14.305533476859381],
+                [149.87038274999645, 20.263587388602616]
+              ]
+            },
             "mapFill": "#e94b60",
             "stops": [
               [0, 0.05],
@@ -155,7 +164,7 @@
             neq
           </p>
         </figcaption>
-        <div class="orbitas-projections-map"></div>
+        <div class="orbita s-projections-map"></div>
         <script class="config" type="application/json">
           {
             "mapFill": "#0c8e76",
@@ -166,14 +175,22 @@
               "step": 5
             },
             "stops": [
-              [0, 0.05],
-              [1.0, 0.1],
-              [3.3, 0.2],
-              [9.6, 0.4],
-              [16.5, 0.6],
-              [22.8, 0.8],
-              [27.9, 1]
+              [0, 0.1],
+              [10, 0.2],
+              [15, 0.4],
+              [20, 0.6],
+              [25, 0.8],
+              [30, 1]
             ],
+            "mapOptions": {
+              "center": [119.108664, 3.120056],
+              "zoom": 3,
+              "minZoom": 3,
+              "maxBounds": [
+                [88.34694524999765, -14.305533476859381],
+                [149.87038274999645, 20.263587388602616]
+              ]
+            },
             "grid": "grid-lg-2.min",
             "yearLabel": "Select a year",
             "dataLabel": "Projected forest cover",
@@ -192,7 +209,57 @@
                 "value": "indonesia_coordinated_scenario_110agprice_zerodef_5yr_step_forestcover_skm.csv"
               }
             },
-            "dataNote": "This is an auxilliary note in case something needs to be spelled out. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Auctor urna nunc id cursus metus aliquam eleifend mi. Bibendum neque egestas congue quisque. Sit amet porttitor eget dolor morbi. ",
+            "firstData": "bau",
+            "gridID": "uni_ID"
+          }
+        </script>
+      </figure>
+
+      <figure class="projections-map-wrapper">
+        <figcaption>
+          <h2>Percentile test data</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Auctor urna nunc id cursus metus aliquam eleifend mi. Bibendum
+            neq
+          </p>
+        </figcaption>
+        <div class="orbitas-projections-map"></div>
+        <script class="config" type="application/json">
+          {
+            "mapFill": "#0c8e76",
+            "slug": "tree-cover",
+            "years": {
+              "start": 2010,
+              "end": 2050,
+              "step": 5
+            },
+            "stops": [
+              [0, 0.1],
+              [0.2, 0.2],
+              [0.4, 0.4],
+              [0.6, 0.6],
+              [0.8, 0.8]
+            ],
+            "mapOptions": {
+              "center": [119.108664, 3.120056],
+              "zoom": 3,
+              "minZoom": 3,
+              "maxBounds": [
+                [88.34694524999765, -14.305533476859381],
+                [149.87038274999645, 20.263587388602616]
+              ]
+            },
+            "grid": "grid-lg-2.min",
+            "yearLabel": "Select a year",
+            "dataLabel": "Projected forest cover",
+            "legendLabel": "Square kilometers of forest cover",
+            "data": {
+              "bau": {
+                "label": "TEST",
+                "value": "indonesia_bau_scenario_5yr_step_forestcover_skm_percent_test.csv"
+              }
+            },
+
             "firstData": "bau",
             "gridID": "uni_ID"
           }
