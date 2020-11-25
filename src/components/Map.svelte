@@ -1,14 +1,12 @@
 <script>
-  // STORES
-  // import { currentYear, loading } from "./../utils/stores.js";
-
   // OUR SCOPED STORE SOLUTION
   import { key } from "../utils/stores";
   import { getContext } from "svelte";
   let { currentYear, loading } = getContext(key);
 
   // COMPONENTS
-  import Legend from "./Legend.svelte";
+  import LegendBuckets from "./LegendBuckets.svelte";
+  import LegendStops from "./LegendStops.svelte";
   import ButtonPeat from "./ButtonPeat.svelte";
 
   // UTILS
@@ -17,10 +15,15 @@
   import { mesh } from "topojson-client";
 
   export let data;
-  export let stops;
   export let geoData;
   export let mapFill = "#2f4752";
   export let legendLabel;
+
+  // DATA VIZ SCALES
+  export let stops;
+  export let buckets;
+  // If the stops property is empty, then assume we have buckets data. Let's hope we do.
+  let useBuckets = stops.length === 0;
 
   export let years;
   let oldCurrentYear;
@@ -98,6 +101,30 @@
         // Add our grid ID to our list
         layers.push(gridID);
 
+        // Make our painting deccisions here, based on our scales and stuff
+
+        let paint = {
+          "fill-color": mapFill,
+          "fill-opacity-transition": {
+            duration: 300,
+            delay: 0,
+          },
+        };
+
+        if (useBuckets) {
+          // We are using buckets
+          paint["fill-opacity"] = {
+            property: `${i}`,
+            stops: buckets,
+          };
+        } else if (stops.length > 0) {
+          // We will be using linear interpolation. We check for it specifically so we can raise an error if we have neither.
+          paint["fill-opacity"] = ["interpolate", ["linear"], ["get", `${i}`], ...stops];
+        } else {
+          // We have neither.
+          console.error("A proper map scale has not been configured");
+        }
+
         // Add grid and color it using the stops provided
         map.addLayer({
           id: gridID,
@@ -106,17 +133,7 @@
           layout: {
             visibility: `grid-${i}` === `grid-${$currentYear}` ? "visible" : "none",
           },
-          paint: {
-            "fill-opacity": {
-              property: `${i}`,
-              stops,
-            },
-            "fill-color": mapFill,
-            "fill-opacity-transition": {
-              duration: 300,
-              delay: 0,
-            },
-          },
+          paint,
         });
         // Let's not waste our time on grid cells without data.
         // Filter them out of the display by checking for
@@ -129,7 +146,6 @@
     // Otherwise skip this entirely.
     if (displayPeat) {
       map.on("load", function (e) {
-        console.log(e);
         fetch("./geo/peat.min.topojson")
           .then(data => data.json())
           .then(peat => {
@@ -195,7 +211,11 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
 </svelte:head>
 <div class="map-wrapper">
-  <Legend {data} {stops} {mapFill} label={legendLabel} />
+  {#if useBuckets}
+    <LegendBuckets {data} {buckets} {mapFill} label={legendLabel} />
+  {:else}
+    <LegendStops {data} {stops} {mapFill} label={legendLabel} />
+  {/if}
   {#if hasPeat}
     <ButtonPeat on:click={togglePeat} {peatVisible} {peatColor} />
   {/if}

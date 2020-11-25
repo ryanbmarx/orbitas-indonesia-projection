@@ -31,6 +31,7 @@
   export let dataLabel = "data";
   export let years;
   export let stops = [];
+  export let buckets = [];
   export let mapFill;
   export let gridID;
   export let legendLabel;
@@ -104,6 +105,7 @@
     height: 400px;
     background: #eee;
     position: relative;
+    margin: 24px 0;
   }
 
   .note :global(p) {
@@ -122,7 +124,7 @@
       <Loading />
     {/if}
     {#if geoData}
-      <Map {displayPeat} bind:this={map} gridFile={grid} {data} {stops} {mapFill} {years} {geoData} {peatColor} {legendLabel} {...mapOptions} />
+      <Map {displayPeat} bind:this={map} gridFile={grid} {data} {stops} {buckets} {mapFill} {years} {geoData} {peatColor} {legendLabel} {...mapOptions} />
     {/if}
   </div>
   {#if dataNote}

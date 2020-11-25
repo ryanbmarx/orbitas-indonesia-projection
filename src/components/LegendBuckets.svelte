@@ -1,5 +1,8 @@
 <script>
-  export let stops;
+  /**
+   * This is the legend for the bucketized display of data
+   */
+  export let buckets;
   export let mapFill;
   export let label;
 </script>
@@ -58,14 +61,16 @@
   }
 </style>
 
-<div class="legend">
-  <span class="label">{label}</span>
-  <ol class="legend__list">
-    {#each stops as stop, i}
-      <li class="legend__list-item">
-        {#if i > 0}<span class="legend__list-item__label">{stop[0]}</span>{/if}
-        <span style="background:{mapFill};opacity:{stop[1]}" class="legend__list-item__box" />
-      </li>
-    {/each}
-  </ol>
-</div>
+{#if buckets && buckets.length > 0}
+  <div class="legend">
+    <span class="label">{label}</span>
+    <ol class="legend__list">
+      {#each buckets as bucket, i}
+        <li class="legend__list-item">
+          {#if i > 0}<span class="legend__list-item__label">{bucket[0]}</span>{/if}
+          <span style="background:{mapFill};opacity:{bucket[1]}" class="legend__list-item__box" />
+        </li>
+      {/each}
+    </ol>
+  </div>
+{/if}
