@@ -72,7 +72,11 @@
   /* STRUCTURE */
 
   .timeline-wrapper {
-    --extra: 12px;
+    --play-btn-extra: 12px;
+    --dot-height: 22px;
+    --line-z-index: 1;
+    --button-width: 44px;
+    --button-height: 44px;
 
     flex: 1 1;
     display: grid;
@@ -88,8 +92,6 @@
 
   /* DOTS */
   .timeline {
-    --dot-height: 22px;
-    --line-z-index: 1;
     list-style: none;
     margin: 0 0 0 0;
     padding: 0;
@@ -99,7 +101,10 @@
     align-items: center;
     position: relative;
 
-    transform: translate(0, calc(var(--dot-height, 20px) / 2));
+    transform: translateY(calc(var(--dot-height) / 2));
+  }
+  .timeline.timeline--compressed {
+    --button-width: 35px;
   }
 
   .timeline li {
@@ -116,39 +121,42 @@
     border-radius: var(--line-width, 4px);
 
     position: absolute;
-    top: calc(var(--dot-height, 20px) / 2);
+    top: calc(var(--dot-height) / 2);
     left: 0;
     transform: translate(0, -50%);
   }
 
   .timeline__button {
     display: block;
+
+    display: flex;
+    flex-flow: column nowrap;
+
     border: none;
     background: none;
     padding: 0;
     margin: 0;
-    height: 44px;
-    min-width: 44px;
-    width: 100%;
+    height: var(--button-height);
+    width: var(--button-width);
 
     cursor: pointer;
   }
 
-  .timeline__button.timeline__button--compressed {
-    min-width: 35px;
-  }
   .timeline__button--play {
     position: relative;
     background-color: var(--color-accent);
     color: white;
-    max-width: 44px;
-    min-width: 44px;
+
+    height: var(--button-height);
+    width: 100%;
+    min-width: var(--button-width);
+    max-width: var(--button-width);
+
     border-radius: 50%;
     opacity: 1;
     transition: opacity 150ms ease;
 
     display: flex;
-    width: 100%;
     align-items: center;
     justify-content: center;
   }
@@ -171,10 +179,10 @@
     background: transparent;
     border-radius: 50%;
     position: absolute;
-    top: calc(-0.5 * var(--extra));
-    left: calc(-0.5 * var(--extra));
-    height: calc(100% + var(--extra));
-    width: calc(100% + var(--extra));
+    top: calc(-0.5 * var(--play-btn-extra));
+    left: calc(-0.5 * var(--play-btn-extra));
+    height: calc(100% + var(--play-btn-extra));
+    width: calc(100% + var(--play-btn-extra));
     border: 2px dashed red;
 
     opacity: 0;
@@ -209,25 +217,29 @@
     text-align: center;
     z-index: calc(var(--line-z-index, 1) + 1);
     position: relative;
+    margin-top: 4px;
   }
 
-  .timeline__button__year::before {
+  .timeline__button__circle {
     /* THIS IS THE DOT */
-    content: "";
     display: block;
-    width: var(--dot-height, 20px);
-    height: var(--dot-height, 20px);
+    width: var(--dot-height);
+    height: var(--dot-height);
+    min-width: var(--dot-height);
+    min-height: var(--dot-height);
+
     box-sizing: border-box;
+    z-index: calc(1 + var(--line-z-index));
 
     border: var(--line-width, 4px) solid var(--color-accent);
     background: var(--color-background);
     border-radius: 50px;
-    margin: calc(var(--line-width, 4px) * -1) auto 0 auto;
+    margin: 0 auto;
     transition: background 150ms ease;
   }
 
-  .timeline__button:focus .timeline__button__year::before,
-  .timeline__button:hover .timeline__button__year::before {
+  .timeline__button:focus .timeline__button__circle,
+  .timeline__button:hover .timeline__button__circle {
     background: var(--color-accent);
   }
 
@@ -235,7 +247,7 @@
     font-weight: bold;
     color: var(--color-accent);
   }
-  .timeline__button.timeline__button--active .timeline__button__year::before {
+  .timeline__button.timeline__button--active .timeline__button__circle {
     background: var(--color-accent);
   }
 
@@ -257,17 +269,18 @@
 
 <div class="timeline-wrapper">
   <span id="timeline-label" class="label">Select a year</span>
-  <ol aria-labelledby="timeline-label" class="timeline">
+  <ol aria-labelledby="timeline-label" class="timeline" class:timeline--compressed={years.length > 7}>
     {#each years as year, i}
       <li>
         <button
           class="timeline__button"
           aria-label="View data for the year {year}"
           title="View data for the year {year}"
-          class:timeline__button--compressed={years.length > 7}
           data-year={year}
           class:timeline__button--active={year == $currentYear}
-          on:click={handleClick}><span class="timeline__button__year">{@html formatYear(year, i)}</span></button>
+          on:click={handleClick}>
+          <span class="timeline__button__circle" />
+          <span class="timeline__button__year">{@html formatYear(year, i)}</span></button>
       </li>
     {/each}
   </ol>

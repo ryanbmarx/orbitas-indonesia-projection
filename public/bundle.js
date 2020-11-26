@@ -6083,13 +6083,15 @@ var app = (function () {
     child_ctx[12] = list[i];
     child_ctx[14] = i;
     return child_ctx;
-  } // (261:4) {#each years as year, i}
+  } // (273:4) {#each years as year, i}
 
 
   function create_each_block$1(ctx) {
     var li;
     var button;
-    var span;
+    var span0;
+    var t0;
+    var span1;
     var raw_value = formatYear(
     /*year*/
     ctx[12],
@@ -6098,15 +6100,17 @@ var app = (function () {
     var button_aria_label_value;
     var button_title_value;
     var button_data_year_value;
-    var t;
+    var t1;
     var mounted;
     var dispose;
     var block = {
       c: function create() {
         li = element("li");
         button = element("button");
-        span = element("span");
-        t = space();
+        span0 = element("span");
+        t0 = space();
+        span1 = element("span");
+        t1 = space();
         this.h();
       },
       l: function claim(nodes) {
@@ -6121,20 +6125,27 @@ var app = (function () {
           "data-year": true
         });
         var button_nodes = children(button);
-        span = claim_element(button_nodes, "SPAN", {
+        span0 = claim_element(button_nodes, "SPAN", {
           class: true
         });
-        var span_nodes = children(span);
-        span_nodes.forEach(detach_dev);
+        children(span0).forEach(detach_dev);
+        t0 = claim_space(button_nodes);
+        span1 = claim_element(button_nodes, "SPAN", {
+          class: true
+        });
+        var span1_nodes = children(span1);
+        span1_nodes.forEach(detach_dev);
         button_nodes.forEach(detach_dev);
-        t = claim_space(li_nodes);
+        t1 = claim_space(li_nodes);
         li_nodes.forEach(detach_dev);
         this.h();
       },
       h: function hydrate() {
-        attr_dev(span, "class", "timeline__button__year svelte-hqeqd7");
-        add_location(span, file$5, 269, 33, 6154);
-        attr_dev(button, "class", "timeline__button svelte-hqeqd7");
+        attr_dev(span0, "class", "timeline__button__circle svelte-176wpzo");
+        add_location(span0, file$5, 281, 10, 6390);
+        attr_dev(span1, "class", "timeline__button__year svelte-176wpzo");
+        add_location(span1, file$5, 282, 10, 6442);
+        attr_dev(button, "class", "timeline__button svelte-176wpzo");
         attr_dev(button, "aria-label", button_aria_label_value = "View data for the year " +
         /*year*/
         ctx[12]);
@@ -6144,24 +6155,23 @@ var app = (function () {
         attr_dev(button, "data-year", button_data_year_value =
         /*year*/
         ctx[12]);
-        toggle_class(button, "timeline__button--compressed",
-        /*years*/
-        ctx[3].length > 7);
         toggle_class(button, "timeline__button--active",
         /*year*/
         ctx[12] ==
         /*$currentYear*/
         ctx[1]);
-        add_location(button, file$5, 262, 8, 5822);
-        attr_dev(li, "class", "svelte-hqeqd7");
-        add_location(li, file$5, 261, 6, 5809);
+        add_location(button, file$5, 274, 8, 6111);
+        attr_dev(li, "class", "svelte-176wpzo");
+        add_location(li, file$5, 273, 6, 6098);
       },
       m: function mount(target, anchor) {
         insert_dev(target, li, anchor);
         append_dev(li, button);
-        append_dev(button, span);
-        span.innerHTML = raw_value;
-        append_dev(li, t);
+        append_dev(button, span0);
+        append_dev(button, t0);
+        append_dev(button, span1);
+        span1.innerHTML = raw_value;
+        append_dev(li, t1);
 
         if (!mounted) {
           dispose = listen_dev(button, "click",
@@ -6171,14 +6181,6 @@ var app = (function () {
         }
       },
       p: function update(ctx, dirty) {
-        if (dirty &
-        /*years*/
-        8) {
-          toggle_class(button, "timeline__button--compressed",
-          /*years*/
-          ctx[3].length > 7);
-        }
-
         if (dirty &
         /*years, $currentYear*/
         10) {
@@ -6199,7 +6201,7 @@ var app = (function () {
       block,
       id: create_each_block$1.name,
       type: "each",
-      source: "(261:4) {#each years as year, i}",
+      source: "(273:4) {#each years as year, i}",
       ctx
     });
     return block;
@@ -6284,22 +6286,25 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(span0, "id", "timeline-label");
-        attr_dev(span0, "class", "label svelte-hqeqd7");
-        add_location(span0, file$5, 258, 2, 5656);
+        attr_dev(span0, "class", "label svelte-176wpzo");
+        add_location(span0, file$5, 270, 2, 5899);
         attr_dev(ol, "aria-labelledby", "timeline-label");
-        attr_dev(ol, "class", "timeline svelte-hqeqd7");
-        add_location(ol, file$5, 259, 2, 5719);
-        attr_dev(span1, "class", "icon svelte-hqeqd7");
-        add_location(span1, file$5, 274, 4, 6446);
-        attr_dev(button, "class", "timeline__button timeline__button--play svelte-hqeqd7");
+        attr_dev(ol, "class", "timeline svelte-176wpzo");
+        toggle_class(ol, "timeline--compressed",
+        /*years*/
+        ctx[3].length > 7);
+        add_location(ol, file$5, 271, 2, 5962);
+        attr_dev(span1, "class", "icon svelte-176wpzo");
+        add_location(span1, file$5, 287, 4, 6734);
+        attr_dev(button, "class", "timeline__button timeline__button--play svelte-176wpzo");
         attr_dev(button, "aria-label", "Click here to animate the data over time");
         attr_dev(button, "title", "Click to play animation");
         toggle_class(button, "playing",
         /*playing*/
         ctx[0]);
-        add_location(button, file$5, 273, 2, 6269);
-        attr_dev(div, "class", "timeline-wrapper svelte-hqeqd7");
-        add_location(div, file$5, 257, 0, 5623);
+        add_location(button, file$5, 286, 2, 6557);
+        attr_dev(div, "class", "timeline-wrapper svelte-176wpzo");
+        add_location(div, file$5, 269, 0, 5866);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);
@@ -6355,6 +6360,14 @@ var app = (function () {
           }
 
           each_blocks.length = each_value.length;
+        }
+
+        if (dirty &
+        /*years*/
+        8) {
+          toggle_class(ol, "timeline--compressed",
+          /*years*/
+          ctx[3].length > 7);
         }
 
         if (dirty &
