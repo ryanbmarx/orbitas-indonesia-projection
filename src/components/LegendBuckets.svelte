@@ -1,10 +1,12 @@
 <script>
+  import LegendIcons from "./LegendIcons.svelte";
   /**
    * This is the legend for the bucketized display of data
    */
   export let buckets;
   export let mapFill;
   export let label;
+  export let icons;
 </script>
 
 <style>
@@ -72,5 +74,8 @@
         </li>
       {/each}
     </ol>
+    {#if icons}
+      <LegendIcons {icons} />
+    {/if}
   </div>
 {/if}

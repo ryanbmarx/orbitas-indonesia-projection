@@ -2,10 +2,12 @@
   /**
    * This is the legend for linear inteporlation
    */
+  import LegendIcons from "./LegendIcons.svelte";
   import { hexToRGB } from "../utils/colors";
   export let stops;
   export let mapFill;
   export let label;
+  export let icons;
 
   let { gradient, spans } = generateGradient(stops);
 
@@ -84,4 +86,7 @@
     {@html spans}
   </div>
   <span class="legend__gradient" style="background:{gradient};" />
+  {#if icons}
+    <LegendIcons {icons} />
+  {/if}
 </div>

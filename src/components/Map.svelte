@@ -18,6 +18,8 @@
   export let geoData;
   export let mapFill = "#2f4752";
   export let legendLabel;
+  export let slug;
+  export let icons;
 
   // DATA VIZ SCALES
   export let stops;
@@ -41,12 +43,6 @@
   export let peatColor;
 
   // CONFIG STUFF
-  // export let MAP_CENTER = [119.108664, 3.120056];
-  // export let MAX_BOUNDS = [
-  //   [88.34694524999765, -14.305533476859381], // Southwest coordinates
-  //   [149.87038274999645, 20.263587388602616], // Northeast coordinates
-  // ];
-
   // These are props only so it's easy to make switches based on feedback. These are in `config.mapOptions`
   mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
   // CONFIGURABLE VALUES WITH DEFAULTS
@@ -66,11 +62,15 @@
       layers.forEach(l => {
         let visibilityState = l === `grid-${$currentYear}` ? "visible" : "none";
         map.setLayoutProperty(l, "visibility", visibilityState);
+        if (slug === "capacity") {
+          map.setLayoutProperty(`${l}-offline`, "visibility", visibilityState);
+        }
       });
     }
   });
 
   onMount(async () => {
+    console.log("Now mapping", geoData);
     // INIT THE MAP
     map = new mapboxgl.Map({
       container,
@@ -102,7 +102,6 @@
         layers.push(gridID);
 
         // Make our painting deccisions here, based on our scales and stuff
-
         let paint = {
           "fill-color": mapFill,
           "fill-opacity-transition": {
@@ -127,7 +126,7 @@
 
         // Add grid and color it using the stops provided
         map.addLayer({
-          id: gridID,
+          id: `grid-${i}`,
           type: "fill",
           source: "grid",
           layout: {
@@ -139,6 +138,35 @@
         // Filter them out of the display by checking for
         // a value for the year in questions.
         map.setFilter(gridID, [">=", `${i}`, 0]);
+
+        if (slug === "capacity") {
+          console.log("Adding zeroes for ", gridID);
+          // Make our painting deccisions here, based on our scales and stuff
+          let gridIDOffline = `${gridID}-offline`;
+          map.addLayer({
+            id: `grid-${i}-offline`,
+            type: "fill",
+            source: "grid",
+            layout: {
+              visibility: `grid-${i}-offline` === `grid-${currentYear}-offline` ? "visible" : "none",
+            },
+            paint: {
+              "fill-color": "black",
+              "fill-opacity": 1,
+              "fill-opacity-transition": {
+                duration: 300,
+                delay: 0,
+              },
+            },
+          });
+          // Let's remove cells that should not be here.
+          // If the cell had capacity in 2020 and doesn't
+          // now, then show it.
+          let firstYear = "2020";
+          // Start by removing any cell that is zero to start
+          // map.setFilter(gridIDOffline, ["==", firstYear, 0]);
+          map.setFilter(`grid-${i}-offline`, ["==", `${i}`, "o"]);
+        }
       }
     });
 
@@ -212,9 +240,9 @@
 </svelte:head>
 <div class="map-wrapper">
   {#if useBuckets}
-    <LegendBuckets {data} {buckets} {mapFill} label={legendLabel} />
+    <LegendBuckets {data} {buckets} {mapFill} label={legendLabel} {icons} />
   {:else}
-    <LegendStops {data} {stops} {mapFill} label={legendLabel} />
+    <LegendStops {data} {stops} {mapFill} label={legendLabel} {icons} />
   {/if}
   {#if hasPeat}
     <ButtonPeat on:click={togglePeat} {peatVisible} {peatColor} />

@@ -19,7 +19,7 @@ export function csvParse(text) {
     const ID = row.shift();
     // This generates an object of key/value pairs for the remaining row items
     let newRow = row.reduce((accumulator = {}, currentValue, currentIndex) => {
-      accumulator[headers[currentIndex]] = parseFloat(currentValue);
+      accumulator[headers[currentIndex]] = currentValue === "o" ? currentValue : parseFloat(currentValue);
       return accumulator;
     }, {});
     // Adds the grid data (as k/v pairs) to the overall accumulator, keyed to grid IT
