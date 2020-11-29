@@ -10,22 +10,9 @@ files.forEach(file => {
     if (err) throw err;
     console.log(`++ Processing ${file}`);
     data = csvParse(data, d => {
-      // This is our CSV accessor function, which we will use to find the grid cells
-      // that are projected to go offline. This means it starts nonzero but ends zero.
-
-      // if the first year is zero or the last year is not zero, then skip this altogether
-      if (d["2020"] <= 0 || d["2050"] > 0) return d;
-
-      // Since this _might_ be offline, start checking the years, starting at the end and working backwards
-      for (i = years.length - 1; i >= 0; i -= 1) {
-        const year = years[i];
-        // For each year in the row of data ...
-        if (d[year] <= 0) {
-          // set the value to offline
+      for (let year of years) {
+        if (d["2020"] > 0 && d[year] <= 0) {
           d[year] = "o";
-        } else {
-          // Since it's not zero, move to the next grid/row
-          break;
         }
       }
       return d;
@@ -34,7 +21,7 @@ files.forEach(file => {
     const csvOptions = {
       keys: ["GRID_ID", "2020", ...years],
     };
-    // Put our data back into a CSV and write it to public
+
     json2csvAsync(data, csvOptions)
       .then(csv => {
         fs.writeFile(`./public/data/${file}`, csv, "utf-8", err => {
