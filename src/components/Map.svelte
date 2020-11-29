@@ -70,7 +70,7 @@
   });
 
   onMount(async () => {
-    console.log("Now mapping", geoData);
+    // console.log("Now mapping", geoData);
     // INIT THE MAP
     map = new mapboxgl.Map({
       container,
@@ -140,7 +140,6 @@
         map.setFilter(gridID, [">=", `${i}`, 0]);
 
         if (slug === "capacity") {
-          console.log("Adding zeroes for ", gridID);
           // Make our painting deccisions here, based on our scales and stuff
           let gridIDOffline = `${gridID}-offline`;
           map.addLayer({

@@ -5449,7 +5449,7 @@ var app = (function () {
   var {
     console: console_1
   } = globals;
-  var file$4 = "src/components/Map.svelte"; // (244:2) {:else}
+  var file$4 = "src/components/Map.svelte"; // (243:2) {:else}
 
   function create_else_block$1(ctx) {
     var legendstops;
@@ -5531,11 +5531,11 @@ var app = (function () {
       block,
       id: create_else_block$1.name,
       type: "else",
-      source: "(244:2) {:else}",
+      source: "(243:2) {:else}",
       ctx
     });
     return block;
-  } // (242:2) {#if useBuckets}
+  } // (241:2) {#if useBuckets}
 
 
   function create_if_block_1$1(ctx) {
@@ -5618,11 +5618,11 @@ var app = (function () {
       block,
       id: create_if_block_1$1.name,
       type: "if",
-      source: "(242:2) {#if useBuckets}",
+      source: "(241:2) {#if useBuckets}",
       ctx
     });
     return block;
-  } // (247:2) {#if hasPeat}
+  } // (246:2) {#if hasPeat}
 
 
   function create_if_block$3(ctx) {
@@ -5684,7 +5684,7 @@ var app = (function () {
       block,
       id: create_if_block$3.name,
       type: "if",
-      source: "(247:2) {#if hasPeat}",
+      source: "(246:2) {#if hasPeat}",
       ctx
     });
     return block;
@@ -5753,11 +5753,11 @@ var app = (function () {
       h: function hydrate() {
         attr_dev(link, "href", "https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css");
         attr_dev(link, "rel", "stylesheet");
-        add_location(link, file$4, 238, 2, 6748);
+        add_location(link, file$4, 237, 2, 6698);
         attr_dev(div0, "class", "map svelte-lsrd4t");
-        add_location(div0, file$4, 249, 2, 7160);
+        add_location(div0, file$4, 248, 2, 7110);
         attr_dev(div1, "class", "map-wrapper svelte-lsrd4t");
-        add_location(div1, file$4, 240, 0, 6854);
+        add_location(div1, file$4, 239, 0, 6804);
       },
       m: function mount(target, anchor) {
         append_dev(document.head, link);
@@ -5936,8 +5936,8 @@ var app = (function () {
       }
     });
     onMount( /*#__PURE__*/_asyncToGenerator(function* () {
-      console.log("Now mapping", geoData); // INIT THE MAP
-
+      // console.log("Now mapping", geoData);
+      // INIT THE MAP
       map = new mapboxGl.Map({
         container,
         style,
@@ -6001,7 +6001,6 @@ var app = (function () {
           map.setFilter(gridID, [">=", "".concat(i), 0]);
 
           if (slug === "capacity") {
-            console.log("Adding zeroes for ", gridID); // Make our painting deccisions here, based on our scales and stuff
             map.addLayer({
               id: "grid-".concat(i, "-offline"),
               type: "fill",
