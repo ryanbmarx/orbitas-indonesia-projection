@@ -6,7 +6,7 @@ const { json2csvAsync } = require("json-2-csv");
 const files = process.argv.slice(2);
 const years = ["2025", "2030", "2035", "2040", "2045", "2050"];
 files.forEach(file => {
-  fs.readFile(`./src/data/${file}`, "utf-8", (err, data) => {
+  fs.readFile(`./public/data/${file}`, "utf-8", (err, data) => {
     if (err) throw err;
     console.log(`++ Processing ${file}`);
     data = csvParse(data, d => {

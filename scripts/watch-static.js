@@ -12,7 +12,8 @@ watchedDirectories.forEach(d => {
   console.log(`+++ Now watching ${d}`);
   const watcher = chokidar.watch(`./src/${d}`, { persistent: true });
   watcher.on("change", path => {
-    console.log(`+++ ${path} has changed. Running npm run static:${d}`);
-    exec(`npm run static:${d}`);
+    const cmd = `npm run static:${d}`;
+    console.log(`+++ ${path} has changed. Running ${cmd}`);
+    exec(cmd);
   });
 });

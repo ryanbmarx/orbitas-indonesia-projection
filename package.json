@@ -33,11 +33,12 @@
     "autobuild": "rollup -c -w",
     "build": ". .env && npm run static && rollup -c",
     "dev": ". .env && run-p start:dev autobuild watch",
+    "process": "run-p process:*",
     "process:capacity": "node scripts/offline.js ModestA_CAPACITY_26OCT2020.csv ModestB_CAPACITY_26OCT2020.csv Aggressive_CAPACITY_26OCT2020.csv BAU_CAPACITY_26OCT2020.csv",
     "start": ". .env && sirv public --single",
     "start:dev": " sirv public --single --dev",
     "static:geo": "mkdir -p public/geo && cp -rf src/geo/* public/geo",
-    "static:data": "mkdir -p public/data && cp -rf src/data/* public/data",
+    "static:data": "mkdir -p public/data && cp -rf src/data/* public/data && npm run process",
     "static:assets": "mkdir -p public/assets && cp -rf src/assets/* public",
     "static": "mkdir -p public && run-p static:*",
     "watch": "node scripts/watch-static.js geo data assets"
