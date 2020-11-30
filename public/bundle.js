@@ -5753,11 +5753,11 @@ var app = (function () {
       h: function hydrate() {
         attr_dev(link, "href", "https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css");
         attr_dev(link, "rel", "stylesheet");
-        add_location(link, file$4, 237, 2, 6698);
+        add_location(link, file$4, 237, 2, 6699);
         attr_dev(div0, "class", "map svelte-lsrd4t");
-        add_location(div0, file$4, 248, 2, 7110);
+        add_location(div0, file$4, 248, 2, 7111);
         attr_dev(div1, "class", "map-wrapper svelte-lsrd4t");
-        add_location(div1, file$4, 239, 0, 6804);
+        add_location(div1, file$4, 239, 0, 6805);
       },
       m: function mount(target, anchor) {
         append_dev(document.head, link);
@@ -6006,7 +6006,7 @@ var app = (function () {
               type: "fill",
               source: "grid",
               layout: {
-                visibility: "grid-".concat(i, "-offline") === "grid-".concat(currentYear, "-offline") ? "visible" : "none"
+                visibility: "grid-".concat(i, "-offline") === "grid-".concat($currentYear, "-offline") ? "visible" : "none"
               },
               paint: {
                 "fill-color": "black",
@@ -6680,7 +6680,7 @@ var app = (function () {
     child_ctx[12] = list[i];
     child_ctx[14] = i;
     return child_ctx;
-  } // (273:4) {#each years as year, i}
+  } // (274:4) {#each years as year, i}
 
 
   function create_each_block$2(ctx) {
@@ -6738,11 +6738,11 @@ var app = (function () {
         this.h();
       },
       h: function hydrate() {
-        attr_dev(span0, "class", "timeline__button__circle svelte-176wpzo");
-        add_location(span0, file$6, 281, 10, 6390);
-        attr_dev(span1, "class", "timeline__button__year svelte-176wpzo");
-        add_location(span1, file$6, 282, 10, 6442);
-        attr_dev(button, "class", "timeline__button svelte-176wpzo");
+        attr_dev(span0, "class", "timeline__button__circle svelte-1xibms2");
+        add_location(span0, file$6, 282, 10, 6416);
+        attr_dev(span1, "class", "timeline__button__year svelte-1xibms2");
+        add_location(span1, file$6, 283, 10, 6468);
+        attr_dev(button, "class", "timeline__button svelte-1xibms2");
         attr_dev(button, "aria-label", button_aria_label_value = "View data for the year " +
         /*year*/
         ctx[12]);
@@ -6757,9 +6757,9 @@ var app = (function () {
         ctx[12] ==
         /*$currentYear*/
         ctx[1]);
-        add_location(button, file$6, 274, 8, 6111);
-        attr_dev(li, "class", "svelte-176wpzo");
-        add_location(li, file$6, 273, 6, 6098);
+        add_location(button, file$6, 275, 8, 6137);
+        attr_dev(li, "class", "svelte-1xibms2");
+        add_location(li, file$6, 274, 6, 6124);
       },
       m: function mount(target, anchor) {
         insert_dev(target, li, anchor);
@@ -6798,7 +6798,7 @@ var app = (function () {
       block,
       id: create_each_block$2.name,
       type: "each",
-      source: "(273:4) {#each years as year, i}",
+      source: "(274:4) {#each years as year, i}",
       ctx
     });
     return block;
@@ -6883,25 +6883,25 @@ var app = (function () {
       },
       h: function hydrate() {
         attr_dev(span0, "id", "timeline-label");
-        attr_dev(span0, "class", "label svelte-176wpzo");
-        add_location(span0, file$6, 270, 2, 5899);
+        attr_dev(span0, "class", "label svelte-1xibms2");
+        add_location(span0, file$6, 271, 2, 5925);
         attr_dev(ol, "aria-labelledby", "timeline-label");
-        attr_dev(ol, "class", "timeline svelte-176wpzo");
+        attr_dev(ol, "class", "timeline svelte-1xibms2");
         toggle_class(ol, "timeline--compressed",
         /*years*/
         ctx[3].length > 7);
-        add_location(ol, file$6, 271, 2, 5962);
-        attr_dev(span1, "class", "icon svelte-176wpzo");
-        add_location(span1, file$6, 287, 4, 6734);
-        attr_dev(button, "class", "timeline__button timeline__button--play svelte-176wpzo");
+        add_location(ol, file$6, 272, 2, 5988);
+        attr_dev(span1, "class", "icon svelte-1xibms2");
+        add_location(span1, file$6, 293, 4, 6780);
+        attr_dev(button, "class", "timeline__button timeline__button--play svelte-1xibms2");
         attr_dev(button, "aria-label", "Click here to animate the data over time");
         attr_dev(button, "title", "Click to play animation");
         toggle_class(button, "playing",
         /*playing*/
         ctx[0]);
-        add_location(button, file$6, 286, 2, 6557);
-        attr_dev(div, "class", "timeline-wrapper svelte-176wpzo");
-        add_location(div, file$6, 269, 0, 5866);
+        add_location(button, file$6, 287, 2, 6583);
+        attr_dev(div, "class", "timeline-wrapper svelte-1xibms2");
+        add_location(div, file$6, 270, 0, 5892);
       },
       m: function mount(target, anchor) {
         insert_dev(target, div, anchor);

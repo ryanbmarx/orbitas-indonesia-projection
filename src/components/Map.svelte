@@ -147,7 +147,7 @@
             type: "fill",
             source: "grid",
             layout: {
-              visibility: `grid-${i}-offline` === `grid-${currentYear}-offline` ? "visible" : "none",
+              visibility: `grid-${i}-offline` === `grid-${$currentYear}-offline` ? "visible" : "none",
             },
             paint: {
               "fill-color": "black",
