@@ -3,28 +3,39 @@
    * This is the legend for linear inteporlation
    */
   import LegendIcons from "./LegendIcons.svelte";
-  import { hexToRGB } from "../utils/colors";
+  // import { hexToRGB } from "../utils/colors";
   export let stops;
-  export let mapFill;
+  // export let mapFill;
   export let label;
   export let icons;
+  export let max = 31;
 
-  let { gradient, spans } = generateGradient(stops);
+  let { gradient, spans, spansMiddle } = generateGradient(stops);
 
   function generateGradient(stops) {
+    console.log(stops);
     // background: linear-gradient(to left, #333, #333 50%, #eee 75%, #333 75%);
     let gradient = "linear-gradient(to right,";
     let spans = "";
+    let spansMiddle = "";
+    let counter = 0;
     for (let i = 0; i < stops.length; i += 2) {
-      gradient += `${hexToRGB(mapFill, stops[i + 1])}`;
+      gradient += `${stops[i + 1]} ${(stops[i] / max) * 100}%`;
       if (i < stops.length - 2) {
         gradient += ",";
       }
-      spans += `<span class="legend__number" style="left: ${stops[i + 1] * 100}%;">${stops[i]}</span>`;
+      if (counter == 0) {
+        spans += `<span class="legend__number" style="left: ${(stops[i] / max) * 100}%;">${stops[i]}</span>`;
+      } else if (i === stops.length - 2) {
+        spans += `<span class="legend__number" style="left: ${(stops[i] / max) * 100}%;">${stops[i]}</span>`;
+      } else {
+        spansMiddle += `<span class="legend__number" style="left: ${(stops[i] / max) * 100}%;">${stops[i]}</span>`;
+      }
+      counter++;
     }
 
     gradient += ")";
-    return { gradient, spans };
+    return { gradient, spans, spansMiddle };
   }
 </script>
 
@@ -36,7 +47,7 @@
   .legend__numbers {
     font: 14px/1em var(--sans-serif);
     height: 1em;
-    margin-bottom: 0.25em;
+    margin: 0.25em 0;
     display: block;
     position: relative;
   }
@@ -86,6 +97,11 @@
     {@html spans}
   </div>
   <span class="legend__gradient" style="background:{gradient};" />
+  {#if spansMiddle}
+    <div class="legend__numbers">
+      {@html spansMiddle}
+    </div>
+  {/if}
   {#if icons}
     <LegendIcons {icons} />
   {/if}

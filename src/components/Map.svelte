@@ -118,7 +118,8 @@
           };
         } else if (stops.length > 0) {
           // We will be using linear interpolation. We check for it specifically so we can raise an error if we have neither.
-          paint["fill-opacity"] = ["interpolate", ["linear"], ["get", `${i}`], ...stops];
+          paint["fill-opacity"] = 0.9;
+          paint["fill-color"] = ["interpolate", ["linear"], ["get", `${i}`], ...stops];
         } else {
           // We have neither.
           console.error("A proper map scale has not been configured");

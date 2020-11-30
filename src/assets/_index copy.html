@@ -166,60 +166,10 @@
       </p>
       <figure class="projections-map-wrapper">
         <figcaption>
-          <h2>Palm oil suitability (Option 1)</h2>
-          <p>This is a straight gradient from yellow to the existing dark green.</p>
-        </figcaption>
-        <div class="orbitas-projections-map"></div>
-        <script class="config" type="application/json">
-          {
-            "mapFill": "#0c8e76",
-            "slug": "tree-cover",
-            "years": {
-              "start": 2010,
-              "end": 2050,
-              "step": 5
-            },
-            "stops": [0, "#d6ff5b", 31, "#0c8e76"],
-            "mapOptions": {
-              "center": [119.108664, 3.120056],
-              "zoom": 3,
-              "minZoom": 3,
-              "maxBounds": [
-                [88.34694524999765, -14.305533476859381],
-                [149.87038274999645, 20.263587388602616]
-              ]
-            },
-            "grid": "grid-lg-trimmed",
-            "yearLabel": "Select a year",
-            "dataLabel": "Projected forest cover",
-            "legendLabel": "Square kilometers of forest cover",
-            "data": {
-              "bau": {
-                "label": "Under BAU (4C) scenario",
-                "value": "indonesia_bau_scenario_5yr_step_forestcover_skm.csv"
-              },
-              "stabilising": {
-                "label": "Under stabilising (3C) scenario",
-                "value": "indonesia_stabilising_scenario_110agprice_zerodef_5yr_step_forestcover_skm.csv"
-              },
-              "coordinated": {
-                "label": "Under coordinated (1.5C) scenario",
-                "value": "indonesia_coordinated_scenario_110agprice_zerodef_5yr_step_forestcover_skm.csv"
-              }
-            },
-            "firstData": "bau",
-            "gridID": "uni_ID",
-            "displayPeat": true,
-            "dataNote": "Grid cells of green reflect areas with dense tree canopy coverage while grid cells of yellow highlight less tree canopy coverage."
-          }
-        </script>
-      </figure>
-      <figure class="projections-map-wrapper">
-        <figcaption>
-          <h2>Palm oil suitability (Option 2)</h2>
+          <h2>Palm oil suitability</h2>
           <p>
-            This is a straight yellow-to-dark-green gradient, with finer detail on all cells < 28 sq km. There is an intermediate color used at 28
-            which makes for a little smoother transition.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Auctor urna
+            nunc id cursus metus aliquam eleifend mi. Bibendum neq
           </p>
         </figcaption>
         <div class="orbitas-projections-map"></div>
@@ -232,8 +182,7 @@
               "end": 2050,
               "step": 5
             },
-            "stops": [0, "#d6ff78", 28, "#5cbb3e", 31, "#0c8e76"],
-
+            "stops": [0, 0, 15, 0.2, 31, 1],
             "mapOptions": {
               "center": [119.108664, 3.120056],
               "zoom": 3,
@@ -264,60 +213,7 @@
             "firstData": "bau",
             "gridID": "uni_ID",
             "displayPeat": true,
-            "dataNote": "Grid cells of green reflect areas with dense tree canopy coverage while grid cells of yellow highlight less tree canopy coverage."
-          }
-        </script>
-      </figure>
-      <figure class="projections-map-wrapper">
-        <figcaption>
-          <h2>Palm oil suitability (Option 3)</h2>
-          <p>
-            Same colors, but anything at 29 sq km of tree cover or greater is just the dark green. This color scheme has a higher contrast between the
-            "have trees" and "have not trees" cells.
-          </p>
-        </figcaption>
-        <div class="orbitas-projections-map"></div>
-        <script class="config" type="application/json">
-          {
-            "mapFill": "#0c8e76",
-            "slug": "tree-cover",
-            "years": {
-              "start": 2010,
-              "end": 2050,
-              "step": 5
-            },
-            "stops": [0, "#d6ff78", 29, "#0c8e76", 31, "#0c8e76"],
-            "mapOptions": {
-              "center": [119.108664, 3.120056],
-              "zoom": 3,
-              "minZoom": 3,
-              "maxBounds": [
-                [88.34694524999765, -14.305533476859381],
-                [149.87038274999645, 20.263587388602616]
-              ]
-            },
-            "grid": "grid-lg-trimmed",
-            "yearLabel": "Select a year",
-            "dataLabel": "Projected forest cover",
-            "legendLabel": "Square kilometers of forest cover",
-            "data": {
-              "bau": {
-                "label": "Under BAU (4C) scenario",
-                "value": "indonesia_bau_scenario_5yr_step_forestcover_skm.csv"
-              },
-              "stabilising": {
-                "label": "Under stabilising (3C) scenario",
-                "value": "indonesia_stabilising_scenario_110agprice_zerodef_5yr_step_forestcover_skm.csv"
-              },
-              "coordinated": {
-                "label": "Under coordinated (1.5C) scenario",
-                "value": "indonesia_coordinated_scenario_110agprice_zerodef_5yr_step_forestcover_skm.csv"
-              }
-            },
-            "firstData": "bau",
-            "gridID": "uni_ID",
-            "displayPeat": true,
-            "dataNote": "Grid cells of green reflect areas with dense tree canopy coverage while grid cells of yellow highlight less tree canopy coverage."
+            "dataNote": "Grid cells of green reflect areas with dense tree canopy coverage while grid cells of {color} highlight less tree canopy coverage."
           }
         </script>
       </figure>
