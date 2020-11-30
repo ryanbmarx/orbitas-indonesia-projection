@@ -131,6 +131,7 @@
 
     display: flex;
     flex-flow: column nowrap;
+    align-items: stretch;
 
     border: none;
     background: none;
@@ -284,7 +285,12 @@
       </li>
     {/each}
   </ol>
-  <button class:playing class="timeline__button timeline__button--play" aria-label="Click here to animate the data over time" title="Click to play animation" on:click={play}>
+  <button
+    class:playing
+    class="timeline__button timeline__button--play"
+    aria-label="Click here to animate the data over time"
+    title="Click to play animation"
+    on:click={play}>
     <span class="icon" />
   </button>
 </div>
