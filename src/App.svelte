@@ -90,22 +90,23 @@
     --color-text: #3f3f3f;
     --line-width: 3px;
   }
-
   :global(.projections-map-wrapper) {
     margin: 32px 0;
+    padding: 0;
+  }
+  :global(.projections-map-wrapper figcaption) {
+    margin-bottom: 16px;
     padding: 0;
   }
   .projections :global(.select-wrapper label),
   .projections :global(.label) {
     display: block;
-    font: 500 14px/1em var(--sans-serif);
+    font: bold 14px/1em var(--sans-serif);
     margin: 0 0 16px 0;
   }
 
   .map-wrapper {
     width: 100%;
-    height: 400px;
-    background: #eee;
     position: relative;
     margin: 24px 0;
   }
@@ -126,7 +127,21 @@
       <Loading />
     {/if}
     {#if geoData}
-      <Map {icons} {slug} {displayPeat} bind:this={map} gridFile={grid} {data} {stops} {buckets} {mapFill} {years} {geoData} {peatColor} {legendLabel} {...mapOptions} />
+      <Map
+        {icons}
+        {slug}
+        {displayPeat}
+        bind:this={map}
+        gridFile={grid}
+        {data}
+        {stops}
+        {buckets}
+        {mapFill}
+        {years}
+        {geoData}
+        {peatColor}
+        {legendLabel}
+        {...mapOptions} />
     {/if}
   </div>
   {#if dataNote}
