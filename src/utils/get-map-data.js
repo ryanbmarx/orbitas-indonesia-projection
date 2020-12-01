@@ -1,5 +1,6 @@
 import { csvParse } from "../utils/csv-parse";
 import { feature } from "topojson-client";
+import { urlFor } from "./links";
 
 // Adds downloaded values from CSV into the geojson
 function mergeProps(data, geo, dataKey, gridKey) {
@@ -14,7 +15,7 @@ function mergeProps(data, geo, dataKey, gridKey) {
 }
 export async function getMapData(gridFile, dataKey, dataList, gridID) {
   // The things we are fetching get stored here, so we can wait until they are fetched.
-  let fetching = [`./geo/${gridFile}.topojson`, `./data/${dataList[dataKey].value}`].map(f => {
+  let fetching = [urlFor(`./geo/${gridFile}.topojson`), urlFor(`./data/${dataList[dataKey].value}`)].map(f => {
     // console.log("Starting fetch for", f);
     return fetch(f).then(req => (f.indexOf(".csv") > -1 ? req.text() : req.json()));
   });
