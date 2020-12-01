@@ -13,7 +13,6 @@
   let { gradient, spans, spansMiddle } = generateGradient(stops);
 
   function generateGradient(stops) {
-    console.log(stops);
     // background: linear-gradient(to left, #333, #333 50%, #eee 75%, #333 75%);
     let gradient = "linear-gradient(to right,";
     let spans = "";

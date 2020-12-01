@@ -92,9 +92,10 @@
 
   /* DOTS */
   .timeline {
+    /* Import b/c of conflicts with WP theme styling */
     list-style: none;
-    margin: 0 0 0 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
 
     display: flex;
     justify-content: space-around;

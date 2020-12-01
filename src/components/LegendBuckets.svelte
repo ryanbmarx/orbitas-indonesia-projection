@@ -12,10 +12,13 @@
 <style>
   .legend {
     background: var(--color-background);
+    /* Import b/c of conflicts with WP theme styling */
+    margin: 8px 0 !important;
   }
   .legend__list {
-    margin: 0;
-    padding: 0;
+    /* Import b/c of conflicts with WP theme styling */
+    margin: 0 !important;
+    padding: 0 !important;
     list-style: none;
 
     display: flex;
