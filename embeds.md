@@ -2,13 +2,17 @@
 
 Ideally in the `<body>`, at the end:
 
+```html
 <script defer src="/wp-content/uploads/map-interactives/bundle.js"></script>
+```
 
 Ideally in the page `<head>`:
 
+```html
 <link rel="prefetch" href="/wp-content/uploads/map-interactives/geo/grid-lg-2.min.topojson" />
 <link rel="prefetch" href="/wp-content/uploads/map-interactives/geo/grid-sm.min.topojson" />
-<link rel="stylesheet" href="/wp-content/uploads/map-interactives/bundle.css">
+<link rel="stylesheet" href="/wp-content/uploads/map-interactives/bundle.css" />
+```
 
 And the two graphics:
 
