@@ -13,7 +13,7 @@
   import { onMount, afterUpdate } from "svelte";
   import mapboxgl from "mapbox-gl";
   import { mesh } from "topojson-client";
-
+  import { urlFor } from "../utils/links";
   export let data;
   export let geoData;
   export let mapFill = "#2f4752";
@@ -174,7 +174,7 @@
     // Otherwise skip this entirely.
     if (displayPeat) {
       map.on("load", function (e) {
-        fetch("./geo/peat.min.topojson")
+        fetch(urlFor("/geo/peat.min.topojson"))
           .then(data => data.json())
           .then(peat => {
             map.addSource("peat", {
