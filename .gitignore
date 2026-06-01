@@ -5,3 +5,5 @@ public/embed.html
 # public/geo
 # public/data
 .env
+public/bundle.js
+public/bundle.css

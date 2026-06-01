@@ -1,3 +1,5 @@
+<svelte:options accessors={true} />
+
 <script>
   // OUR SCOPED STORE SOLUTION
   import { key } from "../utils/stores";
@@ -46,7 +48,8 @@
   // These are props only so it's easy to make switches based on feedback. These are in `config.mapOptions`
   mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
   // CONFIGURABLE VALUES WITH DEFAULTS
-  export let style = "mapbox://styles/lucida-maps/ckhl11xlx05e019pq4tb6d9mx";
+  // export let style = "mapbox://styles/lucida-maps/ckhl11xlx05e019pq4tb6d9mx";
+  export let style = "mapbox://styles/ryanbmarx/ckwk8n7902yjx15uols8vijyb";
   export let minZoom = 1;
   export let maxZoom = 16;
 
@@ -221,6 +224,43 @@
   }
 </script>
 
+<svelte:head>
+  <link
+    href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css"
+    rel="stylesheet"
+  />
+</svelte:head>
+<div class="map-wrapper">
+  {#if useBuckets}
+    <LegendBuckets
+      {data}
+      {buckets}
+      {mapFill}
+      label={legendLabel}
+      {icons}
+    />
+  {:else}
+    <LegendStops
+      {data}
+      {stops}
+      {mapFill}
+      label={legendLabel}
+      {icons}
+    />
+  {/if}
+  {#if hasPeat}
+    <ButtonPeat
+      on:click={togglePeat}
+      {peatVisible}
+      {peatColor}
+    />
+  {/if}
+  <div
+    bind:this={container}
+    class="map"
+  />
+</div>
+
 <style>
   .map-wrapper {
     margin: 24px 0;
@@ -233,20 +273,3 @@
     height: 400px;
   }
 </style>
-
-<svelte:options accessors={true} />
-
-<svelte:head>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
-</svelte:head>
-<div class="map-wrapper">
-  {#if useBuckets}
-    <LegendBuckets {data} {buckets} {mapFill} label={legendLabel} {icons} />
-  {:else}
-    <LegendStops {data} {stops} {mapFill} label={legendLabel} {icons} />
-  {/if}
-  {#if hasPeat}
-    <ButtonPeat on:click={togglePeat} {peatVisible} {peatColor} />
-  {/if}
-  <div bind:this={container} class="map" />
-</div>
